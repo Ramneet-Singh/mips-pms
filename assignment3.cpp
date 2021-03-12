@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <string.h>
+#include <boost/algorithm/string/replace.hpp>
 
 using namespace std;
 
@@ -216,6 +217,12 @@ class MIPS {
 			instructionsExecuted+=1;
 			clockCycles+=1;
 		}
+		string preprocessRegisters(string str){
+			for(int i = 0; i<32; i++){
+				boost::replace_all(str, registers[i].name, to_string(i));
+			}
+			return str;
+		}
 		void printStatistics(){
 			cout<<"===========================================";
 			cout<<"\nNumber of clock cycles:\t\t\t "<<clockCycles;
@@ -260,6 +267,7 @@ int main() {
 	ifstream infile;
 	string str;
 	string instruction[1000];
+	string instruction_original[1000];
 	int no_executions_instruction[1000];
 
 	
@@ -267,6 +275,8 @@ int main() {
 	infile.open("program.asm");
 	int index = 0;
 	while(getline(infile, str)) {
+		instruction_original[index] = str;
+		str = interpreter.preprocessRegisters(str);
 		instruction[index] = str;
 		index++;
 	}
@@ -333,7 +343,7 @@ int main() {
 	// printing number of times each instruction was executed
 	cout<<setw(4)<<"Line"<<setw(18)<<"Instruction"<<setw(18)<<"Executed\n";
 	for(int i = 0; i<no_of_instructions; i++){
-		cout<<setw(4)<<i+1<<setw(18)<<instruction[i]<<setw(9)<<no_executions_instruction[i]<<setw(9)<<" time(s)\n";
+		cout<<setw(4)<<i+1<<setw(18)<<instruction_original[i]<<setw(9)<<no_executions_instruction[i]<<setw(9)<<" time(s)\n";
 	}
 
 	infile.close();
