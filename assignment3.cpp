@@ -54,7 +54,7 @@ class IntRegister {
 };
 
 class MIPS {
-	public:
+	private:
 
 		IntRegister registers[32];
 
@@ -191,10 +191,11 @@ class MIPS {
 			clockCycles += 1;
 			instructionsExecuted+=1;
 		}
-		void j(){
+		void j(int a){
 			printRegisterContents();
 			clockCycles+=1;
 			instructionsExecuted+=1;
+			registers[31].setContent(a);
 		}
 		bool beq(int a, int b, int c){
 			bool toJump = false;
@@ -313,7 +314,6 @@ int main() {
 				program_counter = atoi(tokens[3]) - 1;
 				continue;
 			}
-			
 		}
 		else if(strcmp(tokens[0], "bne") == 0) {
 			if(interpreter.bne(atoi(tokens[1]), atoi(tokens[2]), program_counter+1)){
@@ -322,9 +322,8 @@ int main() {
 			}
 		}
 		else if(strcmp(tokens[0], "j") == 0) {
-			interpreter.registers[31].setContent(program_counter+1);
 			program_counter = atoi(tokens[1]) - 1;
-			interpreter.j();
+			interpreter.j(program_counter+1);
 			continue;
 		}
 		else if (strcmp(tokens[0], "exit") == 0) {
