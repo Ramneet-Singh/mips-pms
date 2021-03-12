@@ -47,15 +47,22 @@ class MIPS {
 
 		IntRegister registers[32];
 
-		float Memory[1048576];
-
 		int clockCycles;
 		int instructionsExecuted;
+		int instructionIndex;
+		int no_exec_instructions[9];
+
+	public:
+		int Memory[1048576];
+		// Instruction mapping
+		static string instructions[10]; 
+		int maxArguments;
 
 	public: 
 
 		MIPS(){
 
+			maxArguments = 4;
 			clockCycles = 0;
 			
 			registers[0].setName("zero");
@@ -92,7 +99,7 @@ class MIPS {
 			registers[31].setName("ra");
 		}
 
-		void setMemory(int loc, float val){
+		void setMemory(int loc, int val){
 			Memory[loc] = val;
 		}
 		void throwError(string argument, int ErrorType){
@@ -108,6 +115,9 @@ class MIPS {
 			}
 			else if(ErrorType == 2){
 				cout<<"Error: Memory address " << argument << " not found!"<<'\n';
+			}
+			else if(ErrorType == 3){
+				cout<<"Error: The instruction: " << argument << " has more arguments than allowed!"<<'\n';
 			}
 			exit(1);
 
@@ -180,13 +190,7 @@ class MIPS {
 			clockCycles += 1;
 			instructionsExecuted+=1;
 		}
-		void j(int a){
-			printRegisterContents();
-			clockCycles+=1;
-			instructionsExecuted+=1;
-			registers[31].setContent(a);
-		}
-		bool beq(int a, int b, int c){
+		bool beq(int a, int b){
 			bool toJump = false;
 			if(a>31 || a<0){ throwError(to_string(a), 1);}
 			if(b>31 || b<0){ throwError(to_string(b), 1);}
@@ -196,10 +200,9 @@ class MIPS {
 			printRegisterContents();
 			clockCycles+=1;
 			instructionsExecuted+=1;
-			registers[31].setContent(c);
 			return toJump;
 		}
-		bool bne(int a, int b, int c){
+		bool bne(int a, int b){
 			bool toJump = true;
 			if(a>31 || a<0){ throwError(to_string(a), 1);}
 			if(b>31 || b<0){ throwError(to_string(b), 1);}
@@ -209,142 +212,194 @@ class MIPS {
 			printRegisterContents();
 			clockCycles+=1;
 			instructionsExecuted+=1;
-			registers[31].setContent(c);
 			return toJump;
 		}
-		void instExit(){
-			printRegisterContents();
-			instructionsExecuted+=1;
-			clockCycles+=1;
+		void slt(int a, int b, int c){
+			if(registers[b].content < registers[c].content){
+				registers[a].setContent(1);
+			}
+			else{
+				registers[a].setContent(0);
+			}
 		}
 		string preprocessRegisters(string str){
-			for(int i = 0; i<32; i++){
-				boost::replace_all(str, registers[i].name, to_string(i));
-			}
+			
 			return str;
 		}
 		void printStatistics(){
 			cout<<"===========================================";
 			cout<<"\nNumber of clock cycles:\t\t\t "<<clockCycles;
 			cout<<"\nNumber of instructions executed:\t "<<clockCycles;
-			cout<<"\nAverage clock cycles per instruction:\t "<<clockCycles / instructionsExecuted<<'\n';
-			cout<<"===========================================\n";
-		}
-};
-
-void tokenise(string instr, char *tokenized_inst[10]) {
-	int len = instr.length();
-	char str[len+1];
-	strcpy(str, instr.c_str());
-	char *token = strtok(str, " ");
-	int cnt = 0;
-	while(token != NULL) {
-		if(strchr(token, ',')) {
-			token[strlen(token)-1] = '\0';
-		}
-		if(strcmp(token, "$ra") != 0 && strchr(token, '$')) {
-			for(int i = 1; i < strlen(token); i++) {
-				token[i-1] = token[i];
+			if(instructionsExecuted!=0){
+				cout<<"\nAverage clock cycles per instruction:\t "<<clockCycles / instructionsExecuted;
 			}
-			token[strlen(token)-1] = '\0';
+			cout<<"\n===========================================\n";
+			// printing number of times each instruction was executed
+			cout<<setw(10)<<"Instruction"<<setw(18)<<"Executed\n";
+			for(int i = 0; i<10; i++){
+				cout<<setw(10)<<instructions[i]<<setw(9)<<no_exec_instructions[i]<<setw(10)<<" time(s)\n";
+			}
 		}
-		tokenized_inst[cnt] = token;
-		cnt++;
-		token = strtok(NULL, " ");
-	}
-}
+
+		int encode(string command, string arguments[], int maxArguments){
+			return 0;
+		}
+		void decode(int encoded, int * instructDecoded){
+			// add everything decoded in instructDecoded.
+			// instructDecoded[0] contains command, and other elements contain arguments
+
+		}
+
+
+		void readInstructions(string filename){
+			// read input from file, store instructions in memory
+			ifstream infile;
+			infile.open(filename);
+			string str;
+			instructionIndex = 0;
+			// const int maxArguments = 4;
+			
+			while(getline(infile, str)) {
+				// Some preprocessing
+				for(int i = 0; i<32; i++){
+					boost::replace_all(str, registers[i].name, to_string(i));
+				}
+				boost::replace_all(str, "\t", " ");
+				// Initialisations
+				string command;
+				string arguments[maxArguments];
+				for(int i = 0; i<maxArguments;i++){
+					arguments[i] = "none";
+				}
+				int i = 0;
+				int argument_number = 0;
+				int first = 1;
+				int non_empty = false;
+				while(i < str.size()) {
+					// handling whitespace
+					if(str[i] == ' ' || str[i] == '\t'){
+						i++;
+						continue;
+					}
+					string token = "";
+					// command
+					if(first == 1){
+						first = 0;
+						while(i < str.size() && str[i]!=' '){
+							token = token + str[i];
+							i+=1;
+							non_empty = true;
+						}
+						command = token;
+						i+=1;
+						continue;
+					}
+					// arguments
+					while(i < str.size() && str[i]!=',' && str[i]!='\n'){
+						token = token + str[i];
+						i+=1;
+					}
+					i+=1;
+					if(argument_number>=maxArguments){
+						throwError(str, 3);
+						break;
+					}
+					arguments[argument_number] = token;
+					argument_number+=1;
+				}
+				if(non_empty){
+					cout<<command<<" "<<arguments[0]<<" "<<arguments[1]<<" "<<arguments[2]<<'\n';
+					setMemory(instructionIndex, encode(command, arguments, maxArguments));
+					instructionIndex++;
+				}
+			}
+			infile.close();
+
+		}
+		void execute(){
+			// Reading instructions from memory, decoding and executing them
+			// const int maxArguments = 4;
+
+			int program_counter = 0;
+
+			for(int i = 0; i<10; i++){
+				no_exec_instructions[i] = 0;
+			}
+
+			while( program_counter < instructionIndex ){
+				int instructDecoded[maxArguments + 1];
+				decode(Memory[program_counter], instructDecoded);
+				cout<<instructDecoded[0]<<" "<<instructDecoded[1]<<" "<<instructDecoded[2]<<" "<<instructDecoded[3]<<'\n';
+				if(instructDecoded[0] < 10){
+					no_exec_instructions[instructDecoded[0]] += 1;
+				}
+				if(instructDecoded[0] == 0){
+					lw(instructDecoded[1], instructDecoded[2]);
+				}
+				else if(instructDecoded[0] == 1){
+					sw(instructDecoded[1], instructDecoded[2]);
+				}
+				else if(instructDecoded[0] == 2){
+					add(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
+				}
+				else if(instructDecoded[0] == 3){
+					sub(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
+				}
+				else if(instructDecoded[0] == 4){
+					mul(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
+				}
+				else if(instructDecoded[0] == 5){
+					addi(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
+				}
+				else if(instructDecoded[0] == 6){
+					program_counter = instructDecoded[1];
+				}
+				else if(instructDecoded[0] == 7){
+					if(beq(instructDecoded[1], instructDecoded[2])){
+						printRegisterContents();
+						program_counter = instructDecoded[1];
+						continue;
+					}
+					
+				}
+				else if(instructDecoded[0] == 8){
+					if(bne(instructDecoded[1], instructDecoded[2])){
+						printRegisterContents();
+						program_counter = instructDecoded[1];
+						continue;
+					}
+				}
+				else if(instructDecoded[0] == 9){
+					slt(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
+				}
+				else{
+					cout<<"Error: The instruction is either undefined or out of scope of this assignment.\n";
+					cout<<"Kindly use add, sub, mul, beq, bne, slt, j, lw, sw, addi instructions only\n";
+					exit(0);
+				}
+				program_counter +=1;
+				printRegisterContents();
+			}
+
+		}
+
+		
+};
+string MIPS::instructions[10] = { "lw", "sw", "add", "sub", "mul", "addi", "j", "beq", "bne", "slt"};
 
 int main() {
 
 
 	MIPS interpreter;
-	interpreter.setMemory(0, 100.0);
-	interpreter.setMemory(1, 2.0);
-	interpreter.setMemory(2, 3.0);
-	interpreter.setMemory(3, 4.0);
+	interpreter.setMemory(100, 100.0);
+	interpreter.setMemory(101, 2.0);
+	interpreter.setMemory(102, 3.0);
+	interpreter.setMemory(103, 4.0);
 
+	interpreter.readInstructions("program.asm");
 
-	ifstream infile;
-	string str;
-	string instruction[1000];
-	string instruction_original[1000];
-	int no_executions_instruction[1000];
+	// interpreter.execute();
 
-	
-	//read input from file
-	infile.open("program.asm");
-	int index = 0;
-	while(getline(infile, str)) {
-		instruction_original[index] = str;
-		str = interpreter.preprocessRegisters(str);
-		instruction[index] = str;
-		index++;
-	}
-	int no_of_instructions = index;
-	int program_counter = 0;
-	char *tokens[10];
-
-	while ( program_counter < no_of_instructions) {
-		string instr = instruction[program_counter];
-		no_executions_instruction[program_counter]+=1;
-		cout << instr <<endl;
-		tokenise(instr, tokens);
-		if(strcmp(tokens[0], "lw") == 0) {
-			interpreter.lw(atoi(tokens[1]), atoi(tokens[2]));
-		}
-		else if(strcmp(tokens[0], "sw") == 0) {
-			interpreter.sw(atoi(tokens[1]), atoi(tokens[2]));
-		}
-		else if(strcmp(tokens[0], "add") == 0) {
-			interpreter.add(atoi(tokens[1]), atoi(tokens[2]), atoi(tokens[3]));
-		}
-		else if(strcmp(tokens[0], "sub") == 0) {
-			interpreter.sub(atoi(tokens[1]), atoi(tokens[2]), atoi(tokens[3]));
-		}
-		else if(strcmp(tokens[0], "mul") == 0) {
-			interpreter.mul(atoi(tokens[1]), atoi(tokens[2]), atoi(tokens[3]));
-		}
-		else if(strcmp(tokens[0], "addi") == 0) {
-			interpreter.addi(atoi(tokens[1]), atoi(tokens[2]), atoi(tokens[3]));	
-		}
-		else if(strcmp(tokens[0], "beq") == 0) {
-			if(interpreter.beq(atoi(tokens[1]), atoi(tokens[2]), program_counter+1)){
-				program_counter = atoi(tokens[3]) - 1;
-				continue;
-			}
-		}
-		else if(strcmp(tokens[0], "bne") == 0) {
-			if(interpreter.bne(atoi(tokens[1]), atoi(tokens[2]), program_counter+1)){
-				program_counter = atoi(tokens[3]) - 1;
-				continue;
-			}
-		}
-		else if(strcmp(tokens[0], "j") == 0) {
-			program_counter = atoi(tokens[1]) - 1;
-			interpreter.j(program_counter+1);
-			continue;
-		}
-		else if (strcmp(tokens[0], "exit") == 0) {
-			interpreter.instExit();
-			break;
-		}
-		else{
-			cout<<"Error: The instruction \""<<tokens[0]<<"\" is either undefined or out of scope of this assignment.\n";
-			cout<<"Kindly use add, sub, mul, beq, bne, slt, j, lw, sw, addi instructions only\n";
-			exit(0);
-		}
-		interpreter.printRegisterContents();
-		program_counter = program_counter + 1;
-	}
-	if (program_counter == no_of_instructions - 1 && strcmp(tokens[0], "exit") != 0) {
-			cout<<"Warning: The instructions ended without an exit instruction!\n";
-	}
 	interpreter.printStatistics();
-	// printing number of times each instruction was executed
-	cout<<setw(4)<<"Line"<<setw(18)<<"Instruction"<<setw(18)<<"Executed\n";
-	for(int i = 0; i<no_of_instructions; i++){
-		cout<<setw(4)<<i+1<<setw(18)<<instruction_original[i]<<setw(9)<<no_executions_instruction[i]<<setw(9)<<" time(s)\n";
-	}
-
-	infile.close();
+	
 }
