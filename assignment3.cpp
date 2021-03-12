@@ -5,20 +5,15 @@
 using namespace std;
 
 string decToHex(int n){
-	if(n<10){ return to_string(n); }
+	if(n < 0){ return "-1" + decToHex(0-n); }
+	else if(n < 10){ return to_string(n); }
 	else if(n == 10){ return "A";  }
 	else if(n == 11){ return "B";  }
 	else if(n == 12){ return "C";  }
 	else if(n == 13){ return "D";  }
 	else if(n == 14){ return "F";  }
 	else if(n == 15){ return "G";  }
-	else if(n<0){
-		return "-1" + decToHex(0-n);
-	}
-	else{
-		return decToHex((n-n%16)/16) + decToHex(n%16);
-	}
-
+	else{ return decToHex((n-n%16)/16) + decToHex(n%16); }
 }
 
 class IntRegister {       
@@ -40,6 +35,22 @@ class IntRegister {
 		void setContent(int n){
 			content = n;
 		}
+		string decToHex(int n){
+			if(n < 0){ return "-1" + decToHex(0-n); }
+			else if(n < 10){ return to_string(n); }
+			else if(n == 10){ return "A";  }
+			else if(n == 11){ return "B";  }
+			else if(n == 12){ return "C";  }
+			else if(n == 13){ return "D";  }
+			else if(n == 14){ return "F";  }
+			else if(n == 15){ return "G";  }
+			else{ return decToHex((n-n%16)/16) + decToHex(n%16); }
+		}
+
+		string getHex(){
+			return decToHex(content);
+			
+		}
 };
 
 class MIPS {
@@ -49,15 +60,14 @@ class MIPS {
 
 		float Memory[1048576];
 
-		int ErrorType ;
-		// 0 means no error
-		// 1 means invalid register being used
-		// 2 means overflow has occurred
+		int clockCycles;
+		int instructionsExecuted;
 
 	public: 
 
 		MIPS(){
-			ErrorType = 0;
+
+			clockCycles = 0;
 			
 			registers[0].setName("zero");
 			registers[1].setName("at");
@@ -96,7 +106,11 @@ class MIPS {
 		void setMemory(int loc, float val){
 			Memory[loc] = val;
 		}
-		void throwError(char* argument){
+		void throwError(string argument, int ErrorType){
+			// ErrorType:
+			// 0 means no error
+			// 1 means invalid register being used
+			// 2 means overflow has occurred
 			if (ErrorType == 0){
 				return;
 			}
@@ -104,12 +118,9 @@ class MIPS {
 				cout<<"Error: Register "<< argument<<" not found!"<<'\n';
 			}
 			else if(ErrorType == 2){
-				cout<<"Error: Register " << argument << " has overflow!"<<'\n';
-			}
-			else if(ErrorType == 3){
 				cout<<"Error: Memory address " << argument << " not found!"<<'\n';
 			}
-			exit(0);
+			exit(1);
 
 		}
 
@@ -119,42 +130,109 @@ class MIPS {
 					return i;
 				}
 			}
-			ErrorType = 1;
-			throwError(name);
+			throwError(name, 1);
 			return -1;
 
 		}
 
 		void printRegisterContents(){
-    		cout << "Reg no.\tReg name"<<"\t"<<"Content" << '\n';
+   //  		cout << "Reg no.\tReg name"<<"\t"<<"Content" << '\n';
+			// for(int i = 0; i<32;i++){
+			// 	cout <<i<<'\t'<< registers[i].name<<"\t\t"<<registers[i].getHex() << '\n';
+			// }
+			cout<<setw(6)<<"Reg no."<<setw(10)<<"Reg name"<<setw(10)<<"Content"<<'\n';
 			for(int i = 0; i<32;i++){
-				cout <<i<<'\t'<< registers[i].name<<"\t\t"<<decToHex(registers[i].content) << '\n';
+				cout<<setw(6)<<i<<setw(10)<< registers[i].name<<setw(10)<<registers[i].getHex() << '\n';
 			}
-		}
-
-		void add(int a, int b, int c){
-			registers[a].setContent(registers[b].content + registers[c].content);
-		}
-		void sub(int a, int b, int c){
-			registers[a].setContent(registers[b].content - registers[c].content);
-		}
-		void mul(int a, int b, int c){
-			registers[a].setContent(registers[b].content * registers[c].content);
-		}
-		void addi(int a, int b, int c){
-			registers[a].setContent(registers[b].content + c);
+			// setw(4)
 		}
 		void lw(int a, int b){
+			if(a>31 || a<0){ throwError(to_string(a), 1);}
+			if(b>sizeof(Memory)/sizeof(*Memory) || b<0){throwError(to_string(b), 2);}
 			registers[a].setContent(Memory[b]);
+			clockCycles += 1;
+			instructionsExecuted+=1;
 		}
 		void sw(int a, int b){
+			if(a>sizeof(Memory)/sizeof(*Memory) || a<0){throwError(to_string(a), 2);}
+			if(b>31 || b<0){ throwError(to_string(b), 1);}
 			Memory[a] = registers[b].content;
+			clockCycles += 1;
+			instructionsExecuted+=1;
 		}
-		bool checkEqual(int a, int b){
+		void add(int a, int b, int c){
+			if(a>31 || a<0){ throwError(to_string(a), 1);}
+			if(b>31 || b<0){ throwError(to_string(b), 1);}
+			if(c>31 || c<0){ throwError(to_string(c), 1);}
+			registers[a].setContent(registers[b].content + registers[c].content);
+			clockCycles += 1;
+			instructionsExecuted+=1;
+		}
+		void sub(int a, int b, int c){
+			if(a>31 || a<0){ throwError(to_string(a), 1);}
+			if(b>31 || b<0){ throwError(to_string(b), 1);}
+			if(c>31 || c<0){ throwError(to_string(c), 1);}
+			registers[a].setContent(registers[b].content - registers[c].content);
+			clockCycles += 1;
+			instructionsExecuted+=1;
+		}
+		void mul(int a, int b, int c){
+			if(a>31 || a<0){ throwError(to_string(a), 1);}
+			if(b>31 || b<0){ throwError(to_string(b), 1);}
+			if(c>31 || c<0){ throwError(to_string(c), 1);}
+			registers[a].setContent(registers[b].content * registers[c].content);
+			clockCycles += 1;
+			instructionsExecuted+=1;
+		}
+		void addi(int a, int b, int c){
+			if(a>31 || a<0){ throwError(to_string(a), 1);}
+			if(b>31 || b<0){ throwError(to_string(b), 1);}
+			registers[a].setContent(registers[b].content + c);
+			clockCycles += 1;
+			instructionsExecuted+=1;
+		}
+		void j(){
+			printRegisterContents();
+			clockCycles+=1;
+			instructionsExecuted+=1;
+		}
+		bool beq(int a, int b, int c){
+			bool toJump = false;
+			if(a>31 || a<0){ throwError(to_string(a), 1);}
+			if(b>31 || b<0){ throwError(to_string(b), 1);}
 			if(registers[a].content == registers[b].content){
-				return true;
+				toJump = true;
 			}
-			return false;
+			printRegisterContents();
+			clockCycles+=1;
+			instructionsExecuted+=1;
+			registers[31].setContent(c);
+			return toJump;
+		}
+		bool bne(int a, int b, int c){
+			bool toJump = true;
+			if(a>31 || a<0){ throwError(to_string(a), 1);}
+			if(b>31 || b<0){ throwError(to_string(b), 1);}
+			if(registers[a].content == registers[b].content){
+				toJump = false;
+			}
+			printRegisterContents();
+			clockCycles+=1;
+			instructionsExecuted+=1;
+			registers[31].setContent(c);
+			return toJump;
+		}
+		void instExit(){
+			printRegisterContents();
+			instructionsExecuted+=1;
+			clockCycles+=1;
+		}
+		void printStatistics(){
+			cout<<"===========================================";
+			cout<<"\nNumber of clock cycles:\t\t\t "<<clockCycles;
+			cout<<"\nNumber of instructions executed:\t "<<clockCycles;
+			cout<<"\nAverage clock cycles per instruction:\t "<<clockCycles / instructionsExecuted<<'\n';
+			cout<<"===========================================\n";
 		}
 };
 
@@ -193,6 +271,7 @@ int main() {
 	ifstream infile;
 	string str;
 	string instruction[1000];
+	int no_executions_instruction[1000];
 
 	
 	//read input from file
@@ -204,10 +283,12 @@ int main() {
 	}
 	int no_of_instructions = index;
 	int program_counter = 0;
+	char *tokens[10];
+
 	while ( program_counter < no_of_instructions) {
 		string instr = instruction[program_counter];
+		no_executions_instruction[program_counter]+=1;
 		cout << instr <<endl;
-		char *tokens[10];
 		tokenise(instr, tokens);
 		if(strcmp(tokens[0], "lw") == 0) {
 			interpreter.lw(atoi(tokens[1]), atoi(tokens[2]));
@@ -228,38 +309,45 @@ int main() {
 			interpreter.addi(atoi(tokens[1]), atoi(tokens[2]), atoi(tokens[3]));	
 		}
 		else if(strcmp(tokens[0], "beq") == 0) {
-			if(interpreter.checkEqual(atoi(tokens[1]), atoi(tokens[2]))){
-				interpreter.registers[31].setContent(program_counter+1);
+			if(interpreter.beq(atoi(tokens[1]), atoi(tokens[2]), program_counter+1)){
 				program_counter = atoi(tokens[3]) - 1;
-				interpreter.printRegisterContents();
 				continue;
 			}
 			
 		}
 		else if(strcmp(tokens[0], "bne") == 0) {
-			if( ! interpreter.checkEqual(atoi(tokens[1]), atoi(tokens[2]))){
-				interpreter.registers[31].setContent(program_counter+1);
+			if(interpreter.bne(atoi(tokens[1]), atoi(tokens[2]), program_counter+1)){
 				program_counter = atoi(tokens[3]) - 1;
-				interpreter.printRegisterContents();
 				continue;
 			}
 		}
 		else if(strcmp(tokens[0], "j") == 0) {
 			interpreter.registers[31].setContent(program_counter+1);
 			program_counter = atoi(tokens[1]) - 1;
-			interpreter.printRegisterContents();
+			interpreter.j();
 			continue;
 		}
 		else if (strcmp(tokens[0], "exit") == 0) {
+			interpreter.instExit();
 			break;
 		}
 		else{
-			cout<<"Error: The instruction is either undefined or out of scope of this assignment.\n";
+			cout<<"Error: The instruction \""<<tokens[0]<<"\" is either undefined or out of scope of this assignment.\n";
 			cout<<"Kindly use add, sub, mul, beq, bne, slt, j, lw, sw, addi instructions only\n";
 			exit(0);
 		}
 		interpreter.printRegisterContents();
 		program_counter = program_counter + 1;
 	}
+	if (program_counter == no_of_instructions - 1 && strcmp(tokens[0], "exit") != 0) {
+			cout<<"Warning: The instructions ended without an exit instruction!\n";
+	}
+	interpreter.printStatistics();
+	// printing number of times each instruction was executed
+	cout<<setw(4)<<"Line"<<setw(18)<<"Instruction"<<setw(18)<<"Executed\n";
+	for(int i = 0; i<no_of_instructions; i++){
+		cout<<setw(4)<<i+1<<setw(18)<<instruction[i]<<setw(9)<<no_executions_instruction[i]<<setw(9)<<" time(s)\n";
+	}
+
 	infile.close();
 }
