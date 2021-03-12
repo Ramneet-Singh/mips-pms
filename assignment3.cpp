@@ -4,18 +4,6 @@
 
 using namespace std;
 
-string decToHex(int n){
-	if(n < 0){ return "-1" + decToHex(0-n); }
-	else if(n < 10){ return to_string(n); }
-	else if(n == 10){ return "A";  }
-	else if(n == 11){ return "B";  }
-	else if(n == 12){ return "C";  }
-	else if(n == 13){ return "D";  }
-	else if(n == 14){ return "F";  }
-	else if(n == 15){ return "G";  }
-	else{ return decToHex((n-n%16)/16) + decToHex(n%16); }
-}
-
 class IntRegister {       
 	public:             
 		int content;
@@ -36,7 +24,7 @@ class IntRegister {
 			content = n;
 		}
 		string decToHex(int n){
-			if(n < 0){ return "-1" + decToHex(0-n); }
+			if(n < 0){ return "-" + decToHex(0-n); }
 			else if(n < 10){ return to_string(n); }
 			else if(n == 10){ return "A";  }
 			else if(n == 11){ return "B";  }
