@@ -380,7 +380,7 @@ public:
 			string secondArg = "";
 			string thirdArg = "";
 			int i = 0;
-			while (arguments[1][i] != "(" && i < arguments[1].size())
+			while (arguments[1][i] != '(' && i < arguments[1].size())
 			{
 				secondArg += arguments[1][i];
 				i++;
@@ -394,7 +394,7 @@ public:
 			else
 			{
 				int j = i + 1;
-				while (arguments[1][j] != ")" && j < arguments[1].size())
+				while (arguments[1][j] != ')' && j < arguments[1].size())
 				{
 					thirdArg += arguments[1][j];
 					j++;
