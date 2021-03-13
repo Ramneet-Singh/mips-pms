@@ -114,6 +114,10 @@ public:
 		// 6 means there was no closing bracket in the statement
 		// 7 for invalid instruction address
 		// 8 for empty arguments
+		// 9 for modifying register $zero
+		// 10 for referring to an unaligned word (reading or writing)
+		// 11 for instruction address which is not a multiple of 4
+		// 12 for instructions causing integer overflow
 		if (ErrorType == 0)
 		{
 			return;
@@ -150,6 +154,23 @@ public:
 		else if (ErrorType == 8)
 		{
 			cout << "Error: The instruction: " << argument << " has an empty argument!" << '\n';
+		}
+		else if (ErrorType == 9)
+		{
+			cout << "Error: The instruction: " << argument << " is trying to modify register $zero!" << '\n';
+		}
+		else if (ErrorType == 10)
+		{
+			cout << "Error: The instruction: " << argument << " is referring to an un-aligned word" << '\n';
+		}
+		else if (ErrorType == 11)
+		{
+			cout << "Error: Instruction address is not a multiple of 4 in " << argument << "\n";
+		}
+		else if (ErrorType == 12)
+		{
+			cout << "Error: The instruction: " << argument << " is causing integer overflow"
+				 << "\n";
 		}
 		exit(1);
 	}
@@ -190,6 +211,10 @@ public:
 		{
 			throwError(to_string(addr), 2);
 		}
+		if (a == 0)
+		{
+			throwError("lw " + registers[a].name + " " + to_string(c) + "(" + registers[b].name + ")", 9);
+		}
 		registers[a].setContent(Memory[addr]);
 		clockCycles += 1;
 		instructionsExecuted += 1;
@@ -209,6 +234,10 @@ public:
 		{
 			throwError(to_string(addr), 2);
 		}
+		if ((addr % 4) != 0)
+		{
+			throwError("sw " + "$zero " to_string(c) + "(" + registers[b].name + ")", 10);
+		}
 		Memory[addr] = registers[a].content;
 		clockCycles += 1;
 		instructionsExecuted += 1;
@@ -227,7 +256,20 @@ public:
 		{
 			throwError(to_string(c), 1);
 		}
-		registers[a].setContent(registers[b].content + registers[c].content);
+		if (a == 0)
+		{
+			throwError("add " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 9);
+		}
+		int result = registers[b].content + registers[c].content;
+		if (registers[b].content > 0 && registers[c].content > 0 && result < 0)
+		{
+			throwError("add " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 12);
+		}
+		if (registers[b].content < 0 && registers[c].content < 0 && result > 0)
+		{
+			throwError("add " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 12);
+		}
+		registers[a].setContent(result);
 		clockCycles += 1;
 		instructionsExecuted += 1;
 	}
@@ -245,7 +287,20 @@ public:
 		{
 			throwError(to_string(c), 1);
 		}
-		registers[a].setContent(registers[b].content - registers[c].content);
+		if (a == 0)
+		{
+			throwError("sub " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 9);
+		}
+		int result = registers[b].content - registers[c].content;
+		if (registers[b].content < 0 && registers[c].content > 0 && result > 0)
+		{
+			throwError("sub " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 12);
+		}
+		if (registers[b].content > 0 && registers[c].content < 0 && result < 0)
+		{
+			throwError("sub " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 12);
+		}
+		registers[a].setContent(result);
 		clockCycles += 1;
 		instructionsExecuted += 1;
 	}
@@ -263,6 +318,10 @@ public:
 		{
 			throwError(to_string(c), 1);
 		}
+		if (a == 0)
+		{
+			throwError("mul " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 9);
+		}
 		registers[a].setContent(registers[b].content * registers[c].content);
 		clockCycles += 1;
 		instructionsExecuted += 1;
@@ -276,6 +335,10 @@ public:
 		if (b > 31 || b < 0)
 		{
 			throwError(to_string(b), 1);
+		}
+		if (a == 0)
+		{
+			throwError("addi " + registers[a].name + " " + registers[b].name + " " + to_string(c), 9);
 		}
 		registers[a].setContent(registers[b].content + c);
 		clockCycles += 1;
@@ -321,6 +384,10 @@ public:
 	}
 	void slt(int a, int b, int c)
 	{
+		if (a == 0)
+		{
+			throwError("slt $zero " + registers[b].name + " " + registers[c].name, 9);
+		}
 		if (registers[b].content < registers[c].content)
 		{
 			registers[a].setContent(1);
@@ -562,7 +629,7 @@ public:
 					i++;
 					continue;
 				}
-				
+
 				string token = "";
 				// command
 				if (first == 1)
@@ -589,12 +656,14 @@ public:
 					throwError(str, 3);
 					break;
 				}
-				if(token == ""){
+				if (token == "")
+				{
 					throwError(str, 8);
 				}
 				arguments[argument_number] = token;
 				string_encountered = false;
-				if(str[i] == ','){
+				if (str[i] == ',')
+				{
 					string_encountered = true;
 				}
 				i += 1;
@@ -602,7 +671,7 @@ public:
 			}
 			if (non_empty)
 			{
-				cout << command << " " << arguments[0] << " " << arguments[1] << " " << arguments[2] <<" " <<arguments[3]<<'\n';
+				cout << command << " " << arguments[0] << " " << arguments[1] << " " << arguments[2] << " " << arguments[3] << '\n';
 				encode(command, arguments, maxArguments, instructionIndex);
 				instructionIndex += 4;
 			}
@@ -660,6 +729,10 @@ public:
 				{
 					throwError(to_string(instructDecoded[1]), 7);
 				}
+				if ((instructDecoded[1] % 4) != 0)
+				{
+					throwError("j " + to_string(instructDecoded[1]), 11);
+				}
 				program_counter = instructDecoded[1];
 				printRegisterContents();
 				continue;
@@ -670,7 +743,12 @@ public:
 				{
 					throwError(to_string(instructDecoded[3]), 7);
 				}
-				if (beq(instructDecoded[1], instructDecoded[2]))
+				bool check = beq(instructDecoded[1], instructDecoded[2]);
+				if ((instructDecoded[3] % 4) != 0)
+				{
+					throwError("beq " + registers[instructDecoded[1]].name + " " + registers[instructDecoded[2]].name + " " + to_string(instructDecoded[3]), 11);
+				}
+				if (check)
 				{
 					printRegisterContents();
 					program_counter = instructDecoded[3];
@@ -683,7 +761,12 @@ public:
 				{
 					throwError(to_string(instructDecoded[3]), 7);
 				}
-				if (bne(instructDecoded[1], instructDecoded[2]))
+				bool check = bne(instructDecoded[1], instructDecoded[2]);
+				if ((instructDecoded[3] % 4) != 0)
+				{
+					throwError("bne " + registers[instructDecoded[1]].name + " " + registers[instructDecoded[2]].name + " " + to_string(instructDecoded[3]), 11);
+				}
+				if (check)
 				{
 					printRegisterContents();
 					program_counter = instructDecoded[3];
