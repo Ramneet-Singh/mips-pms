@@ -113,6 +113,7 @@ public:
 		// 5 means the instruction has too few arguments
 		// 6 means there was no closing bracket in the statement
 		// 7 for invalid instruction address
+		// 8 for empty arguments
 		if (ErrorType == 0)
 		{
 			return;
@@ -146,6 +147,10 @@ public:
 		{
 			cout << "Error: The address: " << argument << " is not a valid instruction address" << '\n';
 		}
+		else if (ErrorType == 8)
+		{
+			cout << "Error: The instruction: " << argument << " has an empty argument!" << '\n';
+		}
 		exit(1);
 	}
 
@@ -164,16 +169,11 @@ public:
 
 	void printRegisterContents()
 	{
-		//  		cout << "Reg no.\tReg name"<<"\t"<<"Content" << '\n';
-		// for(int i = 0; i<32;i++){
-		// 	cout <<i<<'\t'<< registers[i].name<<"\t\t"<<registers[i].getHex() << '\n';
-		// }
 		cout << setw(6) << "Reg no." << setw(10) << "Reg name" << setw(10) << "Content" << '\n';
 		for (int i = 0; i < 32; i++)
 		{
 			cout << setw(6) << i << setw(10) << registers[i].name << setw(10) << registers[i].getHex() << '\n';
 		}
-		// setw(4)
 	}
 	void lw(int a, int b, int c)
 	{
@@ -365,13 +365,13 @@ public:
 		{
 			// lw and sw instructions
 			int registerNo, baseRegister, offset;
-			if (arguments[0] == "none" || arguments[1] == "none")
+			if (arguments[0] == "" || arguments[1] == "")
 			{
 				throwError(command, 5);
 			}
 			for (int j = 2; j < maxArguments; j++)
 			{
-				if (arguments[j] != "none")
+				if (arguments[j] != "")
 				{
 					throwError(command, 3);
 				}
@@ -389,7 +389,7 @@ public:
 			{
 				//Then there is no base register given
 				baseRegister = 0;
-				offset = stoi(arguments[1]);
+				offset = stoi(arguments[1], nullptr, 0);
 			}
 			else
 			{
@@ -404,7 +404,7 @@ public:
 					throwError(command, 6);
 				}
 				baseRegister = stoi(thirdArg);
-				offset = stoi(secondArg);
+				offset = stoi(secondArg, nullptr, 0);
 			}
 			Memory[instructionIndex + 1] = registerNo;
 			Memory[instructionIndex + 2] = baseRegister;
@@ -416,21 +416,21 @@ public:
 			int reg1, reg2, targetAddress;
 			for (int k = 0; k < 3; k++)
 			{
-				if (arguments[k] == "none")
+				if (arguments[k] == "")
 				{
 					throwError(command, 5);
 				}
 			}
 			for (int j = 3; j < maxArguments; j++)
 			{
-				if (arguments[j] != "none")
+				if (arguments[j] != "")
 				{
 					throwError(command, 3);
 				}
 			}
-			reg1 = stoi(arguments[1]);
-			reg2 = stoi(arguments[2]);
-			targetAddress = stoi(arguments[3]);
+			reg1 = stoi(arguments[0]);
+			reg2 = stoi(arguments[1]);
+			targetAddress = stoi(arguments[2]);
 			Memory[instructionIndex + 1] = reg1;
 			Memory[instructionIndex + 2] = reg2;
 			Memory[instructionIndex + 3] = targetAddress;
@@ -441,14 +441,14 @@ public:
 			int reg1, reg2, imValue;
 			for (int k = 0; k < 3; k++)
 			{
-				if (arguments[k] == "none")
+				if (arguments[k] == "")
 				{
 					throwError(command, 5);
 				}
 			}
 			for (int j = 3; j < maxArguments; j++)
 			{
-				if (arguments[j] != "none")
+				if (arguments[j] != "")
 				{
 					throwError(command, 3);
 				}
@@ -464,13 +464,13 @@ public:
 		{
 			// j instruction
 			int jumpAddr;
-			if (arguments[0] == "none")
+			if (arguments[0] == "")
 			{
 				throwError(command, 5);
 			}
 			for (int j = 1; j < maxArguments; j++)
 			{
-				if (arguments[j] != "none")
+				if (arguments[j] != "")
 				{
 					throwError(command, 3);
 				}
@@ -484,14 +484,14 @@ public:
 			int reg1, reg2, reg3;
 			for (int k = 0; k < 3; k++)
 			{
-				if (arguments[k] == "none")
+				if (arguments[k] == "")
 				{
 					throwError(command, 5);
 				}
 			}
 			for (int j = 3; j < maxArguments; j++)
 			{
-				if (arguments[j] != "none")
+				if (arguments[j] != "")
 				{
 					throwError(command, 3);
 				}
@@ -541,26 +541,28 @@ public:
 			{
 				boost::replace_all(str, "$" + registers[i].name, to_string(i));
 			}
-			boost::replace_all(str, "\t", " ");
+			boost::replace_all(str, "$", "");
 			// Initialisations
 			string command;
 			string arguments[maxArguments];
 			for (int i = 0; i < maxArguments; i++)
 			{
-				arguments[i] = "none";
+				arguments[i] = "";
 			}
 			int i = 0;
 			int argument_number = 0;
 			int first = 1;
-			int non_empty = false;
-			while (i < str.size())
+			bool non_empty = false;
+			bool string_encountered = false;
+			while (i < str.size() || string_encountered)
 			{
 				// handling whitespace
-				if (str[i] == ' ' || str[i] == '\t')
+				if (i < str.size() && (str[i] == ' ' || str[i] == '\t'))
 				{
 					i++;
 					continue;
 				}
+				
 				string token = "";
 				// command
 				if (first == 1)
@@ -582,18 +584,25 @@ public:
 					token = token + str[i];
 					i += 1;
 				}
-				i += 1;
 				if (argument_number >= maxArguments)
 				{
 					throwError(str, 3);
 					break;
 				}
+				if(token == ""){
+					throwError(str, 8);
+				}
 				arguments[argument_number] = token;
+				string_encountered = false;
+				if(str[i] == ','){
+					string_encountered = true;
+				}
+				i += 1;
 				argument_number += 1;
 			}
 			if (non_empty)
 			{
-				cout << command << " " << arguments[0] << " " << arguments[1] << " " << arguments[2] << '\n';
+				cout << command << " " << arguments[0] << " " << arguments[1] << " " << arguments[2] <<" " <<arguments[3]<<'\n';
 				encode(command, arguments, maxArguments, instructionIndex);
 				instructionIndex += 4;
 			}
@@ -616,7 +625,7 @@ public:
 		{
 			int instructDecoded[maxArguments + 1];
 			decode(program_counter, instructDecoded);
-			cout << instructDecoded[0] << " " << instructDecoded[1] << " " << instructDecoded[2] << " " << instructDecoded[3] << '\n';
+			cout << instructions[instructDecoded[0]] << " " << instructDecoded[1] << " " << instructDecoded[2] << " " << instructDecoded[3] << '\n';
 			if (instructDecoded[0] < 10)
 			{
 				no_exec_instructions[instructDecoded[0]] += 1;
@@ -652,6 +661,7 @@ public:
 					throwError(to_string(instructDecoded[1]), 7);
 				}
 				program_counter = instructDecoded[1];
+				printRegisterContents();
 				continue;
 			}
 			else if (instructDecoded[0] == 7)
@@ -690,7 +700,7 @@ public:
 				cout << "Kindly use add, sub, mul, beq, bne, slt, j, lw, sw, addi instructions only\n";
 				exit(0);
 			}
-			program_counter += 1;
+			program_counter += 4;
 			printRegisterContents();
 		}
 	}
@@ -701,14 +711,14 @@ int main()
 {
 
 	MIPS interpreter;
-	interpreter.setMemory(100, 100);
-	interpreter.setMemory(101, 2);
-	interpreter.setMemory(102, 3);
-	interpreter.setMemory(103, 4);
+	interpreter.setMemory(1000, 100);
+	interpreter.setMemory(1001, 2);
+	interpreter.setMemory(1002, 3);
+	interpreter.setMemory(1003, 4);
 
 	interpreter.readInstructions("program.asm");
 
-	// interpreter.execute();
+	interpreter.execute();
 
 	interpreter.printStatistics();
 }

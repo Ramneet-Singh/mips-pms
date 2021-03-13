@@ -1,28 +1,31 @@
-  	lw $at,  	100
+  	lw $at,  	0x3E8($t0)     
 
-lw $v0, 101
-lw $v1, 102
-lw $a0, 103
-sw $t0, 	4
-sw      $t1,     5
-sw 		$t4,      8
-sw $t2,    6
-beq $a0, $a1, 20
-bne $a2, $at, 20
-beq $a0, $a2, 20
-bne $a0, $a3, 20
+lw $v0, 1001
+lw $v1, 1002
+lw $a0, 1003
+addi $t0, $t0, 101
+sw $t0, 	960
+lw $t4, 960
+sw      $t1,     500
+sw 		$t4,      800
+sw $t2,    600
+beq $a0, $a1, 96
+beq $a0, $a2, 80
+addi $t1, $t1, 10
+mul $t7, $at, $t1
+slt $s7, $v0, $at
 
 
 
-j 								16
-add 			$t4, $a0, $1
-add $t5,    	$s2, $3
-sub $t6, $s2, $0
-mul $t7, $a3, $1
-add $t0, $a0, $5
-sub $t1, $a1, $2
-add $t2, $t1, $4
-add $t3, $t2, $1
+j 								64
+add 			$t4, $a0, $t1
+add $t5,    	$s2, $t3
+sub $t6, $s2, $t0
+add $t0, $a0, $t5
+addi $a1, $a1, 5
+sub $t1, $a1, $t2
+add $t2, $t1, $t4
+add $t3, $t2, $t1
 lw $t4, 1028
 lw $t5, 1029
 lw $t6, 1030
