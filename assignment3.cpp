@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iostream>
 #include <map>
+#include <vector>
 #include <string.h>
 #include <boost/algorithm/string/replace.hpp>
 
@@ -48,6 +49,8 @@ private:
 	int instructionsExecuted;
 	int instructionIndex;
 	int no_exec_instructions[9];
+	vector<string> labels;
+	map<string, int> labelToAddr;
 
 public:
 	int Memory[1048576];
@@ -118,6 +121,9 @@ public:
 		// 10 for referring to an unaligned word (reading or writing)
 		// 11 for instruction address which is not a multiple of 4
 		// 12 for instructions causing integer overflow
+		// 13 for multiple labels with same name
+		// 14 for label names starting with a digit
+		// 15 for label address does not exist
 		if (ErrorType == 0)
 		{
 			return;
@@ -170,6 +176,21 @@ public:
 		else if (ErrorType == 12)
 		{
 			cout << "Error: The instruction: " << argument << " is causing integer overflow"
+				 << "\n";
+		}
+		else if (ErrorType == 13)
+		{
+			cout << "Error: The name: \"" << argument << "\" is being used for multiple labels"
+				 << "\n";
+		}
+		else if (ErrorType == 14)
+		{
+			cout << "Error: The label: \"" << argument << "\" is not a valid label name"
+				 << "\n";
+		}
+		else if (ErrorType == 15)
+		{
+			cout << "Error: The label: \"" << argument << "\" does not have a defined address"
 				 << "\n";
 		}
 		exit(1);
@@ -401,11 +422,7 @@ public:
 			registers[a].setContent(0);
 		}
 	}
-	string preprocessRegisters(string str)
-	{
 
-		return str;
-	}
 	void printStatistics()
 	{
 		cout << "===========================================";
@@ -484,7 +501,7 @@ public:
 		else if (commandCode == 7 || commandCode == 8)
 		{
 			// beq or bne command
-			int reg1, reg2, targetAddress;
+			int reg1, reg2, labelIndex;
 			for (int k = 0; k < 3; k++)
 			{
 				if (arguments[k] == "")
@@ -501,10 +518,24 @@ public:
 			}
 			reg1 = stoi(arguments[0]);
 			reg2 = stoi(arguments[1]);
-			targetAddress = stoi(arguments[2]);
+			if (arguments[2][0] >= '0' && arguments[2][0] <= '9')
+			{
+				throwError(arguments[0], 14);
+			}
+			int n = labels.size();
+			int i = 0;
+			while (i < n && labels[i] != arguments[2])
+			{
+				i++;
+			}
+			if (i == n)
+			{
+				labels.push_back(arguments[2]);
+			}
+
 			Memory[instructionIndex + 1] = reg1;
 			Memory[instructionIndex + 2] = reg2;
-			Memory[instructionIndex + 3] = targetAddress;
+			Memory[instructionIndex + 3] = i;
 		}
 		else if (commandCode == 5)
 		{
@@ -546,8 +577,21 @@ public:
 					throwError(command, 3);
 				}
 			}
-			jumpAddr = stoi(arguments[0]);
-			Memory[instructionIndex + 1] = jumpAddr;
+			if (arguments[0][0] >= '0' && arguments[0][0] <= '9')
+			{
+				throwError(arguments[0], 14);
+			}
+			int n = labels.size();
+			int i = 0;
+			while (i < n && labels[i] != arguments[0])
+			{
+				i++;
+			}
+			if (i == n)
+			{
+				labels.push_back(arguments[0]);
+			}
+			Memory[instructionIndex + 1] = i;
 		}
 		else
 		{
@@ -596,6 +640,16 @@ public:
 		}
 	}
 
+	// Function for taking a label and adding it to label strings
+	void addLabel(string label)
+	{
+		labels.push_back(label);
+	}
+	void mapLabelToAddr(string label, int addr)
+	{
+		labelToAddr.insert(make_pair(label, addr));
+	}
+
 	void readInstructions(string filename)
 	{
 		// read input from file, store instructions in memory
@@ -639,11 +693,36 @@ public:
 				if (first == 1)
 				{
 					first = 0;
-					while (i < str.size() && str[i] != ' ')
+					while (i < str.size() && str[i] != ' ' && str[i] != ':')
 					{
 						token = token + str[i];
 						i += 1;
 						non_empty = true;
+					}
+					if (str[i] == ':')
+					{
+						if (labelToAddr.count(token) != 0)
+						{
+							throwError(token, 13);
+						}
+						int n = labels.size();
+						int i = 0;
+						while (i < n)
+						{
+							if (labels[i] == token)
+							{
+								break;
+							}
+							i++;
+						}
+						if (i == n)
+						{
+							addLabel(token);
+						}
+						mapLabelToAddr(token, instructionIndex);
+						first = 1;
+						i += 1;
+						continue;
 					}
 					command = token;
 					i += 1;
@@ -729,51 +808,66 @@ public:
 			}
 			else if (instructDecoded[0] == 6)
 			{
-				if (instructDecoded[1] >= instructionIndex || instructDecoded[1] < 0)
+				if (labelToAddr.count(labels[instructDecoded[1]]) != 1)
 				{
-					throwError(to_string(instructDecoded[1]), 7);
+					throwError(labels[instructDecoded[1]], 15);
 				}
-				if ((instructDecoded[1] % 4) != 0)
+				int address = labelToAddr.at(labels[instructDecoded[1]]);
+				if (address >= instructionIndex || address < 0)
+				{
+					throwError(to_string(address), 7);
+				}
+				if ((address % 4) != 0)
 				{
 					throwError("j " + to_string(instructDecoded[1]), 11);
 				}
-				program_counter = instructDecoded[1];
+				program_counter = address;
 				printRegisterContents();
 				continue;
 			}
 			else if (instructDecoded[0] == 7)
 			{
-				if (instructDecoded[3] >= instructionIndex || instructDecoded[3] < 0)
+				if (labelToAddr.count(labels[instructDecoded[3]]) != 1)
 				{
-					throwError(to_string(instructDecoded[3]), 7);
+					throwError(labels[instructDecoded[3]], 15);
+				}
+				int address = labelToAddr.at(labels[instructDecoded[3]]);
+				if (address >= instructionIndex || address < 0)
+				{
+					throwError(to_string(address), 7);
 				}
 				bool check = beq(instructDecoded[1], instructDecoded[2]);
-				if ((instructDecoded[3] % 4) != 0)
+				if ((address % 4) != 0)
 				{
-					throwError("beq " + registers[instructDecoded[1]].name + " " + registers[instructDecoded[2]].name + " " + to_string(instructDecoded[3]), 11);
+					throwError("beq " + registers[instructDecoded[1]].name + " " + registers[instructDecoded[2]].name + " " + labels[instructDecoded[3]], 11);
 				}
 				if (check)
 				{
 					printRegisterContents();
-					program_counter = instructDecoded[3];
+					program_counter = address;
 					continue;
 				}
 			}
 			else if (instructDecoded[0] == 8)
 			{
-				if (instructDecoded[3] >= instructionIndex || instructDecoded[3] < 0)
+				if (labelToAddr.count(labels[instructDecoded[3]]) != 1)
 				{
-					throwError(to_string(instructDecoded[3]), 7);
+					throwError(labels[instructDecoded[3]], 15);
+				}
+				int address = labelToAddr.at(labels[instructDecoded[3]]);
+				if (address >= instructionIndex || address < 0)
+				{
+					throwError(to_string(address), 7);
 				}
 				bool check = bne(instructDecoded[1], instructDecoded[2]);
-				if ((instructDecoded[3] % 4) != 0)
+				if ((address % 4) != 0)
 				{
-					throwError("bne " + registers[instructDecoded[1]].name + " " + registers[instructDecoded[2]].name + " " + to_string(instructDecoded[3]), 11);
+					throwError("bne " + registers[instructDecoded[1]].name + " " + registers[instructDecoded[2]].name + " " + labels[instructDecoded[3]], 11);
 				}
 				if (check)
 				{
 					printRegisterContents();
-					program_counter = instructDecoded[3];
+					program_counter = address;
 					continue;
 				}
 			}
@@ -794,21 +888,24 @@ public:
 };
 string MIPS::instructions[10] = {"lw", "sw", "add", "sub", "mul", "addi", "j", "beq", "bne", "slt"};
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 	string filename;
-	if (argc == 1) {
-        filename = "program.asm";
-    }
-    else if (argc == 2){
-    	filename = argv[1];
-    }
-    else{
-    	cout<<"Error: incorrect usage. \nPlease run: \t./assignment3 \tor \t./assignment3 path_to_program\n";
-    	return -1;
-    }
+	if (argc == 1)
+	{
+		filename = "program.asm";
+	}
+	else if (argc == 2)
+	{
+		filename = argv[1];
+	}
+	else
+	{
+		cout << "Error: incorrect usage. \nPlease run: \t./assignment3 \tor \t./assignment3 path_to_program\n";
+		return -1;
+	}
 
-    MIPS interpreter;
+	MIPS interpreter;
 
 	interpreter.readInstructions(filename);
 
