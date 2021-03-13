@@ -50,7 +50,7 @@ private:
 	int no_exec_instructions[9];
 
 public:
-	int Memory[262144];
+	int Memory[1048576];
 	// Instruction mapping
 	static string instructions[10];
 	int maxArguments;
@@ -215,6 +215,10 @@ public:
 		{
 			throwError("lw " + registers[a].name + " " + to_string(c) + "(" + registers[b].name + ")", 9);
 		}
+		if ((addr % 4) != 0)
+		{
+			throwError("lw " + registers[a].name + " " + to_string(c) + "(" + registers[b].name + ")", 10);
+		}
 		registers[a].setContent(Memory[addr]);
 		clockCycles += 1;
 		instructionsExecuted += 1;
@@ -236,7 +240,7 @@ public:
 		}
 		if ((addr % 4) != 0)
 		{
-			throwError("sw " + "$zero " to_string(c) + "(" + registers[b].name + ")", 10);
+			throwError("sw " + to_string(a) + " " + to_string(c) + "(" + registers[b].name + ")", 10);
 		}
 		Memory[addr] = registers[a].content;
 		clockCycles += 1;
@@ -671,7 +675,7 @@ public:
 			}
 			if (non_empty)
 			{
-				cout << command << " " << arguments[0] << " " << arguments[1] << " " << arguments[2] << " " << arguments[3] << '\n';
+				// cout << command << " " << arguments[0] << " " << arguments[1] << " " << arguments[2] << " " << arguments[3] << '\n';
 				encode(command, arguments, maxArguments, instructionIndex);
 				instructionIndex += 4;
 			}
@@ -790,16 +794,23 @@ public:
 };
 string MIPS::instructions[10] = {"lw", "sw", "add", "sub", "mul", "addi", "j", "beq", "bne", "slt"};
 
-int main()
+int main(int argc, char** argv)
 {
+	string filename;
+	if (argc == 1) {
+        filename = "program.asm";
+    }
+    else if (argc == 2){
+    	filename = argv[1];
+    }
+    else{
+    	cout<<"Error: incorrect usage. \nPlease run: \t./assignment3 \tor \t./assignment3 path_to_program\n";
+    	return -1;
+    }
 
-	MIPS interpreter;
-	interpreter.setMemory(1000, 100);
-	interpreter.setMemory(1001, 2);
-	interpreter.setMemory(1002, 3);
-	interpreter.setMemory(1003, 4);
+    MIPS interpreter;
 
-	interpreter.readInstructions("program.asm");
+	interpreter.readInstructions(filename);
 
 	interpreter.execute();
 
