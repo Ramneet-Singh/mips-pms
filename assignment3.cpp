@@ -1,6 +1,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 #include <map>
 #include <string.h>
 #include <boost/algorithm/string/replace.hpp>
