@@ -1,0 +1,2 @@
+sw $12 $0 1048577
+Error: Memory address 1048577 not found!

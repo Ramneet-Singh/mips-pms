@@ -47,7 +47,7 @@ private:
 	int clockCycles;
 	int instructionsExecuted;
 	int instructionIndex;
-	int no_exec_instructions[9];
+	int no_exec_instructions[10];
 
 public:
 	int Memory[1048576];
@@ -59,7 +59,7 @@ public:
 	MIPS()
 	{
 
-		maxArguments = 4;
+		maxArguments = 3;
 		clockCycles = 0;
 
 		registers[0].setName("zero");
@@ -136,7 +136,7 @@ public:
 		}
 		else if (ErrorType == 4)
 		{
-			cout << "Error: The instruction" << argument << "is either undefined or out of scope of this assignment.\n";
+			cout << "Error: The instruction \"" << argument << "\" is either undefined or out of scope of this assignment.\n";
 			cout << "Kindly use add, sub, mul, beq, bne, slt, j, lw, sw, addi instructions only\n";
 		}
 		else if (ErrorType == 5)
@@ -190,10 +190,10 @@ public:
 
 	void printRegisterContents()
 	{
-		cout << setw(6) << "Reg no." << setw(10) << "Reg name" << setw(10) << "Content" << '\n';
+		cout << setw(6) << "Reg no." << setw(11) << "Reg name" << setw(15) << "Content" << '\n';
 		for (int i = 0; i < 32; i++)
 		{
-			cout << setw(6) << i << setw(10) << registers[i].name << setw(10) << registers[i].getHex() << '\n';
+			cout << setw(6) << i << setw(11) << registers[i].name << setw(15) << registers[i].getHex() << '\n';
 		}
 	}
 	void lw(int a, int b, int c)
@@ -213,11 +213,11 @@ public:
 		}
 		if (a == 0)
 		{
-			throwError("lw " + registers[a].name + " " + to_string(c) + "(" + registers[b].name + ")", 9);
+			throwError("lw $" + registers[a].name + " " + to_string(c) + "($" + registers[b].name + ")", 9);
 		}
 		if ((addr % 4) != 0)
 		{
-			throwError("lw " + registers[a].name + " " + to_string(c) + "(" + registers[b].name + ")", 10);
+			throwError("lw $" + registers[a].name + " " + to_string(c) + "($" + registers[b].name + ")", 10);
 		}
 		registers[a].setContent(Memory[addr]);
 		clockCycles += 1;
@@ -240,7 +240,7 @@ public:
 		}
 		if ((addr % 4) != 0)
 		{
-			throwError("sw " + to_string(a) + " " + to_string(c) + "(" + registers[b].name + ")", 10);
+			throwError("sw $" + to_string(a) + " " + to_string(c) + "($" + registers[b].name + ")", 10);
 		}
 		Memory[addr] = registers[a].content;
 		clockCycles += 1;
@@ -262,16 +262,16 @@ public:
 		}
 		if (a == 0)
 		{
-			throwError("add " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 9);
+			throwError("add $" + registers[a].name + " $" + registers[b].name + " $" + registers[c].name, 9);
 		}
 		int result = registers[b].content + registers[c].content;
 		if (registers[b].content > 0 && registers[c].content > 0 && result < 0)
 		{
-			throwError("add " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 12);
+			throwError("add $" + registers[a].name + " $" + registers[b].name + " $" + registers[c].name, 12);
 		}
 		if (registers[b].content < 0 && registers[c].content < 0 && result > 0)
 		{
-			throwError("add " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 12);
+			throwError("add $" + registers[a].name + " $" + registers[b].name + " $" + registers[c].name, 12);
 		}
 		registers[a].setContent(result);
 		clockCycles += 1;
@@ -293,16 +293,16 @@ public:
 		}
 		if (a == 0)
 		{
-			throwError("sub " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 9);
+			throwError("sub $" + registers[a].name + " $" + registers[b].name + " $" + registers[c].name, 9);
 		}
 		int result = registers[b].content - registers[c].content;
 		if (registers[b].content < 0 && registers[c].content > 0 && result > 0)
 		{
-			throwError("sub " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 12);
+			throwError("sub $" + registers[a].name + " $" + registers[b].name + " $" + registers[c].name, 12);
 		}
 		if (registers[b].content > 0 && registers[c].content < 0 && result < 0)
 		{
-			throwError("sub " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 12);
+			throwError("sub $" + registers[a].name + " $" + registers[b].name + " $" + registers[c].name, 12);
 		}
 		registers[a].setContent(result);
 		clockCycles += 1;
@@ -324,7 +324,7 @@ public:
 		}
 		if (a == 0)
 		{
-			throwError("mul " + registers[a].name + " " + registers[b].name + " " + registers[c].name, 9);
+			throwError("mul $" + registers[a].name + " $" + registers[b].name + " $" + registers[c].name, 9);
 		}
 		registers[a].setContent(registers[b].content * registers[c].content);
 		clockCycles += 1;
@@ -342,7 +342,7 @@ public:
 		}
 		if (a == 0)
 		{
-			throwError("addi " + registers[a].name + " " + registers[b].name + " " + to_string(c), 9);
+			throwError("addi $" + registers[a].name + " $" + registers[b].name + " " + to_string(c), 9);
 		}
 		registers[a].setContent(registers[b].content + c);
 		clockCycles += 1;
@@ -390,7 +390,7 @@ public:
 	{
 		if (a == 0)
 		{
-			throwError("slt $zero " + registers[b].name + " " + registers[c].name, 9);
+			throwError("slt $zero $" + registers[b].name + " $" + registers[c].name, 9);
 		}
 		if (registers[b].content < registers[c].content)
 		{
@@ -401,21 +401,16 @@ public:
 			registers[a].setContent(0);
 		}
 	}
-	string preprocessRegisters(string str)
-	{
-
-		return str;
-	}
 	void printStatistics()
 	{
-		cout << "===========================================";
-		cout << "\nNumber of clock cycles:\t\t\t " << clockCycles;
-		cout << "\nNumber of instructions executed:\t " << clockCycles;
+		cout << "===================================================\n";
+		cout << setw(40)<<"Total number of clock cycles :  " << setw(10)<<clockCycles<<'\n';
+		cout << setw(40)<<"Number of instructions executed:  "<< setw(10)<<clockCycles<<'\n';
 		if (instructionsExecuted != 0)
 		{
-			cout << "\nAverage clock cycles per instruction:\t " << clockCycles / instructionsExecuted;
+			cout << setw(40)<< "Average clock cycles per instruction:  " << setw(10)<<clockCycles / instructionsExecuted;
 		}
-		cout << "\n===========================================\n";
+		cout << "\n===================================================\n";
 		// printing number of times each instruction was executed
 		cout << setw(10) << "Instruction" << setw(18) << "Executed\n";
 		for (int i = 0; i < 10; i++)
@@ -575,7 +570,7 @@ public:
 			Memory[instructionIndex + 2] = reg2;
 			Memory[instructionIndex + 3] = reg3;
 		}
-
+		// cout<<command<<instructionIndex<<commandCode<<'\n';
 		Memory[instructionIndex] = commandCode;
 	}
 	void decode(int index, int *instructDecoded)
@@ -588,6 +583,7 @@ public:
 		{
 		case 6:
 			instructDecoded[1] = Memory[index + 1];
+			break;
 		default:
 			for (int k = 1; k < 4; k++)
 			{
@@ -675,7 +671,7 @@ public:
 			}
 			if (non_empty)
 			{
-				// cout << command << " " << arguments[0] << " " << arguments[1] << " " << arguments[2] << " " << arguments[3] << '\n';
+				// cout << command << " " << arguments[0] << " " << arguments[1] << " " << arguments[2] << " " << '\n';
 				encode(command, arguments, maxArguments, instructionIndex);
 				instructionIndex += 4;
 			}
@@ -685,20 +681,26 @@ public:
 	void execute()
 	{
 		// Reading instructions from memory, decoding and executing them
-		// const int maxArguments = 4;
-
 		int program_counter = 0;
 
 		for (int i = 0; i < 10; i++)
 		{
 			no_exec_instructions[i] = 0;
 		}
-
 		while (program_counter < instructionIndex)
 		{
+			
 			int instructDecoded[maxArguments + 1];
 			decode(program_counter, instructDecoded);
-			cout << instructions[instructDecoded[0]] << " " << instructDecoded[1] << " " << instructDecoded[2] << " " << instructDecoded[3] << '\n';
+			if(instructDecoded[0] == 6){
+				cout << instructions[instructDecoded[0]] << " " << instructDecoded[1]<<"\n";
+			}
+			else if (instructDecoded[0] == 1 || instructDecoded[0] == 0 || instructDecoded[0] == 5 || instructDecoded[0] == 7 || instructDecoded[0] == 8){
+				cout << instructions[instructDecoded[0]] << " $" << instructDecoded[1] << " $" << instructDecoded[2] << " " << instructDecoded[3] << '\n';
+			}
+			else {
+				cout << instructions[instructDecoded[0]] << " $" << instructDecoded[1] << " $" << instructDecoded[2] << " $" << instructDecoded[3] << '\n';
+			}
 			if (instructDecoded[0] < 10)
 			{
 				no_exec_instructions[instructDecoded[0]] += 1;
@@ -811,6 +813,7 @@ int main(int argc, char** argv)
     MIPS interpreter;
 
 	interpreter.readInstructions(filename);
+
 
 	interpreter.execute();
 

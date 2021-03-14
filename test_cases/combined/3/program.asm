@@ -1,31 +1,32 @@
-  	lw $at,  	0x3E8($t0)     
+addi $t0, $t0, 10
+add $t1, $t0, $zero
+addi $a0, $a0, 0
 
-lw $v0, 1004
-lw $v1, 1008
-lw $a0, 10012
-addi $t0, $t0, 101
-sw $t0, 	960
-lw $t4, 960
-sw      $t1,     500
-sw 		$t4,      800
-sw $t2,    600
-beq $a0, $a1, 96
-beq $a0, $a2, 80
-addi $t1, $t1, 10
-mul $t7, $at, $t1
-slt $s7, $v0, $at
+add $a0, $a0, $t1
+addi $t1, $t1, -1
+bne $t1, $zero, 12 
 
+add $t0, $a0, 0
+add $t1, $t0, $zero
+addi $a0, $t0, 0
 
+addi $a0, $a0, $t1
+addi $t1, $t1, -1
+bne $t1, $zero, 36
 
-j 								64
-add 			$t4, $a0, $t1
-add $t5,    	$s2, $t3
-sub $t6, $s2, $t0
-add $t0, $a0, $t5
-addi $a1, $a1, 5
-sub $t1, $a1, $t2
-add $t2, $t1, $t4
-add $t3, $t2, $t1
-lw $t4, 1028
-lw $t5, 1029
-lw $t6, 1030
+addi $t0, $a0, 0
+add $t1, $t0, $zero
+addi $a0, $t0, 0
+
+add $a0, $a0, $t1
+addi $t1, $t1, -1
+bne $t1, $zero, 60
+
+mul $a1, $a0, $t0
+sub $a2, $a2, $a1
+
+sw $a2, 10000
+lw $k0, 10000
+sw $k0, 10004
+lw $k1, 10004
+slt $v0, $t1, $k0

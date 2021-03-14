@@ -1,0 +1,2 @@
+lw $9 $0 8001
+Error: The instruction: lw $t1 8001($zero) is referring to an un-aligned word
