@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <map>
+#include <vector>
 #include <string.h>
 #include <boost/algorithm/string/replace.hpp>
 
@@ -49,6 +50,8 @@ private:
 	int instructionsExecuted;
 	int instructionIndex;
 	int no_exec_instructions[10];
+	vector<string> labels;
+	map<string, int> labelToAddr;
 
 public:
 	int Memory[1048576];
@@ -103,6 +106,14 @@ public:
 		Memory[loc] = val;
 	}
 
+	void addLabel(string lbl)
+	{
+		// Find whether it already exists
+		if (find(labels.begin(), labels.end(), lbl) != labels.end())
+		{
+		}
+	}
+
 	void throwError(string argument, int ErrorType)
 	{
 		// ErrorType:
@@ -119,6 +130,8 @@ public:
 		// 10 for referring to an unaligned word (reading or writing)
 		// 11 for instruction address which is not a multiple of 4
 		// 12 for instructions causing integer overflow
+		// 13 for a label being declared twice
+		// 14 for using an undeclared label
 		if (ErrorType == 0)
 		{
 			return;
@@ -173,20 +186,17 @@ public:
 			cout << "Error: The instruction: " << argument << " is causing integer overflow"
 				 << "\n";
 		}
-		exit(1);
-	}
-
-	int getIntRegister(char *name)
-	{
-		for (int i = 0; i < 32; i++)
+		else if (ErrorType == 13)
 		{
-			if (registers[i].name.compare(name) == 0)
-			{
-				return i;
-			}
+			cout << "Error: The label: \"" << argument << "\" has been declared twice"
+				 << "\n";
 		}
-		throwError(name, 1);
-		return -1;
+		else if (ErrorType == 14)
+		{
+			cout << "Error: The label: \"" << argument << "\" has not been declared"
+				 << "\n";
+		}
+		exit(1);
 	}
 
 	void printRegisterContents()
@@ -197,6 +207,12 @@ public:
 			cout << setw(6) << i << setw(11) << registers[i].name << setw(15) << registers[i].getHex() << '\n';
 		}
 	}
+
+	/*           -----------------------------------------------------------------           
+	                                INSTRUCTION FUNCTIONS
+				 -----------------------------------------------------------------
+	*/
+
 	void lw(int a, int b, int c)
 	{
 		if (a > 31 || a < 0)
@@ -402,14 +418,20 @@ public:
 			registers[a].setContent(0);
 		}
 	}
+
+	/*           -----------------------------------------------------------------           
+	                                PRINTING FUNCTION
+				 -----------------------------------------------------------------
+	*/
+
 	void printStatistics()
 	{
 		cout << "===================================================\n";
-		cout << setw(40)<<"Total number of clock cycles :  " << setw(10)<<clockCycles<<'\n';
-		cout << setw(40)<<"Number of instructions executed:  "<< setw(10)<<clockCycles<<'\n';
+		cout << setw(40) << "Total number of clock cycles :  " << setw(10) << clockCycles << '\n';
+		cout << setw(40) << "Number of instructions executed:  " << setw(10) << clockCycles << '\n';
 		if (instructionsExecuted != 0)
 		{
-			cout << setw(40)<< "Average clock cycles per instruction:  " << setw(10)<<clockCycles / instructionsExecuted;
+			cout << setw(40) << "Average clock cycles per instruction:  " << setw(10) << clockCycles / instructionsExecuted;
 		}
 		cout << "\n===================================================\n";
 		// printing number of times each instruction was executed
@@ -420,9 +442,14 @@ public:
 		}
 	}
 
+	/*           -----------------------------------------------------------------           
+	                                INSTRUCTION ENCODING FUNCTIONS
+				 -----------------------------------------------------------------
+	*/
+
 	void encode(string command, string arguments[], int maxArguments, int instructionIndex)
 	{
-		auto itr = find(instructions, instructions + (sizeof(instructions) / sizeof(*instructions)), command);
+		auto itr = find(begin(instructions), end(instructions), command);
 		if (itr == end(instructions))
 		{
 			throwError(command, 4);
@@ -480,7 +507,7 @@ public:
 		else if (commandCode == 7 || commandCode == 8)
 		{
 			// beq or bne command
-			int reg1, reg2, targetAddress;
+			int reg1, reg2, labelPos;
 			for (int k = 0; k < 3; k++)
 			{
 				if (arguments[k] == "")
@@ -497,10 +524,20 @@ public:
 			}
 			reg1 = stoi(arguments[0]);
 			reg2 = stoi(arguments[1]);
-			targetAddress = stoi(arguments[2]);
+			string label = arguments[2];
+			auto ptr = find(labels.begin(), labels.end(), label);
+			if (ptr != labels.end())
+			{
+				labelPos = ptr - labels.begin();
+			}
+			else
+			{
+				labelPos = labels.size();
+				labels.push_back(label);
+			}
 			Memory[instructionIndex + 1] = reg1;
 			Memory[instructionIndex + 2] = reg2;
-			Memory[instructionIndex + 3] = targetAddress;
+			Memory[instructionIndex + 3] = labelPos;
 		}
 		else if (commandCode == 5)
 		{
@@ -530,7 +567,7 @@ public:
 		else if (commandCode == 6)
 		{
 			// j instruction
-			int jumpAddr;
+			int jumpLabelPos;
 			if (arguments[0] == "")
 			{
 				throwError(command, 5);
@@ -542,8 +579,18 @@ public:
 					throwError(command, 3);
 				}
 			}
-			jumpAddr = stoi(arguments[0]);
-			Memory[instructionIndex + 1] = jumpAddr;
+			string jumpLabel = arguments[0];
+			auto ptr = find(labels.begin(), labels.end(), jumpLabel);
+			if (ptr != labels.end())
+			{
+				jumpLabelPos = ptr - labels.begin();
+			}
+			else
+			{
+				jumpLabelPos = labels.size();
+				labels.push_back(jumpLabel);
+			}
+			Memory[instructionIndex + 1] = jumpLabelPos;
 		}
 		else
 		{
@@ -574,24 +621,58 @@ public:
 		// cout<<command<<instructionIndex<<commandCode<<'\n';
 		Memory[instructionIndex] = commandCode;
 	}
+
 	void decode(int index, int *instructDecoded)
 	{
 		// add everything decoded in instructDecoded.
 		// instructDecoded[0] contains command, and other elements contain arguments
 		int commandCode = Memory[index];
 		instructDecoded[0] = commandCode;
+		string cmdLabel;
+		int labelPos;
 		switch (commandCode)
 		{
 		case 6:
-			instructDecoded[1] = Memory[index + 1];
+		{
+			// labels may be going out of range
+			cmdLabel = labels[Memory[index + 1]];
+			auto itr1 = labelToAddr.find(cmdLabel);
+			if (itr1 == labelToAddr.end())
+			{
+				throwError(cmdLabel, 14);
+			}
+			instructDecoded[1] = itr1->second;
 			break;
+		}
+		case 7:
+		case 8:
+		{
+			instructDecoded[1] = Memory[index + 1];
+			instructDecoded[2] = Memory[index + 2];
+			// labels may be going out of range
+			cmdLabel = labels[Memory[index + 3]];
+			auto itr2 = labelToAddr.find(cmdLabel);
+			if (itr2 == labelToAddr.end())
+			{
+				throwError(cmdLabel, 14);
+			}
+			instructDecoded[3] = itr2->second;
+			break;
+		}
 		default:
+		{
 			for (int k = 1; k < 4; k++)
 			{
 				instructDecoded[k] = Memory[index + k];
 			}
 		}
+		}
 	}
+
+	/*           -----------------------------------------------------------------           
+	                                PARSING FUNCTION
+				 -----------------------------------------------------------------
+	*/
 
 	void readInstructions(string filename)
 	{
@@ -636,11 +717,31 @@ public:
 				if (first == 1)
 				{
 					first = 0;
-					while (i < str.size() && str[i] != ' ')
+					while (i < str.size() && str[i] != ' ' && str[i] != ':')
 					{
 						token = token + str[i];
 						i += 1;
 						non_empty = true;
+					}
+					if (i < str.size() && str[i] == ':')
+					{
+						// We have reached a label
+						// Store token in labels vector
+						if (find(labels.begin(), labels.end(), token) == labels.end())
+						{
+							labels.push_back(token);
+						}
+						// Map label to the instruction index
+						if (labelToAddr.find(token) != labelToAddr.end())
+						{
+							throwError(token, 13);
+						}
+						labelToAddr.insert(make_pair(token, instructionIndex));
+						// cout << "Found a label: " << token << "\n";
+						first = 1;
+						non_empty = false;
+						i += 1;
+						continue;
 					}
 					command = token;
 					i += 1;
@@ -672,13 +773,33 @@ public:
 			}
 			if (non_empty)
 			{
-				// cout << command << " " << arguments[0] << " " << arguments[1] << " " << arguments[2] << " " << '\n';
+				// cout << command << " " << arguments[0] << " " << arguments[1] << " " << arguments[2] << " " << instructionIndex << " " << '\n';
 				encode(command, arguments, maxArguments, instructionIndex);
 				instructionIndex += 4;
 			}
 		}
+
+		/*
+		cout << "----------------------------LABELS VECTOR----------------------\n";
+		for (int i = 0; i < labels.size(); i++)
+			cout << labels.at(i) << ' ';
+		cout << "\n";
+
+		cout << "----------------------------LABELS MAP----------------------\n";
+		for (auto it = labelToAddr.begin(); it != labelToAddr.end(); ++it)
+		{
+			cout << it->first << " => " << it->second << " \n";
+		}
+		*/
+
 		infile.close();
 	}
+
+	/*           -----------------------------------------------------------------           
+	                                EXECUTION FUNCTION
+				 -----------------------------------------------------------------
+	*/
+
 	void execute()
 	{
 		// Reading instructions from memory, decoding and executing them
@@ -690,16 +811,19 @@ public:
 		}
 		while (program_counter < instructionIndex)
 		{
-			
+
 			int instructDecoded[maxArguments + 1];
 			decode(program_counter, instructDecoded);
-			if(instructDecoded[0] == 6){
-				cout << instructions[instructDecoded[0]] << " " << instructDecoded[1]<<"\n";
+			if (instructDecoded[0] == 6)
+			{
+				cout << instructions[instructDecoded[0]] << " " << instructDecoded[1] << "\n";
 			}
-			else if (instructDecoded[0] == 1 || instructDecoded[0] == 0 || instructDecoded[0] == 5 || instructDecoded[0] == 7 || instructDecoded[0] == 8){
+			else if (instructDecoded[0] == 1 || instructDecoded[0] == 0 || instructDecoded[0] == 5 || instructDecoded[0] == 7 || instructDecoded[0] == 8)
+			{
 				cout << instructions[instructDecoded[0]] << " $" << instructDecoded[1] << " $" << instructDecoded[2] << " " << instructDecoded[3] << '\n';
 			}
-			else {
+			else
+			{
 				cout << instructions[instructDecoded[0]] << " $" << instructDecoded[1] << " $" << instructDecoded[2] << " $" << instructDecoded[3] << '\n';
 			}
 			if (instructDecoded[0] < 10)
@@ -797,24 +921,26 @@ public:
 };
 string MIPS::instructions[10] = {"lw", "sw", "add", "sub", "mul", "addi", "j", "beq", "bne", "slt"};
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
 	string filename;
-	if (argc == 1) {
-        filename = "program.asm";
-    }
-    else if (argc == 2){
-    	filename = argv[1];
-    }
-    else{
-    	cout<<"Error: incorrect usage. \nPlease run: \t./assignment3 \tor \t./assignment3 path_to_program\n";
-    	return -1;
-    }
+	if (argc == 1)
+	{
+		filename = "program.asm";
+	}
+	else if (argc == 2)
+	{
+		filename = argv[1];
+	}
+	else
+	{
+		cout << "Error: incorrect usage. \nPlease run: \t./assignment3 \tor \t./assignment3 path_to_program\n";
+		return -1;
+	}
 
-    MIPS interpreter;
+	MIPS interpreter;
 
 	interpreter.readInstructions(filename);
-
 
 	interpreter.execute();
 
