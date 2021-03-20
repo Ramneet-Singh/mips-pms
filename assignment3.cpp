@@ -106,14 +106,6 @@ public:
 		Memory[loc] = val;
 	}
 
-	void addLabel(string lbl)
-	{
-		// Find whether it already exists
-		if (find(labels.begin(), labels.end(), lbl) != labels.end())
-		{
-		}
-	}
-
 	void throwError(string argument, int ErrorType)
 	{
 		// ErrorType:
@@ -197,6 +189,24 @@ public:
 				 << "\n";
 		}
 		exit(1);
+	}
+
+	void checkNumArguments(string cmnd, string args[], int maxArgs, int expectNum)
+	{
+		for (int k = 0; k < expectNum; k++)
+		{
+			if (args[k] == "")
+			{
+				throwError(cmnd, 5);
+			}
+		}
+		for (int j = expectNum; j < maxArgs; j++)
+		{
+			if (args[j] != "")
+			{
+				throwError(cmnd, 3);
+			}
+		}
 	}
 
 	void printRegisterContents()
@@ -461,17 +471,7 @@ public:
 		{
 			// lw and sw instructions
 			int registerNo, baseRegister, offset;
-			if (arguments[0] == "" || arguments[1] == "")
-			{
-				throwError(command, 5);
-			}
-			for (int j = 2; j < maxArguments; j++)
-			{
-				if (arguments[j] != "")
-				{
-					throwError(command, 3);
-				}
-			}
+			checkNumArguments(command, arguments, maxArguments, 2);
 			registerNo = stoi(arguments[0]);
 			string secondArg = "";
 			string thirdArg = "";
@@ -510,20 +510,7 @@ public:
 		{
 			// beq or bne command
 			int reg1, reg2, labelPos;
-			for (int k = 0; k < 3; k++)
-			{
-				if (arguments[k] == "")
-				{
-					throwError(command, 5);
-				}
-			}
-			for (int j = 3; j < maxArguments; j++)
-			{
-				if (arguments[j] != "")
-				{
-					throwError(command, 3);
-				}
-			}
+			checkNumArguments(command, arguments, maxArguments, 3);
 			reg1 = stoi(arguments[0]);
 			reg2 = stoi(arguments[1]);
 			string label = arguments[2];
@@ -545,20 +532,7 @@ public:
 		{
 			// addi instruction
 			int reg1, reg2, imValue;
-			for (int k = 0; k < 3; k++)
-			{
-				if (arguments[k] == "")
-				{
-					throwError(command, 5);
-				}
-			}
-			for (int j = 3; j < maxArguments; j++)
-			{
-				if (arguments[j] != "")
-				{
-					throwError(command, 3);
-				}
-			}
+			checkNumArguments(command, arguments, maxArguments, 3);
 			reg1 = stoi(arguments[0]);
 			reg2 = stoi(arguments[1]);
 			imValue = stoi(arguments[2]);
@@ -570,17 +544,7 @@ public:
 		{
 			// j instruction
 			int jumpLabelPos;
-			if (arguments[0] == "")
-			{
-				throwError(command, 5);
-			}
-			for (int j = 1; j < maxArguments; j++)
-			{
-				if (arguments[j] != "")
-				{
-					throwError(command, 3);
-				}
-			}
+			checkNumArguments(command, arguments, maxArguments, 1);
 			string jumpLabel = arguments[0];
 			auto ptr = find(labels.begin(), labels.end(), jumpLabel);
 			if (ptr != labels.end())
@@ -598,20 +562,7 @@ public:
 		{
 			// add, sub, mul, slt
 			int reg1, reg2, reg3;
-			for (int k = 0; k < 3; k++)
-			{
-				if (arguments[k] == "")
-				{
-					throwError(command, 5);
-				}
-			}
-			for (int j = 3; j < maxArguments; j++)
-			{
-				if (arguments[j] != "")
-				{
-					throwError(command, 3);
-				}
-			}
+			checkNumArguments(command, arguments, maxArguments, 3);
 			reg1 = stoi(arguments[0]);
 			reg2 = stoi(arguments[1]);
 			reg3 = stoi(arguments[2]);
@@ -835,10 +786,14 @@ public:
 			if (instructDecoded[0] == 0)
 			{
 				lw(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
+				cout << "---------MEMORY LOAD------------\n"
+					 << "Memory : addr " << registers[instructDecoded[2]].content + instructDecoded[3] << " : value " << Memory[registers[instructDecoded[2]].content + instructDecoded[3]] << "\n";
 			}
 			else if (instructDecoded[0] == 1)
 			{
 				sw(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
+				cout << "---------MEMORY STORE------------\n"
+					 << "Memory : addr " << registers[instructDecoded[2]].content + instructDecoded[3] << " : value " << Memory[registers[instructDecoded[2]].content + instructDecoded[3]] << "\n";
 			}
 			else if (instructDecoded[0] == 2)
 			{
