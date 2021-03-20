@@ -417,6 +417,8 @@ public:
 		{
 			registers[a].setContent(0);
 		}
+		clockCycles += 1;
+		instructionsExecuted += 1;
 	}
 
 	/*           -----------------------------------------------------------------           
