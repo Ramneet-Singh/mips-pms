@@ -1,1 +1,0 @@
-Error: The instruction: addi 9, 10, 3, has more arguments than allowed!

@@ -1,2 +1,0 @@
-lw $0 $0 8000
-Error: The instruction: lw $zero 8000($zero) is trying to modify register $zero!

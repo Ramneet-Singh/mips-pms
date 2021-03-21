@@ -1,1 +1,0 @@
-Error: The instruction: lw is missing a closing parentheses

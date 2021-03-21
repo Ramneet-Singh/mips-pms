@@ -1,2 +1,0 @@
-sw $44 $0 9
-Error: Register 44 not found!
