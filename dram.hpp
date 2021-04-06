@@ -9,10 +9,9 @@ private:
     /*
         Checks whether the instruction given is conflicting with the second instruction (which is pending in dram)
         The rules for an instruction I and a pending dram instruction D to conflict are:
-        1. If I is an lw instruction then there is no conflict as all the issued requests are processed in a FIFO Manner
-        2. If D is an sw instruction, then there is no conflict as all it says is to store a certain value at a certain address. 
+        1. If D is an sw instruction, then there is no conflict as all it says is to store a certain value at a certain address. 
            For subsequent instructions, the values of any of the registers can be changed as we have already made use of them and abstracted them out while issuing the sw request.
-        3. Now let D be an lw instruction with register Rd being the target register and AddrD being the address from which to load
+        2. Now let D be an lw instruction with register Rd being the target register and AddrD being the address from which to load
            Simply, any instruction which makes use of a value stored in Rd, or seeks to change the value stored in Rd is a conflicting instruction.
            This is because, if it makes use of a value, the programmer expects the lw instruction to have taken place by the time I is executed.
            And if its value changes, then we will change it back to a wrong value after a few cycles if we don't block instruction I.
