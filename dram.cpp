@@ -1,5 +1,22 @@
 #include <dram.hpp>
 
+int Instruction::rowBufferIndex = 0;
+
+
+bool operator>(const Instruction &lhs, const Instruction &rhs)
+{   
+    return lhs.getRowDifference() > rhs.getRowDifference();
+}
+
+int Instruction::getRowDifference() const{
+    int row_number = address/NUMCOLS;
+    if(row_number>rowBufferIndex){
+        return row_number - rowBufferIndex;
+    }
+    else{
+        return rowBufferIndex - row_number;
+    }
+}
 DRAM::DRAM()
 {
     blockingMode = true;
@@ -14,7 +31,7 @@ DRAM::DRAM()
     rowBufferUpdates = 0;
 }
 
-DRAM::DRAM(int rowAccessDelay = 10, int colAccessDelay = 2, bool blockMode = true)
+DRAM::DRAM(int rowAccessDelay, int colAccessDelay, bool blockMode)
 {
     blockingMode = blockMode;
     ROW_ACCESS_DELAY = rowAccessDelay;

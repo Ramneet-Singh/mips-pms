@@ -2,6 +2,30 @@
 #include <deque>
 #include <queue>
 #include <array>
+#define NUMCOLS 512
+
+class Instruction{
+    
+public:
+    static int rowBufferIndex;
+    int type;
+    // 0 means lw
+    // 1 means sw
+    int target;
+    int address;
+    std::vector<Instruction*> dependencies;
+
+    Instruction(int row, int add, int tar, int typ = 0){
+        rowBufferIndex = row;
+        address = add;
+        target = tar;
+        type = typ;
+    }
+
+    int getRowDifference() const;
+};
+bool operator>(const Instruction &lhs, const Instruction &rhs);
+
 
 class DRAM
 {
@@ -50,6 +74,7 @@ public:
         for sw, instruction[1] = value to be stored, instruction[2] = address
     */
     std::deque<std::array<int, 3>> pendingInstructions;
+    std::priority_queue< Instruction, std::vector<Instruction>, std::greater<Instruction> > pendingInstructionsPriority;
 
     /*
         Have a FIFO Buffer of pending activities of the instruction which is currently being executed
@@ -80,7 +105,7 @@ public:
 
     DRAM();
 
-    DRAM(int rowAccessDelay, int colAccessDelay, bool blockMode);
+    DRAM(int rowAccessDelay, int colAccessDelay = 2, bool blockMode = true);
 
     // 0 cycle delay instruction store and fetch operations
     void store(int address, int val);
