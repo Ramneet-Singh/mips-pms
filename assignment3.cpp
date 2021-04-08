@@ -244,11 +244,8 @@ public:
 			throwError("lw $" + registers[a].name + " " + to_string(c) + "($" + registers[b].name + ")", 10);
 		}
 
-		array<int, 3> dramInstr;
-		dramInstr[0] = 0;
-		dramInstr[1] = a;
-		dramInstr[2] = addr;
-		dramMemory.pendingInstructions.push_back(dramInstr);
+		Instruction *dramInstr = new Instruction(addr, a, 0);
+		dramMemory.addInstruction(*dramInstr);
 	}
 	void issueSw(int a, int b, int c)
 	{
@@ -271,12 +268,10 @@ public:
 			throwError("sw $" + to_string(a) + " " + to_string(c) + "($" + registers[b].name + ")", 10);
 		}
 
-		array<int, 3> dramInstr;
-		dramInstr[0] = 1;
-		dramInstr[1] = val;
-		dramInstr[2] = addr;
-		dramMemory.pendingInstructions.push_back(dramInstr);
+		Instruction *dramInstr = new Instruction(addr, val, 1);
+		dramMemory.addInstruction(*dramInstr);
 	}
+
 	void add(int a, int b, int c)
 	{
 		if (a > 31 || a < 0)
@@ -920,7 +915,7 @@ public:
 			cout << "\n";
 		}
 
-		while (!dramMemory.pendingInstructions.empty())
+		while (!dramMemory.pendingInstructionsPriority.empty())
 		{
 			clockCycles++;
 			cout << "------------Clock Cycle: " << clockCycles << "----------------\n";
@@ -939,8 +934,7 @@ public:
 		{
 			int rowW = dramMemory.bufferRowIndex;
 			dramMemory.writeback();
-			clockCycles += 10;
-			dramMemory.rowBufferUpdates += 1;
+			clockCycles += dramMemory.ROW_ACCESS_DELAY;
 			cout << "------------Clock Cycle: " << clockCycles << "----------------\n";
 			cout << "DRAM Activity: Writeback Row " << rowW << " to Main Memory\n";
 		}
@@ -950,6 +944,9 @@ public:
 };
 
 string MIPS::instructions[10] = {"lw", "sw", "add", "sub", "mul", "addi", "j", "beq", "bne", "slt"};
+
+int Instruction::rowBufferIndex = -1;
+int Instruction::numInstr = 0;
 
 int main(int argc, char **argv)
 {

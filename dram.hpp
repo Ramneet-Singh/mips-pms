@@ -4,33 +4,59 @@
 #include <array>
 #define NUMCOLS 512
 
-class Instruction{
-    
+template <class T, class S, class C>
+S &Container(std::priority_queue<T, S, C> &q)
+{
+    struct HackedQueue : private std::priority_queue<T, S, C>
+    {
+        static S &Container(std::priority_queue<T, S, C> &q)
+        {
+            return q.*&HackedQueue::c;
+        }
+    };
+    return HackedQueue::Container(q);
+}
+
+class Instruction
+{
+
 public:
     static int rowBufferIndex;
+    static int numInstr;
     int type;
     // 0 means lw
     // 1 means sw
     int target;
     int address;
-    std::vector<Instruction*> dependencies;
+    int id;
+    std::vector<Instruction *> dependencies;
 
-    Instruction(int row, int add, int tar, int typ = 0){
-        rowBufferIndex = row;
+    Instruction(int add, int tar, int typ)
+    {
+        id = numInstr++;
         address = add;
         target = tar;
         type = typ;
     }
 
+    bool operator==(const Instruction &rhs) const;
+
     int getRowDifference() const;
 };
-bool operator>(const Instruction &lhs, const Instruction &rhs);
 
+struct CmpInstPtrs
+{
+    bool operator()(const Instruction *lhs, const Instruction *rhs) const
+    {
+        return lhs->getRowDifference() > rhs->getRowDifference();
+    }
+};
 
 class DRAM
 {
 private:
     /*
+        [ASSIGNMENT 4]
         Checks whether the instruction given is conflicting with the second instruction (which is pending in dram)
         The rules for an instruction I and a pending dram instruction D to conflict are:
         1. If D is an sw instruction, then there is no conflict as all it says is to store a certain value at a certain address. 
@@ -40,7 +66,13 @@ private:
            This is because, if it makes use of a value, the programmer expects the lw instruction to have taken place by the time I is executed.
            And if its value changes, then we will change it back to a wrong value after a few cycles if we don't block instruction I.
     */
-    bool isClashing(int *instr, std::array<int, 3> dramInstr);
+    bool isClashing(int *instr, Instruction &dramInstr);
+
+    /*
+        [ASSIGNMENT 4]
+        Called upon completion of the last activity of the currently executing instruction. Deletes it from the pendingInstructionsPriority priority queue and also from the dependencies of each instruction in the queue.
+    */
+    void deleteCurrentInstruction();
 
     /*
         Copy the row at rowIdx to row buffer
@@ -61,20 +93,17 @@ public:
     int rowBuffer[/*CHANGED1024*/ 512];
     int bufferRowIndex;
 
+    int currentInstId;
+
     int rowBufferUpdates;
 
     int ROW_ACCESS_DELAY;
     int COL_ACCESS_DELAY;
 
     /* 
-        Have a FIFO Buffer of pending instructions 
-        Each instruction is of the form:
-        instruction[0] = type ( 0 => lw, 1 => sw )
-        for lw, instruction[1] = target register number, instruction[2] = address
-        for sw, instruction[1] = value to be stored, instruction[2] = address
+        Have a Buffer of pending instructions
     */
-    std::deque<std::array<int, 3>> pendingInstructions;
-    std::priority_queue< Instruction, std::vector<Instruction>, std::greater<Instruction> > pendingInstructionsPriority;
+    std::priority_queue<Instruction *, std::vector<Instruction *>, CmpInstPtrs> pendingInstructionsPriority;
 
     /*
         Have a FIFO Buffer of pending activities of the instruction which is currently being executed
@@ -117,18 +146,29 @@ public:
     void writeback();
 
     /*
+        [ASSIGNMENT 4]
         Adds the activities for a dram instruction. Activities for a lw instruction:
         1. Writeback the row in row buffer
         2. Activate the required row and copy it to row buffer
         3. Copy the data at column offset from row buffer to register
         In case the required row is already present in row buffer, skip activities 2 and 3 
     */
-    void addActivities(std::array<int, 3> dramInstr);
+    void addActivities(Instruction &dramInstr);
 
     /*
         Take the front of the pending activities queue, and move it forward by one cycle
     */
     void performActivity();
+
+    /*
+        Takes in a request from the processor, figures out its dependencies, and adds it to the pendingInstructionsPriority queue.
+    */
+    void addInstruction(Instruction &inst);
+
+    /*
+        Given a  pending DRAM Instruction inst1 and an instruction to be inserted inst2, checks whether inst1 should be added to the dependencies of inst2
+    */
+    bool isConflicting(Instruction &inst1, Instruction &inst2);
 
     /*
         Perform next activity. Checks if there are any already pending activities.
@@ -138,6 +178,12 @@ public:
         If the completed activity was the last one of some instruction, then remove that from the pending instructions
     */
     void executeNext();
+
+    /*
+        It picks the next instruction to be performed from the currently pending instructions in the DRAM.
+        The logic for exploiting row buffer locality is present in this function.
+    */
+    Instruction *scheduleNextInstr();
 
     /*
         Checks if the instruction given is safe to execute before all pending instructions of dram are completed

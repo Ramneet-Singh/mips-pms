@@ -1,28 +1,14 @@
 #include <dram.hpp>
 
-int Instruction::rowBufferIndex = 0;
+using namespace std;
 
-
-bool operator>(const Instruction &lhs, const Instruction &rhs)
-{   
-    return lhs.getRowDifference() > rhs.getRowDifference();
-}
-
-int Instruction::getRowDifference() const{
-    int row_number = address/NUMCOLS;
-    if(row_number>rowBufferIndex){
-        return row_number - rowBufferIndex;
-    }
-    else{
-        return rowBufferIndex - row_number;
-    }
-}
 DRAM::DRAM()
 {
     blockingMode = true;
     ROW_ACCESS_DELAY = 10;
     COL_ACCESS_DELAY = 2;
     bufferRowIndex = -1;
+    Instruction::rowBufferIndex = -1;
 
     for (int i = 0; i < 3; i++)
     {
@@ -37,6 +23,7 @@ DRAM::DRAM(int rowAccessDelay, int colAccessDelay, bool blockMode)
     ROW_ACCESS_DELAY = rowAccessDelay;
     COL_ACCESS_DELAY = colAccessDelay;
     bufferRowIndex = -1;
+    Instruction::rowBufferIndex = -1;
 
     for (int i = 0; i < 3; i++)
     {
@@ -76,6 +63,7 @@ void DRAM::copyToRowBuffer(int rowIndex)
         rowBuffer[i] = Memory[rowIndex][i];
     }
     bufferRowIndex = rowIndex;
+    Instruction::rowBufferIndex = rowIndex;
 }
 
 void DRAM::writeback()
@@ -90,6 +78,7 @@ void DRAM::writeback()
         Memory[bufferRowIndex][i] = rowBuffer[i];
     }
     bufferRowIndex = -1;
+    Instruction::rowBufferIndex = -1;
 }
 
 void DRAM::updateRowBuffer(int columnNum, int val)
@@ -97,14 +86,14 @@ void DRAM::updateRowBuffer(int columnNum, int val)
     rowBuffer[columnNum] = val;
 }
 
-bool DRAM::isClashing(int *instr, std::array<int, 3> dramInstr)
+bool DRAM::isClashing(int *instr, Instruction &dramInstr)
 {
-    if (dramInstr[0] == 1)
+    if (dramInstr.type == 1)
     {
         return false; // sw instruction
     }
 
-    int targetReg = dramInstr[1];
+    int targetReg = dramInstr.target;
     switch (instr[0])
     {
     case 0:
@@ -161,30 +150,34 @@ bool DRAM::isClashing(int *instr, std::array<int, 3> dramInstr)
     }
 }
 
+// [ASSIGNMENT 4]
 bool DRAM::isBlocked(int *instruction)
 {
     if (blockingMode)
     {
-        return !pendingInstructions.empty();
+        return !pendingInstructionsPriority.empty();
     }
 
-    for (auto it = pendingInstructions.begin(); it != pendingInstructions.end(); ++it)
+    vector<Instruction *> &instructs = Container(pendingInstructionsPriority);
+    for (vector<Instruction *>::iterator i = instructs.begin(); i != instructs.end(); i++)
     {
-        if (isClashing(instruction, *it))
+        if (isClashing(instruction, *(*i)))
         {
             return true;
         }
     }
+
     return false;
 }
 
-void DRAM::addActivities(std::array<int, 3> dramInstr)
+// [ASSIGNMENT 4]
+void DRAM::addActivities(Instruction &dramInstr)
 {
-    if (dramInstr[0] == 0)
+    if (dramInstr.type == 0)
     {
         // lw instruction
-        int targetReg = dramInstr[1];
-        int addr = dramInstr[2];
+        int targetReg = dramInstr.target;
+        int addr = dramInstr.address;
 
         std::array<int, 4> activity;
         int targetRow = addr / /*CHANGED1024*/ 512;
@@ -218,8 +211,8 @@ void DRAM::addActivities(std::array<int, 3> dramInstr)
     else
     {
         // sw instruction
-        int value = dramInstr[1];
-        int address = dramInstr[2];
+        int value = dramInstr.target;
+        int address = dramInstr.address;
 
         std::array<int, 4> activity;
         int row = address / /*CHANGED1024*/ 512;
@@ -312,7 +305,8 @@ void DRAM::performActivity()
             // Remove from pending activities
             pendingActivities.pop();
             // Remove its instruction from pending instructions
-            pendingInstructions.pop_front();
+            // [ASSIGNMENT 4]
+            deleteCurrentInstruction();
         }
         break;
     }
@@ -335,7 +329,7 @@ void DRAM::performActivity()
             // Remove from pending activities
             pendingActivities.pop();
             // Remove its instruction from pending instructions
-            pendingInstructions.pop_front();
+            deleteCurrentInstruction();
         }
         break;
     }
@@ -356,14 +350,16 @@ void DRAM::executeNext()
     if (pendingActivities.empty())
     {
         // Check for pending instructions
-        if (pendingInstructions.empty())
+        if (pendingInstructionsPriority.empty())
         {
             return;
         }
 
-        std::array<int, 3> dramInstr = pendingInstructions.front();
+        // [ASSIGNMENT 4]
+        Instruction *nextInstr = scheduleNextInstr();
+        currentInstId = nextInstr->id;
 
-        addActivities(dramInstr);
+        addActivities(*(nextInstr));
     }
 
     performActivity();
