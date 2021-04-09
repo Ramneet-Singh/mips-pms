@@ -28,7 +28,7 @@ void DRAM::addInstruction(Instruction &inst)
     {
         if (isConflicting(*(*i), inst))
         {
-            inst.dependencies.push_back(&inst);
+            inst.dependencies.push_back(&*(*i));
         }
     }
     pendingInstructionsPriority.push(&inst);
