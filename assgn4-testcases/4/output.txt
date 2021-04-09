@@ -1,0 +1,125 @@
+------------Clock Cycle: 1----------------
+lw $10 $0 2004
+
+------------Clock Cycle: 2----------------
+sw $8 $0 1000
+
+------------Clock Cycle: 3----------------
+sw $8 $0 2000
+
+------------Clock Cycle: 4----------------
+addi $8 $8 0
+Register Modified: $8 == $t0 == 0
+
+------------Clock Cycle: 5----------------
+lw $11 $0 2004
+
+------------Clock Cycle: 6----------------
+
+------------Clock Cycle: 7----------------
+
+------------Clock Cycle: 8----------------
+
+------------Clock Cycle: 9----------------
+
+------------Clock Cycle: 10----------------
+
+------------Clock Cycle: 11----------------
+DRAM Activity: Copied Row 3 to Row Buffer
+
+------------Clock Cycle: 12----------------
+
+------------Clock Cycle: 13----------------
+Register Modified: $10 == $t2 == 0
+
+------------Clock Cycle: 14----------------
+sw $10 $0 1000
+
+------------Clock Cycle: 15----------------
+sw $12 $0 2000
+Register Modified: $11 == $t3 == 0
+
+------------Clock Cycle: 16----------------
+addi $12 $12 0
+Register Modified: $12 == $t4 == 0
+
+------------Clock Cycle: 17----------------
+sw $8 $0 1000
+Memory Location Modified: Address == 2000 Value == 0
+
+------------Clock Cycle: 18----------------
+sw $8 $0 1000
+
+------------Clock Cycle: 19----------------
+Memory Location Modified: Address == 2000 Value == 0
+
+------------Clock Cycle: 20----------------
+
+------------Clock Cycle: 21----------------
+
+------------Clock Cycle: 22----------------
+
+------------Clock Cycle: 23----------------
+
+------------Clock Cycle: 24----------------
+
+------------Clock Cycle: 25----------------
+
+------------Clock Cycle: 26----------------
+
+------------Clock Cycle: 27----------------
+
+------------Clock Cycle: 28----------------
+
+------------Clock Cycle: 29----------------
+DRAM Activity: Writeback Row 3 to Main Memory
+
+------------Clock Cycle: 30----------------
+
+------------Clock Cycle: 31----------------
+
+------------Clock Cycle: 32----------------
+
+------------Clock Cycle: 33----------------
+
+------------Clock Cycle: 34----------------
+
+------------Clock Cycle: 35----------------
+
+------------Clock Cycle: 36----------------
+
+------------Clock Cycle: 37----------------
+
+------------Clock Cycle: 38----------------
+
+------------Clock Cycle: 39----------------
+DRAM Activity: Copied Row 1 to Row Buffer
+
+------------Clock Cycle: 40----------------
+
+------------Clock Cycle: 41----------------
+Memory Location Modified: Address == 1000 Value == 0
+
+------------Clock Cycle: 42----------------
+
+------------Clock Cycle: 43----------------
+Memory Location Modified: Address == 1000 Value == 0
+
+------------Clock Cycle: 44----------------
+
+------------Clock Cycle: 45----------------
+Memory Location Modified: Address == 1000 Value == 0
+
+------------Clock Cycle: 46----------------
+
+------------Clock Cycle: 47----------------
+Memory Location Modified: Address == 1000 Value == 0
+
+------------Clock Cycle: 57----------------
+DRAM Activity: Writeback Row 1 to Main Memory
+
+===================================================
+        Total number of clock cycles :          57
+         Number of row buffer updates:           8
+
+===================================================
