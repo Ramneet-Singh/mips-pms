@@ -23,12 +23,10 @@ bool Instruction::operator==(const Instruction &rhs) const
 void DRAM::addInstruction(Instruction &inst)
 {
     // Fill up dependencies vector by iterating over priority queue
-    vector<Instruction *> &instructs = Container(pendingInstructionsPriority);
-    for (vector<Instruction *>::iterator i = instructs.begin(); i != instructs.end(); i++)
-    {
-        if (isConflicting(*(*i), inst))
+    for(auto &i: pendingInstructionsPriority) {
+        if (isConflicting(*i, inst))
         {
-            inst.dependencies.push_back(&*(*i));
+            inst.dependencies.push_back(i);
         }
     }
     pendingInstructionsPriority.push(&inst);

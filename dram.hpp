@@ -4,19 +4,6 @@
 #include <array>
 #define NUMCOLS 512
 
-template <class T, class S, class C>
-S &Container(std::priority_queue<T, S, C> &q)
-{
-    struct HackedQueue : private std::priority_queue<T, S, C>
-    {
-        static S &Container(std::priority_queue<T, S, C> &q)
-        {
-            return q.*&HackedQueue::c;
-        }
-    };
-    return HackedQueue::Container(q);
-}
-
 class Instruction
 {
 
@@ -51,6 +38,13 @@ struct CmpInstPtrs
         return lhs->getRowDifference() > rhs->getRowDifference();
     }
 };
+
+class MyPriorityQueue: public std::priority_queue<Instruction *, std::vector<Instruction *>, CmpInstPtrs> {
+public:
+    decltype(c.begin()) begin() { return c.begin(); }
+    decltype(c.end()) end() { return c.end(); }
+};
+
 
 class DRAM
 {
@@ -103,7 +97,7 @@ public:
     /* 
         Have a Buffer of pending instructions
     */
-    std::priority_queue<Instruction *, std::vector<Instruction *>, CmpInstPtrs> pendingInstructionsPriority;
+    MyPriorityQueue pendingInstructionsPriority;
 
     /*
         Have a FIFO Buffer of pending activities of the instruction which is currently being executed

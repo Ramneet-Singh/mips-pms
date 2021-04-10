@@ -190,9 +190,9 @@ public:
 
 	
 
-	/*           -----------------------------------------------------------------           
+	/*           ================================================================-           
 	                                INSTRUCTION FUNCTIONS
-				 -----------------------------------------------------------------
+				 ================================================================-
 	*/
 
 	void issueLw(int a, int b, int c)
@@ -393,9 +393,9 @@ public:
 		}
 	}
 
-	/*           -----------------------------------------------------------------           
+	/*           ================================================================-           
 	                                PRINTING FUNCTION
-				 -----------------------------------------------------------------
+				 ================================================================-
 	*/
 
 	void printStatistics()
@@ -506,9 +506,9 @@ public:
 		}
 	}
 
-	/*           -----------------------------------------------------------------           
+	/*           ================================================================-           
 	                                INSTRUCTION ENCODING FUNCTIONS
-				 -----------------------------------------------------------------
+				 ================================================================-
 	*/
 
 	void encode(string command, string arguments[], int maxArguments, int instructionIndex)
@@ -674,9 +674,9 @@ public:
 		}
 	}
 
-	/*           -----------------------------------------------------------------           
+	/*           ================================================================-           
 	                                PARSING FUNCTION
-				 -----------------------------------------------------------------
+				 ================================================================-
 	*/
 
 	void readInstructions(string filename)
@@ -785,12 +785,12 @@ public:
 		}
 
 		/*
-		cout << "----------------------------LABELS VECTOR----------------------\n";
+		cout << "================------------LABELS VECTOR================------\n";
 		for (int i = 0; i < labels.size(); i++)
 			cout << labels.at(i) << ' ';
 		cout << "\n";
 
-		cout << "----------------------------LABELS MAP----------------------\n";
+		cout << "================------------LABELS MAP================------\n";
 		for (auto it = labelToAddr.begin(); it != labelToAddr.end(); ++it)
 		{
 			cout << it->first << " => " << it->second << " \n";
@@ -800,9 +800,9 @@ public:
 		infile.close();
 	}
 
-	/*           -----------------------------------------------------------------           
+	/*           ================================================================-           
 	                                EXECUTION FUNCTION
-				 -----------------------------------------------------------------
+				 ================================================================-
 	*/
 
 	void execute()
@@ -813,7 +813,7 @@ public:
 		while (programCounter < instructionIndex)
 		{
 			clockCycles++;
-			cout << "------------Clock Cycle: " << clockCycles << "----------------\n";
+			cout << "==================Clock Cycle: " <<setw(3)<< clockCycles << "==================\n";
 
 			int instructDecoded[maxArguments + 1];
 			decode(programCounter, instructDecoded);
@@ -944,7 +944,7 @@ public:
 		while (!dramMemory.pendingInstructionsPriority.empty())
 		{
 			clockCycles++;
-			cout << "------------Clock Cycle: " << clockCycles << "----------------\n";
+			cout << "==================Clock Cycle: " <<setw(3)<< clockCycles << "==================\n";
 
 			dramMemory.executeNext();
 
@@ -955,14 +955,6 @@ public:
 			}
 
 			cout << "\n";
-		}
-		if (dramMemory.bufferRowIndex != -1)
-		{
-			int rowW = dramMemory.bufferRowIndex;
-			dramMemory.writeback();
-			clockCycles += dramMemory.ROW_ACCESS_DELAY;
-			cout << "------------Clock Cycle: " << clockCycles << "----------------\n";
-			cout << "DRAM Activity: Writeback Row " << rowW << " to Main Memory\n";
 		}
 		cout << "\n";
 		printRegisterContents();

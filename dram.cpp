@@ -157,11 +157,9 @@ bool DRAM::isBlocked(int *instruction)
     {
         return !pendingInstructionsPriority.empty();
     }
-
-    vector<Instruction *> &instructs = Container(pendingInstructionsPriority);
-    for (vector<Instruction *>::iterator i = instructs.begin(); i != instructs.end(); i++)
-    {
-        if (isClashing(instruction, *(*i)))
+    
+    for(auto &i: pendingInstructionsPriority) {
+        if (isClashing(instruction, *i))
         {
             return true;
         }
