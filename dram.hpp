@@ -3,6 +3,8 @@
 #include <queue>
 #include <array>
 #define NUMCOLS 512
+#define NUMROWS 512
+#define LOOK 4
 
 class Instruction
 {
@@ -24,6 +26,27 @@ public:
         address = add;
         target = tar;
         type = typ;
+    }
+
+    Instruction(int idNum, int add, int tar, int typ)
+    {
+        id = idNum;
+        address = add;
+        target = tar;
+        type = typ;
+    }
+
+    Instruction(const Instruction &other) : dependencies(other.dependencies.size())
+    {
+        id = other.id;
+        address = other.address;
+        target = other.target;
+        type = other.type;
+        auto thisit = dependencies.begin();
+        auto thatit = other.dependencies.cbegin();
+
+        for (; thatit != other.dependencies.cend(); ++thisit, ++thatit)
+            *thisit = new Instruction((**thatit).id, (**thatit).address, (**thatit).target, (**thatit).type);
     }
 
     bool operator==(const Instruction &rhs) const;
@@ -96,9 +119,9 @@ private:
 
 public:
     // A 2-D Byte Addressable Memory array
-    int Memory[/*CHANGED1024*/ 512][/*CHANGED1024*/ 512];
+    int Memory[NUMROWS][NUMCOLS];
     // Row Buffer for the DRAM
-    int rowBuffer[/*CHANGED1024*/ 512];
+    int rowBuffer[NUMCOLS];
     int bufferRowIndex;
 
     int currentInstId;
@@ -140,10 +163,14 @@ public:
     */
     int dramCompletedActivity[4];
 
+    // Are we currently in simulation mode or actual execution?
+    bool dryrun;
+
     DRAM();
 
-    DRAM(int rowAccessDelay, int colAccessDelay = 2, bool blockMode = true);
+    DRAM(int rowAccessDelay, int colAccessDelay = 2, bool blockMode = true, bool dry = false);
 
+    DRAM(DRAM &other);
     // 0 cycle delay instruction store and fetch operations
     void store(int address, int val);
     int fetch(int address);
@@ -162,6 +189,12 @@ public:
         In case the required row is already present in row buffer, skip activities 2 and 3 
     */
     void addActivities(Instruction &dramInstr);
+
+    /*
+        [ASSIGNMENT 4]
+        Delete the memory for any dram instructions left when you exit dryrun mode
+    */
+    void deleteAllDryrunInst();
 
     /*
         Take the front of the pending activities queue, and move it forward by one cycle
@@ -192,6 +225,11 @@ public:
         The logic for exploiting row buffer locality is present in this function.
     */
     Instruction *scheduleNextInstr();
+
+    /*
+        Checks if a new instruction's execution will be started in this cycle. If it will, checks which instruction will be scheduled. Returns true only if this instruction would require a writeback and false in all other cases
+    */
+    bool willPerformWritebackNext();
 
     /*
         Checks if the instruction given is safe to execute before all pending instructions of dram are completed

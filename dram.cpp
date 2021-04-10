@@ -5,6 +5,7 @@ using namespace std;
 DRAM::DRAM()
 {
     blockingMode = true;
+    dryrun = false;
     ROW_ACCESS_DELAY = 10;
     COL_ACCESS_DELAY = 2;
     bufferRowIndex = -1;
@@ -17,9 +18,10 @@ DRAM::DRAM()
     rowBufferUpdates = 0;
 }
 
-DRAM::DRAM(int rowAccessDelay, int colAccessDelay, bool blockMode)
+DRAM::DRAM(int rowAccessDelay, int colAccessDelay, bool blockMode, bool dry)
 {
     blockingMode = blockMode;
+    dryrun = dry;
     ROW_ACCESS_DELAY = rowAccessDelay;
     COL_ACCESS_DELAY = colAccessDelay;
     bufferRowIndex = -1;
@@ -32,6 +34,38 @@ DRAM::DRAM(int rowAccessDelay, int colAccessDelay, bool blockMode)
     rowBufferUpdates = 0;
 }
 
+DRAM::DRAM(DRAM &other)
+{
+    blockingMode = other.blockingMode;
+    for (int i = 0; i < NUMROWS; i++)
+    {
+        for (int j = 0; j < NUMCOLS; j++)
+        {
+            Memory[i][j] = other.Memory[i][j];
+        }
+    }
+    for (int k = 0; k < NUMCOLS; k++)
+    {
+        rowBuffer[k] = other.rowBuffer[k];
+    }
+    bufferRowIndex = other.bufferRowIndex;
+    currentInstId = other.currentInstId;
+    rowBufferUpdates = other.rowBufferUpdates;
+    ROW_ACCESS_DELAY = other.ROW_ACCESS_DELAY;
+    COL_ACCESS_DELAY = other.COL_ACCESS_DELAY;
+    pendingActivities = other.pendingActivities;
+    for (int i = 0; i < 3; i++)
+    {
+        dramCompletedActivity[i] = other.dramCompletedActivity[i];
+    }
+    dryrun = other.dryrun;
+
+    for (auto &i : other.pendingInstructionsPriority)
+    {
+        pendingInstructionsPriority.push(new Instruction(*i));
+    }
+}
+
 void DRAM::store(int address, int val)
 {
     if (address < 0 || address >= (sizeof(Memory) / sizeof(Memory[0][0])))
@@ -39,8 +73,8 @@ void DRAM::store(int address, int val)
         throw "Error: Invalid address being stored to: " + std::to_string(address);
     }
 
-    int row = address / /*CHANGED1024*/ 512;
-    int col = address % /*CHANGED1024*/ 512;
+    int row = address / NUMCOLS;
+    int col = address % NUMCOLS;
     Memory[row][col] = val;
 }
 
@@ -51,14 +85,14 @@ int DRAM::fetch(int address)
         throw "Error: Invalid address being stored to: " + std::to_string(address);
     }
 
-    int row = address / /*CHANGED1024*/ 512;
-    int col = address % /*CHANGED1024*/ 512;
+    int row = address / NUMCOLS;
+    int col = address % NUMCOLS;
     return Memory[row][col];
 }
 
 void DRAM::copyToRowBuffer(int rowIndex)
 {
-    for (int i = 0; i < /*CHANGED1024*/ 512; i++)
+    for (int i = 0; i < NUMCOLS; i++)
     {
         rowBuffer[i] = Memory[rowIndex][i];
     }
@@ -68,12 +102,12 @@ void DRAM::copyToRowBuffer(int rowIndex)
 
 void DRAM::writeback()
 {
-    if (bufferRowIndex < 0 || bufferRowIndex >= /*CHANGED1024*/ 512)
+    if (bufferRowIndex < 0 || bufferRowIndex >= NUMROWS)
     {
         return;
     }
 
-    for (int i = 0; i < /*CHANGED1024*/ 512; i++)
+    for (int i = 0; i < NUMCOLS; i++)
     {
         Memory[bufferRowIndex][i] = rowBuffer[i];
     }
@@ -157,8 +191,9 @@ bool DRAM::isBlocked(int *instruction)
     {
         return !pendingInstructionsPriority.empty();
     }
-    
-    for(auto &i: pendingInstructionsPriority) {
+
+    for (auto &i : pendingInstructionsPriority)
+    {
         if (isClashing(instruction, *i))
         {
             return true;
@@ -178,8 +213,8 @@ void DRAM::addActivities(Instruction &dramInstr)
         int addr = dramInstr.address;
 
         std::array<int, 4> activity;
-        int targetRow = addr / /*CHANGED1024*/ 512;
-        int targetCol = addr % /*CHANGED1024*/ 512;
+        int targetRow = addr / NUMCOLS;
+        int targetCol = addr % NUMCOLS;
 
         // Check if row is already loaded into buffer
         if (bufferRowIndex != targetRow)
@@ -213,8 +248,8 @@ void DRAM::addActivities(Instruction &dramInstr)
         int address = dramInstr.address;
 
         std::array<int, 4> activity;
-        int row = address / /*CHANGED1024*/ 512;
-        int col = address % /*CHANGED1024*/ 512;
+        int row = address / NUMCOLS;
+        int col = address % NUMCOLS;
 
         // Check if row is already loaded into buffer
         if (bufferRowIndex != row)
@@ -320,7 +355,7 @@ void DRAM::performActivity()
             updateRowBuffer(act[1], act[2]);
             // Put this inside the completed activity
             dramCompletedActivity[0] = act[0];
-            dramCompletedActivity[1] = ((bufferRowIndex * /*CHANGED1024*/ 512) + act[1]);
+            dramCompletedActivity[1] = ((bufferRowIndex * NUMCOLS) + act[1]);
             dramCompletedActivity[2] = act[2];
             // Increment the number of row buffer updates
             rowBufferUpdates++;

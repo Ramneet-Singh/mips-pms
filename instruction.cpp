@@ -143,6 +143,14 @@ void DRAM::deleteCurrentInstruction()
         pendingInstructionsPriority.pop();
     }
 
+    if (dryrun)
+    {
+        for (auto it = deleteInstPtr->dependencies.begin(); it != deleteInstPtr->dependencies.end(); it++)
+        {
+            delete (*it);
+        }
+    }
+
     delete deleteInstPtr;
 
     Instruction *auxPtr;
@@ -151,5 +159,57 @@ void DRAM::deleteCurrentInstruction()
         auxPtr = auxilliary.front();
         pendingInstructionsPriority.push(auxPtr);
         auxilliary.pop();
+    }
+}
+
+bool DRAM::willPerformWritebackNext()
+{
+    if (!pendingActivities.empty())
+    {
+        return false;
+    }
+    if (pendingInstructionsPriority.empty())
+    {
+        return false;
+    }
+
+    queue<Instruction *> auxilliary;
+    Instruction *instPtr;
+    instPtr = pendingInstructionsPriority.top();
+    while (!instPtr->dependencies.empty())
+    {
+        auxilliary.push(instPtr);
+        pendingInstructionsPriority.pop();
+        if (pendingInstructionsPriority.empty())
+        {
+            cerr << "ERROR: There are no instructions with empty dependencies!" << endl;
+            exit(EXIT_FAILURE);
+        }
+        instPtr = pendingInstructionsPriority.top();
+    }
+
+    // assert: We have found the lowest priority instruction with empty dependencies
+    // Insert the popped instructions back into the priority queue
+    Instruction *auxPtr;
+    while (!auxilliary.empty())
+    {
+        auxPtr = auxilliary.front();
+        pendingInstructionsPriority.push(auxPtr);
+        auxilliary.pop();
+    }
+    bool isDiffRow = ((instPtr->address / NUMCOLS) != bufferRowIndex) && (bufferRowIndex != -1);
+    pendingInstructionsPriority.push(instPtr);
+    return isDiffRow;
+}
+
+void DRAM::deleteAllDryrunInst()
+{
+    for (auto &i : pendingInstructionsPriority)
+    {
+        for (auto it = i->dependencies.begin(); it != i->dependencies.end(); it++)
+        {
+            delete (*it);
+        }
+        delete i;
     }
 }
