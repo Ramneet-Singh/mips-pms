@@ -35,16 +35,30 @@ struct CmpInstPtrs
 {
     bool operator()(const Instruction *lhs, const Instruction *rhs) const
     {
+        /*  OLDEST FIRST ALGORITHM INSTEAD OF CLOSEST ROW FIRST
+        * if(lhs->getRowDifference()==0)
+        * {
+        *     return false; 
+        * }
+        * else if(rhs->getRowDifference()==0)
+        * {
+        *     return true;
+        * }
+        * else
+        * {
+        *     return lhs->id > rhs->id;
+        * }
+        */
         return lhs->getRowDifference() > rhs->getRowDifference();
     }
 };
 
-class MyPriorityQueue: public std::priority_queue<Instruction *, std::vector<Instruction *>, CmpInstPtrs> {
+class MyPriorityQueue : public std::priority_queue<Instruction *, std::vector<Instruction *>, CmpInstPtrs>
+{
 public:
     decltype(c.begin()) begin() { return c.begin(); }
     decltype(c.end()) end() { return c.end(); }
 };
-
 
 class DRAM
 {
