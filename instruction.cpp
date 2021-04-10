@@ -2,6 +2,8 @@
 
 using namespace std;
 
+// [ASSIGNMENT 4]
+
 int Instruction::getRowDifference() const
 {
     int row_number = address / NUMCOLS;
@@ -18,21 +20,6 @@ int Instruction::getRowDifference() const
 bool Instruction::operator==(const Instruction &rhs) const
 {
     return rhs.id == id;
-}
-
-void DRAM::addInstruction(Instruction &inst)
-{
-    // Fill up dependencies vector by iterating over priority queue
-    for (auto &i : pendingInstructionsPriority)
-    {
-        // (*i).to_string();
-        if (isConflicting(*i, inst))
-        {
-
-            inst.dependencies.push_back(new Instruction((*i).id, (*i).address, (*i).target, (*i).type));
-        }
-    }
-    pendingInstructionsPriority.push(&inst);
 }
 
 bool DRAM::isConflicting(Instruction &inst1, Instruction &inst2)
@@ -77,6 +64,22 @@ bool DRAM::isConflicting(Instruction &inst1, Instruction &inst2)
     }
     return false;
 }
+
+void DRAM::addInstruction(Instruction &inst)
+{
+    // Fill up dependencies vector by iterating over priority queue
+    for (auto &i : pendingInstructionsPriority)
+    {
+        // (*i).to_string();
+        if (isConflicting(*i, inst))
+        {
+
+            inst.dependencies.push_back(new Instruction((*i).id, (*i).address, (*i).target, (*i).type));
+        }
+    }
+    pendingInstructionsPriority.push(&inst);
+}
+
 
 Instruction *DRAM::scheduleNextInstr()
 {
@@ -221,4 +224,63 @@ void DRAM::deleteAllDryrunInst()
         i->dependencies.clear();
         delete i;
     }
+}
+
+
+
+DRAM::DRAM(DRAM &other)
+{
+    blockingMode = other.blockingMode;
+    for (int i = 0; i < NUMROWS; i++)
+    {
+        for (int j = 0; j < NUMCOLS; j++)
+        {
+            Memory[i][j] = other.Memory[i][j];
+        }
+    }
+    for (int k = 0; k < NUMCOLS; k++)
+    {
+        rowBuffer[k] = other.rowBuffer[k];
+    }
+    bufferRowIndex = other.bufferRowIndex;
+    currentInstId = other.currentInstId;
+    rowBufferUpdates = other.rowBufferUpdates;
+    ROW_ACCESS_DELAY = other.ROW_ACCESS_DELAY;
+    COL_ACCESS_DELAY = other.COL_ACCESS_DELAY;
+    pendingActivities = other.pendingActivities;
+    for (int i = 0; i < 3; i++)
+    {
+        dramCompletedActivity[i] = other.dramCompletedActivity[i];
+    }
+    dryrun = other.dryrun;
+
+    for (auto &i : other.pendingInstructionsPriority)
+    {
+        pendingInstructionsPriority.push(new Instruction(*i));
+    }
+}
+
+void DRAM::executeNext()
+{
+    for (int i = 0; i < 4; i++)
+    {
+        dramCompletedActivity[i] = -1;
+    }
+
+    if (pendingActivities.empty())
+    {
+        // Check for pending instructions
+        if (pendingInstructionsPriority.empty())
+        {
+            return;
+        }
+
+        // [ASSIGNMENT 4]
+        Instruction *nextInstr = scheduleNextInstr();
+        currentInstId = nextInstr->id;
+
+        addActivities(*(nextInstr));
+    }
+
+    performActivity();
 }

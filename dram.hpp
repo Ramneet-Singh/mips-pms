@@ -6,6 +6,8 @@
 #define NUMROWS 1024
 #define LOOK 4
 
+
+// [ASSIGNMENT 4]
 class Instruction
 {
 
@@ -87,6 +89,25 @@ public:
     decltype(c.end()) end() { return c.end(); }
 };
 
+// [ASSIGNMENT 4 ends]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class DRAM
 {
 private:
@@ -135,6 +156,23 @@ public:
     int ROW_ACCESS_DELAY;
     int COL_ACCESS_DELAY;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // [ASSIGNMENT 4]
+    // Are we currently in simulation mode or actual execution?
+    bool dryrun;
     /* 
         Have a Buffer of pending instructions
     */
@@ -161,14 +199,73 @@ public:
     std::queue<std::array<int, 4>> pendingActivities;
 
     /*
+        Delete the memory for any dram instructions left when you exit dryrun mode
+    */
+    void deleteAllDryrunInst();
+
+    /*
+    Takes in a request from the processor, figures out its dependencies, and adds it to the pendingInstructionsPriority queue.
+    */
+    void addInstruction(Instruction &inst);
+
+    /*
+        It picks the next instruction to be performed from the currently pending instructions in the DRAM.
+        The logic for exploiting row buffer locality is present in this function.
+    */
+    Instruction *scheduleNextInstr();
+
+    /*
+    Checks if a new instruction's execution will be started in this cycle. If it will, checks which instruction will be scheduled. Returns true only if this instruction would require a writeback and false in all other cases
+    */
+    bool willPerformWritebackNext();
+
+    /*
+        Checks if the instruction given is safe to execute before all pending instructions of dram are completed
+        Iterates through the deque of pending instructions and checks one by one whether there is a conflict between this and the given instruction
+    */
+    bool isBlocked(int *instruction);
+    /*
+        Adds the activities for a dram instruction. Activities for a lw instruction:
+        1. Writeback the row in row buffer
+        2. Activate the required row and copy it to row buffer
+        3. Copy the data at column offset from row buffer to register
+        In case the required row is already present in row buffer, skip activities 2 and 3 
+    */
+    void addActivities(Instruction &dramInstr);
+
+    /*
+        Given a  pending DRAM Instruction inst1 and an instruction to be inserted inst2, checks whether inst1 should be added to the dependencies of inst2
+    */
+    bool isConflicting(Instruction &inst1, Instruction &inst2);
+
+
+    // [ASSIGNMENT 4 ends] 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*
         Have an array to store the comleted activity in current cycle if any
         dramCompletedActivity[0] = -1 means there are none in this cycle
         set dramCompletedActivity[0] to -1 after printing out the activity
     */
     int dramCompletedActivity[4];
 
-    // Are we currently in simulation mode or actual execution?
-    bool dryrun;
+
 
     DRAM();
 
@@ -185,35 +282,10 @@ public:
     void writeback();
 
     /*
-        [ASSIGNMENT 4]
-        Adds the activities for a dram instruction. Activities for a lw instruction:
-        1. Writeback the row in row buffer
-        2. Activate the required row and copy it to row buffer
-        3. Copy the data at column offset from row buffer to register
-        In case the required row is already present in row buffer, skip activities 2 and 3 
-    */
-    void addActivities(Instruction &dramInstr);
-
-    /*
-        [ASSIGNMENT 4]
-        Delete the memory for any dram instructions left when you exit dryrun mode
-    */
-    void deleteAllDryrunInst();
-
-    /*
         Take the front of the pending activities queue, and move it forward by one cycle
     */
     void performActivity();
-
-    /*
-        Takes in a request from the processor, figures out its dependencies, and adds it to the pendingInstructionsPriority queue.
-    */
-    void addInstruction(Instruction &inst);
-
-    /*
-        Given a  pending DRAM Instruction inst1 and an instruction to be inserted inst2, checks whether inst1 should be added to the dependencies of inst2
-    */
-    bool isConflicting(Instruction &inst1, Instruction &inst2);
+    
 
     /*
         Perform next activity. Checks if there are any already pending activities.
@@ -224,20 +296,5 @@ public:
     */
     void executeNext();
 
-    /*
-        It picks the next instruction to be performed from the currently pending instructions in the DRAM.
-        The logic for exploiting row buffer locality is present in this function.
-    */
-    Instruction *scheduleNextInstr();
 
-    /*
-        Checks if a new instruction's execution will be started in this cycle. If it will, checks which instruction will be scheduled. Returns true only if this instruction would require a writeback and false in all other cases
-    */
-    bool willPerformWritebackNext();
-
-    /*
-        Checks if the instruction given is safe to execute before all pending instructions of dram are completed
-        Iterates through the deque of pending instructions and checks one by one whether there is a conflict between this and the given instruction
-    */
-    bool isBlocked(int *instruction);
 };
