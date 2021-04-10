@@ -52,9 +52,13 @@ private:
 	vector<string> labels;
 	map<string, int> labelToAddr;
 
+	vector<int> addressesAccessed;
+
 public:
 	// Instruction mapping
 	static string instructions[10];
+	static string registerNames[32];
+	int no_exec_instructions[10];
 	int maxArguments;
 	bool firstLoad;
 	DRAM dramMemory;
@@ -62,45 +66,23 @@ public:
 public:
 	MIPS(int rowAccessDelay, int colAccessDelay, bool blockMode)
 	{
+		
 		dramMemory = DRAM(rowAccessDelay, colAccessDelay, blockMode);
 		firstLoad = true;
 
 		maxArguments = 3;
 		clockCycles = 0;
 
-		registers[0].setName("zero");
-		registers[0].setContent(0);
-		registers[1].setName("at");
-		registers[2].setName("v0");
-		registers[3].setName("v1");
-		registers[4].setName("a0");
-		registers[5].setName("a1");
-		registers[6].setName("a2");
-		registers[7].setName("a3");
-		registers[8].setName("t0");
-		registers[9].setName("t1");
-		registers[10].setName("t2");
-		registers[11].setName("t3");
-		registers[12].setName("t4");
-		registers[13].setName("t5");
-		registers[14].setName("t6");
-		registers[15].setName("t7");
-		registers[16].setName("s0");
-		registers[17].setName("s1");
-		registers[18].setName("s2");
-		registers[19].setName("s3");
-		registers[20].setName("s4");
-		registers[21].setName("s5");
-		registers[22].setName("s6");
-		registers[23].setName("s7");
-		registers[24].setName("t8");
-		registers[25].setName("t9");
-		registers[26].setName("k0");
-		registers[27].setName("k1");
-		registers[28].setName("gp");
-		registers[29].setName("sp");
-		registers[30].setName("fp");
-		registers[31].setName("ra");
+		for(int i = 0; i<32; i++){
+			registers[i].setName(registerNames[i]);
+			registers[i].setContent(0);
+		}
+		
+
+		for (int i = 0; i < 10; i++)
+		{
+			no_exec_instructions[i] = 0;
+		}
 	}
 
 	void throwError(string argument, int ErrorType)
@@ -206,14 +188,7 @@ public:
 		}
 	}
 
-	void printRegisterContents()
-	{
-		cout << setw(6) << "Reg no." << setw(11) << "Reg name" << setw(15) << "Content" << '\n';
-		for (int i = 0; i < 32; i++)
-		{
-			cout << setw(6) << i << setw(11) << registers[i].name << setw(15) << registers[i].getHex() << '\n';
-		}
-	}
+	
 
 	/*           -----------------------------------------------------------------           
 	                                INSTRUCTION FUNCTIONS
@@ -231,6 +206,7 @@ public:
 			throwError(to_string(b), 1);
 		}
 		int addr = registers[b].content + c;
+		addressesAccessed.push_back(addr);
 		if (addr >= (sizeof(dramMemory.Memory) / sizeof(**dramMemory.Memory)) || addr < instructionIndex)
 		{
 			throwError(to_string(addr), 2);
@@ -258,6 +234,7 @@ public:
 			throwError(to_string(b), 1);
 		}
 		int addr = registers[b].content + c;
+		addressesAccessed.push_back(addr);
 		int val = registers[a].content;
 		if (addr >= (sizeof(dramMemory.Memory) / sizeof(**dramMemory.Memory)) || addr < instructionIndex)
 		{
@@ -423,10 +400,57 @@ public:
 
 	void printStatistics()
 	{
+		cout << "====================================================\n\n";
+		cout << setw(35) << "Total number of clock cycles :  " << setw(10) << clockCycles << '\n';
+		cout << setw(35) << "Number of row buffer updates :  " << setw(10) << dramMemory.rowBufferUpdates;
+
+		cout << "\n\n===================================================\n";
+		// printing number of times each instruction was executed
+		cout<< "   Number of times each instruction was executed:\n";
 		cout << "===================================================\n";
-		cout << setw(40) << "Total number of clock cycles :  " << setw(10) << clockCycles << '\n';
-		cout << setw(40) << "Number of row buffer updates:  " << setw(10) << dramMemory.rowBufferUpdates << '\n';
-		cout << "\n===================================================\n";
+		cout << setw(18) << "Instruction" << setw(19) << "Executed\n";
+		for (int i = 0; i < 10; i++)
+		{
+			cout << setw(18) << instructions[i] << setw(9) << no_exec_instructions[i] << setw(10) << " time(s)\n";
+		}
+		cout << "====================================================\n";
+	}
+
+	void printMemory()
+	{
+		cout << "====================================================\n";
+		cout << "Accessed memory content at the end of the execution:\n";
+		cout << "====================================================\n";
+		cout << setw(20) << "Memory address:" << setw(25)<< "Memory content:\n";
+
+		sort( addressesAccessed.begin(), addressesAccessed.end() );
+		addressesAccessed.erase( unique( addressesAccessed.begin(), addressesAccessed.end() ), addressesAccessed.end() );
+
+		for (auto& address : addressesAccessed) {
+			int col = address % 512;
+			int row = (address-col) / 512;
+			stringstream stream;
+			if(row == dramMemory.bufferRowIndex){
+				stream << "0x"<< hex << dramMemory.rowBuffer[col];
+				cout <<setw(20)<< to_string(address) + " - " + to_string(address+3)  << setw(13)<< stream.str() << setw(12)<< to_string(dramMemory.rowBuffer[col]) + "\n";
+			}
+			else{
+				stream << "0x"<< hex << dramMemory.Memory[row][col];
+				cout <<setw(20)<< to_string(address) + " - " + to_string(address+3)  << setw(13)<< stream.str() << setw(12)<< to_string(dramMemory.Memory[row][col]) + "\n";
+			}
+	    }
+	}
+
+	void printRegisterContents()
+	{
+		cout << "====================================================\n";
+		cout<< "  Register contents at the end of the execution:\n";
+		cout << "====================================================\n";
+		cout << setw(6) << "Reg no." << setw(11) << "Reg name" << setw(15) << "Content-Dec" << setw(15) << "Content-Hex" << '\n';
+		for (int i = 0; i < 32; i++)
+		{
+			cout << setw(6) << i << setw(11) << registers[i].name << setw(15) << registers[i].content << setw(15) << registers[i].getHex() << '\n';
+		}
 	}
 
 	void handleActivity()
@@ -474,11 +498,11 @@ public:
 		}
 		else if (instr[0] == 1 || instr[0] == 0 || instr[0] == 5 || instr[0] == 7 || instr[0] == 8)
 		{
-			cout << instructions[instr[0]] << " $" << instr[1] << " $" << instr[2] << " " << instr[3] << '\n';
+			cout << instructions[instr[0]] << " $" << registerNames[instr[1]] << " $" << registerNames[instr[2]] << " " << instr[3] << '\n';
 		}
 		else
 		{
-			cout << instructions[instr[0]] << " $" << instr[1] << " $" << instr[2] << " $" << instr[3] << '\n';
+			cout << instructions[instr[0]] << " $" << registerNames[instr[1]] << " $" << registerNames[instr[2]] << " $" << registerNames[instr[3]] << '\n';
 		}
 	}
 
@@ -802,6 +826,8 @@ public:
 			// If we can execute the next instruction, do it
 			if (issueNext)
 			{
+				if (instructDecoded[0] < 10){ no_exec_instructions[instructDecoded[0]] += 1; }
+
 				printInstruction(instructDecoded);
 
 				switch (instructDecoded[0])
@@ -939,11 +965,14 @@ public:
 			cout << "DRAM Activity: Writeback Row " << rowW << " to Main Memory\n";
 		}
 		cout << "\n";
+		printRegisterContents();
+		printMemory();
 		printStatistics();
 	}
 };
 
 string MIPS::instructions[10] = {"lw", "sw", "add", "sub", "mul", "addi", "j", "beq", "bne", "slt"};
+string MIPS::registerNames[32] = {"zero", "at", "v0", "v1", "a0", "a1", "a2", "a3", "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra"};
 
 int Instruction::rowBufferIndex = -1;
 int Instruction::numInstr = 0;
