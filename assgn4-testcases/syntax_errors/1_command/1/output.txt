@@ -1,0 +1,2 @@
+Error: The instruction "mustafa" is either undefined or out of scope of this assignment.
+Kindly use add, sub, mul, beq, bne, slt, j, lw, sw, addi instructions only

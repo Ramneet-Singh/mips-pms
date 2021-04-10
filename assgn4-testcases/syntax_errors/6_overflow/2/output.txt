@@ -1,0 +1,11 @@
+==================Clock Cycle:   1==================
+Instruction: addi $t0 $zero -2147483648 issued. Memory address : 0 - 3
+Register Modified: $8 == $t0 == -2147483648
+
+==================Clock Cycle:   2==================
+Instruction: addi $t1 $zero 1 issued. Memory address : 4 - 7
+Register Modified: $9 == $t1 == 1
+
+==================Clock Cycle:   3==================
+Instruction: sub $t2 $t0 $t1 issued. Memory address : 8 - 11
+Error: The instruction: sub $t2 $t0 $t1 is causing integer overflow
