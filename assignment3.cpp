@@ -515,15 +515,15 @@ public:
 	{
 		if (instr[0] == 6)
 		{
-			cout << instructions[instr[0]] << " " << instr[1] << "\n";
+			cout << instructions[instr[0]] << " " << instr[1];
 		}
 		else if (instr[0] == 1 || instr[0] == 0 || instr[0] == 5 || instr[0] == 7 || instr[0] == 8)
 		{
-			cout << instructions[instr[0]] << " $" << registerNames[instr[1]] << " $" << registerNames[instr[2]] << " " << instr[3] << '\n';
+			cout << instructions[instr[0]] << " $" << registerNames[instr[1]] << " $" << registerNames[instr[2]] << " " << instr[3];
 		}
 		else
 		{
-			cout << instructions[instr[0]] << " $" << registerNames[instr[1]] << " $" << registerNames[instr[2]] << " $" << registerNames[instr[3]] << '\n';
+			cout << instructions[instr[0]] << " $" << registerNames[instr[1]] << " $" << registerNames[instr[2]] << " $" << registerNames[instr[3]];
 		}
 	}
 
@@ -558,7 +558,12 @@ public:
 			{
 				//Then there is no base register given
 				baseRegister = 0;
-				offset = stoi(arguments[1], nullptr, 0);
+				try{
+					offset = stoi(arguments[1], nullptr, 0);
+				}
+				catch (std::out_of_range& e) {
+					throwError(arguments[1], 2);
+				}
 			}
 			else
 			{
@@ -573,7 +578,12 @@ public:
 					throwError(command, 6);
 				}
 				baseRegister = stoi(thirdArg);
-				offset = stoi(secondArg, nullptr, 0);
+				try{
+					offset = stoi(secondArg, nullptr, 0);
+				}
+				catch (std::out_of_range& e) {
+					throwError(secondArg, 2);
+				}
 			}
 			dramMemory.store(instructionIndex + 1, registerNo);
 			dramMemory.store(instructionIndex + 2, baseRegister);
@@ -1026,7 +1036,10 @@ int MIPS::execute(int numLook, int targetRow)
 					no_exec_instructions[instructDecoded[0]] += 1;
 				}
 
+				cout << "Instruction: ";
 				printInstruction(instructDecoded);
+				cout<<" issued. Memory address : " << programCounter <<" - "<<programCounter+3<<'\n' ;
+				// printInstruction(instructDecoded);
 
 				switch (instructDecoded[0])
 				{
