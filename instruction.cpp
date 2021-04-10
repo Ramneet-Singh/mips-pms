@@ -23,7 +23,8 @@ bool Instruction::operator==(const Instruction &rhs) const
 void DRAM::addInstruction(Instruction &inst)
 {
     // Fill up dependencies vector by iterating over priority queue
-    for(auto &i: pendingInstructionsPriority) {
+    for (auto &i : pendingInstructionsPriority)
+    {
         if (isConflicting(*i, inst))
         {
             inst.dependencies.push_back(i);
@@ -109,6 +110,7 @@ void DRAM::deleteCurrentInstruction()
 {
     int targetId = currentInstId;
 
+    Instruction *deleteInstPtr;
     queue<Instruction *> auxilliary;
     while (!pendingInstructionsPriority.empty())
     {
@@ -136,10 +138,12 @@ void DRAM::deleteCurrentInstruction()
         }
         else
         {
-            delete instPtr;
+            deleteInstPtr = instPtr;
         }
         pendingInstructionsPriority.pop();
     }
+
+    delete deleteInstPtr;
 
     Instruction *auxPtr;
     while (!auxilliary.empty())
