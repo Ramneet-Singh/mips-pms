@@ -63,6 +63,8 @@ public:
 	bool firstLoad;
 	DRAM dramMemory;
 	int programCounter;
+
+	// [ASSIGNMENT 4]
 	// Are we simulating an execution or not?
 	bool dryrun;
 	// If we are making the dram wait, till what clock cycle number? If not, we set it to -1
@@ -226,6 +228,7 @@ public:
 			throwError("lw $" + registers[a].name + " " + to_string(c) + "($" + registers[b].name + ")", 10);
 		}
 
+		// [ASSIGNMENT 4]
 		Instruction *dramInstr = new Instruction(addr, a, 0);
 		dramMemory.addInstruction(*dramInstr);
 	}
@@ -251,6 +254,7 @@ public:
 			throwError("sw $" + to_string(a) + " " + to_string(c) + "($" + registers[b].name + ")", 10);
 		}
 
+		// [ASSIGNMENT 4]
 		Instruction *dramInstr = new Instruction(addr, val, 1);
 		dramMemory.addInstruction(*dramInstr);
 	}
@@ -861,6 +865,7 @@ int MIPS::execute(int numLook, int targetRow)
 	int i = 0;
 	while ((i < numLook || !dryrun) && programCounter < instructionIndex)
 	{
+		// [ASSIGNMENT 4]
 		if (dryrun)
 		{
 			clockCycles++;
@@ -1005,6 +1010,7 @@ int MIPS::execute(int numLook, int targetRow)
 			// Check if we can issue the next instruction
 			bool issueNext = !(dramMemory.isBlocked(instructDecoded));
 
+			// [ASSIGNMENT 4]
 			if (dramMemory.willPerformWritebackNext())
 			{
 				waitDramTill = lookahead(LOOK, *this, dramMemory.bufferRowIndex);
@@ -1037,7 +1043,6 @@ int MIPS::execute(int numLook, int targetRow)
 					no_exec_instructions[instructDecoded[0]] += 1;
 				}
 
-				cout << "Instruction: ";
 				printInstruction(instructDecoded);
 				cout<<" issued. Memory address : " << programCounter <<" - "<<programCounter+3<<'\n' ;
 				// printInstruction(instructDecoded);
@@ -1154,6 +1159,7 @@ int MIPS::execute(int numLook, int targetRow)
 		}
 	}
 
+	// [ASSIGNMENT 4]
 	if ((i >= numLook || programCounter >= instructionIndex) && dryrun)
 	{
 		return -1;

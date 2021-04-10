@@ -1,3 +1,3 @@
 ==================Clock Cycle:   1==================
-Instruction: sw $ $zero 9 issued. Memory address : 0 - 3
+sw $ $zero 9 issued. Memory address : 0 - 3
 Error: Register 44 not found!

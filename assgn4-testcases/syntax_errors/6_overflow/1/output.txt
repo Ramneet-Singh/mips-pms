@@ -1,11 +1,11 @@
 ==================Clock Cycle:   1==================
-Instruction: addi $t0 $zero 2147483647 issued. Memory address : 0 - 3
+addi $t0 $zero 2147483647 issued. Memory address : 0 - 3
 Register Modified: $8 == $t0 == 2147483647
 
 ==================Clock Cycle:   2==================
-Instruction: addi $t1 $zero 2 issued. Memory address : 4 - 7
+addi $t1 $zero 2 issued. Memory address : 4 - 7
 Register Modified: $9 == $t1 == 2
 
 ==================Clock Cycle:   3==================
-Instruction: add $t2 $t1 $t0 issued. Memory address : 8 - 11
+add $t2 $t1 $t0 issued. Memory address : 8 - 11
 Error: The instruction: add $t2 $t1 $t0 is causing integer overflow

@@ -25,8 +25,10 @@ void DRAM::addInstruction(Instruction &inst)
     // Fill up dependencies vector by iterating over priority queue
     for (auto &i : pendingInstructionsPriority)
     {
+        // (*i).to_string();
         if (isConflicting(*i, inst))
         {
+
             inst.dependencies.push_back(new Instruction((*i).id, (*i).address, (*i).target, (*i).type));
         }
     }
@@ -114,23 +116,31 @@ void DRAM::deleteCurrentInstruction()
     queue<Instruction *> auxilliary;
     while (!pendingInstructionsPriority.empty())
     {
+        
         Instruction *instPtr;
+        bool found = false;
         instPtr = pendingInstructionsPriority.top();
-        vector<Instruction *>::iterator deleteIt;
-        vector<Instruction *>::iterator it = instPtr->dependencies.begin();
-        while (it != instPtr->dependencies.end())
-        {
-            if ((*it)->id == currentInstId)
+        do{
+
+            found = false;
+            vector<Instruction *>::iterator deleteIt;
+            vector<Instruction *>::iterator it = instPtr->dependencies.begin();
+            while (it != instPtr->dependencies.end())
             {
-                break;
+                if ((*it)->id == currentInstId)
+                {
+                    found = true;
+                    break;
+                }
+                it++;
             }
-            it++;
+            deleteIt = it;
+            if (deleteIt != instPtr->dependencies.end())
+            {
+                instPtr->dependencies.erase(deleteIt);
+            }
         }
-        deleteIt = it;
-        if (deleteIt != instPtr->dependencies.end())
-        {
-            instPtr->dependencies.erase(deleteIt);
-        }
+        while(found);
 
         if (instPtr->id != targetId)
         {

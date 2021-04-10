@@ -2,8 +2,8 @@
 #include <deque>
 #include <queue>
 #include <array>
-#define NUMCOLS 512
-#define NUMROWS 512
+#define NUMCOLS 1024
+#define NUMROWS 1024
 #define LOOK 4
 
 class Instruction
@@ -52,6 +52,10 @@ public:
     bool operator==(const Instruction &rhs) const;
 
     int getRowDifference() const;
+
+    void to_string(){
+        std::cout<<"ID: "<<id<<" target: "<<target<<" address: "<<address<<'\n';
+    }
 };
 
 struct CmpInstPtrs

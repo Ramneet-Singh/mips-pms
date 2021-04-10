@@ -1,1 +1,273 @@
-Error: The instruction: addi has fewer arguments than required!
+==================Clock Cycle:   1==================
+lw $t1 $zero 2004 issued. Memory address : 0 - 3
+
+==================Clock Cycle:   2==================
+
+==================Clock Cycle:   3==================
+
+==================Clock Cycle:   4==================
+
+==================Clock Cycle:   5==================
+
+==================Clock Cycle:   6==================
+
+==================Clock Cycle:   7==================
+
+==================Clock Cycle:   8==================
+
+==================Clock Cycle:   9==================
+
+==================Clock Cycle:  10==================
+
+==================Clock Cycle:  11==================
+DRAM Activity: Copied Row 1 to Row Buffer
+
+==================Clock Cycle:  12==================
+
+==================Clock Cycle:  13==================
+Register Modified: $9 == $t1 == 0
+
+==================Clock Cycle:  14==================
+sw $t1 $zero 9000 issued. Memory address : 4 - 7
+
+==================Clock Cycle:  15==================
+addi $s0 $zero 100 issued. Memory address : 8 - 11
+Register Modified: $16 == $s0 == 100
+
+==================Clock Cycle:  16==================
+lw $t0 $zero 1004 issued. Memory address : 12 - 15
+
+==================Clock Cycle:  17==================
+sw $t2 $zero 1008 issued. Memory address : 16 - 19
+
+==================Clock Cycle:  18==================
+lw $t3 $zero 1012 issued. Memory address : 20 - 23
+
+==================Clock Cycle:  19==================
+sw $t4 $zero 2000 issued. Memory address : 24 - 27
+
+==================Clock Cycle:  20==================
+sw $t5 $zero 1000 issued. Memory address : 28 - 31
+
+==================Clock Cycle:  21==================
+addi $s1 $zero 100 issued. Memory address : 32 - 35
+Register Modified: $17 == $s1 == 100
+
+==================Clock Cycle:  22==================
+slt $t2 $s0 $s1 issued. Memory address : 36 - 39
+Register Modified: $10 == $t2 == 0
+
+==================Clock Cycle:  23==================
+mul $t6 $s0 $s1 issued. Memory address : 40 - 43
+Register Modified: $14 == $t6 == 10000
+
+==================Clock Cycle:  24==================
+sub $t7 $zero $t6 issued. Memory address : 44 - 47
+Register Modified: $15 == $t7 == -10000
+DRAM Activity: Writeback Row 1 to Main Memory
+
+==================Clock Cycle:  25==================
+j 52 issued. Memory address : 48 - 51
+
+==================Clock Cycle:  26==================
+bne $s1 $s0 0 issued. Memory address : 52 - 55
+
+==================Clock Cycle:  27==================
+
+==================Clock Cycle:  28==================
+
+==================Clock Cycle:  29==================
+
+==================Clock Cycle:  30==================
+
+==================Clock Cycle:  31==================
+
+==================Clock Cycle:  32==================
+
+==================Clock Cycle:  33==================
+
+==================Clock Cycle:  34==================
+DRAM Activity: Copied Row 8 to Row Buffer
+
+==================Clock Cycle:  35==================
+
+==================Clock Cycle:  36==================
+Memory Location Modified: Address == 9000 Value == 0
+
+==================Clock Cycle:  37==================
+
+==================Clock Cycle:  38==================
+
+==================Clock Cycle:  39==================
+
+==================Clock Cycle:  40==================
+
+==================Clock Cycle:  41==================
+
+==================Clock Cycle:  42==================
+
+==================Clock Cycle:  43==================
+
+==================Clock Cycle:  44==================
+
+==================Clock Cycle:  45==================
+
+==================Clock Cycle:  46==================
+DRAM Activity: Writeback Row 8 to Main Memory
+
+==================Clock Cycle:  47==================
+
+==================Clock Cycle:  48==================
+
+==================Clock Cycle:  49==================
+
+==================Clock Cycle:  50==================
+
+==================Clock Cycle:  51==================
+
+==================Clock Cycle:  52==================
+
+==================Clock Cycle:  53==================
+
+==================Clock Cycle:  54==================
+
+==================Clock Cycle:  55==================
+
+==================Clock Cycle:  56==================
+DRAM Activity: Copied Row 1 to Row Buffer
+
+==================Clock Cycle:  57==================
+
+==================Clock Cycle:  58==================
+Memory Location Modified: Address == 2000 Value == 0
+
+==================Clock Cycle:  59==================
+
+==================Clock Cycle:  60==================
+
+==================Clock Cycle:  61==================
+
+==================Clock Cycle:  62==================
+
+==================Clock Cycle:  63==================
+
+==================Clock Cycle:  64==================
+
+==================Clock Cycle:  65==================
+
+==================Clock Cycle:  66==================
+
+==================Clock Cycle:  67==================
+
+==================Clock Cycle:  68==================
+DRAM Activity: Writeback Row 1 to Main Memory
+
+==================Clock Cycle:  69==================
+
+==================Clock Cycle:  70==================
+
+==================Clock Cycle:  71==================
+
+==================Clock Cycle:  72==================
+
+==================Clock Cycle:  73==================
+
+==================Clock Cycle:  74==================
+
+==================Clock Cycle:  75==================
+
+==================Clock Cycle:  76==================
+
+==================Clock Cycle:  77==================
+
+==================Clock Cycle:  78==================
+DRAM Activity: Copied Row 0 to Row Buffer
+
+==================Clock Cycle:  79==================
+
+==================Clock Cycle:  80==================
+Memory Location Modified: Address == 1008 Value == 0
+
+==================Clock Cycle:  81==================
+
+==================Clock Cycle:  82==================
+Register Modified: $11 == $t3 == 0
+
+==================Clock Cycle:  83==================
+
+==================Clock Cycle:  84==================
+Memory Location Modified: Address == 1000 Value == 0
+
+==================Clock Cycle:  85==================
+
+==================Clock Cycle:  86==================
+Register Modified: $8 == $t0 == 0
+
+
+====================================================
+  Register contents at the end of the execution:
+====================================================
+Reg no.   Reg name    Content-Dec    Content-Hex
+     0       zero              0            0x0
+     1         at              0            0x0
+     2         v0              0            0x0
+     3         v1              0            0x0
+     4         a0              0            0x0
+     5         a1              0            0x0
+     6         a2              0            0x0
+     7         a3              0            0x0
+     8         t0              0            0x0
+     9         t1              0            0x0
+    10         t2              0            0x0
+    11         t3              0            0x0
+    12         t4              0            0x0
+    13         t5              0            0x0
+    14         t6          10000         0x2710
+    15         t7         -10000     0xffffd8f0
+    16         s0            100           0x64
+    17         s1            100           0x64
+    18         s2              0            0x0
+    19         s3              0            0x0
+    20         s4              0            0x0
+    21         s5              0            0x0
+    22         s6              0            0x0
+    23         s7              0            0x0
+    24         t8              0            0x0
+    25         t9              0            0x0
+    26         k0              0            0x0
+    27         k1              0            0x0
+    28         gp              0            0x0
+    29         sp              0            0x0
+    30         fp              0            0x0
+    31         ra              0            0x0
+====================================================
+Accessed memory content at the end of the execution:
+====================================================
+     Memory address:         Memory content:
+         1000 - 1003          0x0          0
+         1004 - 1007          0x0          0
+         1008 - 1011          0x0          0
+         1012 - 1015          0x0          0
+         2000 - 2003          0x0          0
+         2004 - 2007          0x0          0
+         9000 - 9003          0x0          0
+====================================================
+
+   Total number of clock cycles :          86
+   Number of row buffer updates :           8
+
+===================================================
+   Number of times each instruction was executed:
+===================================================
+       Instruction          Executed
+                lw        3  time(s)
+                sw        4  time(s)
+               add        0  time(s)
+               sub        1  time(s)
+               mul        1  time(s)
+              addi        2  time(s)
+                 j        1  time(s)
+               beq        0  time(s)
+               bne        1  time(s)
+               slt        1  time(s)
+====================================================

@@ -1,5 +1,5 @@
 main:
-	addi $s0, $zero, 100
+	addi $s0, $zero, 10
 	addi $s1, $zero, 0
 	addi $t1, $zero, 100
 
