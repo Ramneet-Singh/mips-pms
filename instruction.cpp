@@ -27,7 +27,7 @@ void DRAM::addInstruction(Instruction &inst)
     {
         if (isConflicting(*i, inst))
         {
-            inst.dependencies.push_back(i);
+            inst.dependencies.push_back(new Instruction((*i).id, (*i).address, (*i).target, (*i).type));
         }
     }
     pendingInstructionsPriority.push(&inst);
@@ -143,13 +143,11 @@ void DRAM::deleteCurrentInstruction()
         pendingInstructionsPriority.pop();
     }
 
-    if (dryrun)
+    for (auto it = deleteInstPtr->dependencies.begin(); it != deleteInstPtr->dependencies.end(); it++)
     {
-        for (auto it = deleteInstPtr->dependencies.begin(); it != deleteInstPtr->dependencies.end(); it++)
-        {
-            delete (*it);
-        }
+        delete (*it);
     }
+    deleteInstPtr->dependencies.clear();
 
     delete deleteInstPtr;
 
@@ -210,6 +208,7 @@ void DRAM::deleteAllDryrunInst()
         {
             delete (*it);
         }
+        i->dependencies.clear();
         delete i;
     }
 }

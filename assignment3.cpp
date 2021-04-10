@@ -854,6 +854,7 @@ int MIPS::execute(int numLook, int targetRow)
 		if (dryrun)
 		{
 			clockCycles++;
+			i++;
 			int instructDecoded[maxArguments + 1];
 			decode(programCounter, instructDecoded);
 
