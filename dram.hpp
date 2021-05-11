@@ -2,9 +2,7 @@
 #include <deque>
 #include <queue>
 #include <array>
-#define NUMCOLS 1024
-#define NUMROWS 1024
-#define LOOK 4
+#include <constants.h>
 
 
 // [ASSIGNMENT 4]
@@ -20,7 +18,11 @@ public:
     int target;
     int address;
     int id;
-    std::vector<Instruction *> dependencies;
+
+    int core_no;
+    int index;
+    // std::vector<Instruction *> dependencies;
+    int dependencies[BUFFER_SIZE];
 
     Instruction(int add, int tar, int typ)
     {
@@ -111,24 +113,6 @@ public:
 class DRAM
 {
 private:
-    /*
-        [ASSIGNMENT 4]
-        Checks whether the instruction given is conflicting with the second instruction (which is pending in dram)
-        The rules for an instruction I and a pending dram instruction D to conflict are:
-        1. If D is an sw instruction, then there is no conflict as all it says is to store a certain value at a certain address. 
-           For subsequent instructions, the values of any of the registers can be changed as we have already made use of them and abstracted them out while issuing the sw request.
-        2. Now let D be an lw instruction with register Rd being the target register and AddrD being the address from which to load
-           Simply, any instruction which makes use of a value stored in Rd, or seeks to change the value stored in Rd is a conflicting instruction.
-           This is because, if it makes use of a value, the programmer expects the lw instruction to have taken place by the time I is executed.
-           And if its value changes, then we will change it back to a wrong value after a few cycles if we don't block instruction I.
-    */
-    bool isClashing(int *instr, Instruction &dramInstr);
-
-    /*
-        [ASSIGNMENT 4]
-        Called upon completion of the last activity of the currently executing instruction. Deletes it from the pendingInstructionsPriority priority queue and also from the dependencies of each instruction in the queue.
-    */
-    void deleteCurrentInstruction();
 
     /*
         Copy the row at rowIdx to row buffer
@@ -149,7 +133,7 @@ public:
     int rowBuffer[NUMCOLS];
     int bufferRowIndex;
 
-    int currentInstId;
+    
 
     int rowBufferUpdates;
 
@@ -203,27 +187,14 @@ public:
     */
     void deleteAllDryrunInst();
 
-    /*
-    Takes in a request from the processor, figures out its dependencies, and adds it to the pendingInstructionsPriority queue.
-    */
-    void addInstruction(Instruction &inst);
-
-    /*
-        It picks the next instruction to be performed from the currently pending instructions in the DRAM.
-        The logic for exploiting row buffer locality is present in this function.
-    */
-    Instruction *scheduleNextInstr();
+    
 
     /*
     Checks if a new instruction's execution will be started in this cycle. If it will, checks which instruction will be scheduled. Returns true only if this instruction would require a writeback and false in all other cases
     */
     bool willPerformWritebackNext();
 
-    /*
-        Checks if the instruction given is safe to execute before all pending instructions of dram are completed
-        Iterates through the deque of pending instructions and checks one by one whether there is a conflict between this and the given instruction
-    */
-    bool isBlocked(int *instruction);
+   
     /*
         Adds the activities for a dram instruction. Activities for a lw instruction:
         1. Writeback the row in row buffer
@@ -232,12 +203,6 @@ public:
         In case the required row is already present in row buffer, skip activities 2 and 3 
     */
     void addActivities(Instruction &dramInstr);
-
-    /*
-        Given a  pending DRAM Instruction inst1 and an instruction to be inserted inst2, checks whether inst1 should be added to the dependencies of inst2
-    */
-    bool isConflicting(Instruction &inst1, Instruction &inst2);
-
 
     // [ASSIGNMENT 4 ends] 
 
@@ -271,7 +236,7 @@ public:
 
     DRAM(int rowAccessDelay, int colAccessDelay = 2, bool blockMode = true, bool dry = false);
 
-    DRAM(DRAM &other);
+    
     // 0 cycle delay instruction store and fetch operations
     void store(int address, int val);
     int fetch(int address);
@@ -285,16 +250,6 @@ public:
         Take the front of the pending activities queue, and move it forward by one cycle
     */
     void performActivity();
-    
-
-    /*
-        Perform next activity. Checks if there are any already pending activities.
-        If there aren't any, checks if there are any pending instructions and adds their activities.
-        If an activity has been completed in this cycle, then puts that in dramCompletedActivity.
-        Else makes sure that dramCompletedActivity = [-1, -1, -1, -1]
-        If the completed activity was the last one of some instruction, then remove that from the pending instructions
-    */
-    void executeNext();
 
 
 };

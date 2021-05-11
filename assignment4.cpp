@@ -61,7 +61,9 @@ public:
 	int no_exec_instructions[10];
 	int maxArguments;
 	bool firstLoad;
-	DRAM dramMemory;
+
+	MRM & manager;
+	
 	int programCounter;
 
 	// [ASSIGNMENT 4]
@@ -71,10 +73,11 @@ public:
 	int waitDramTill;
 
 public:
-	MIPS(int rowAccessDelay, int colAccessDelay, bool blockMode, bool dry = false)
+	
+	MIPS(int rowAccessDelay, int colAccessDelay, bool blockMode, bool dry = false, MRM & m)
 	{
 
-		dramMemory = DRAM(rowAccessDelay, colAccessDelay, blockMode, dry);
+		manager = m;
 		firstLoad = true;
 		dryrun = dry;
 		waitDramTill = -1;
@@ -231,6 +234,7 @@ public:
 		// [ASSIGNMENT 4]
 		Instruction *dramInstr = new Instruction(addr, a, 0);
 		dramMemory.addInstruction(*dramInstr);
+		// [ASSIGNMENT 4 end]
 	}
 	void issueSw(int a, int b, int c)
 	{
@@ -257,6 +261,7 @@ public:
 		// [ASSIGNMENT 4]
 		Instruction *dramInstr = new Instruction(addr, val, 1);
 		dramMemory.addInstruction(*dramInstr);
+		// [ASSIGNMENT 4 end]
 	}
 
 	void add(int a, int b, int c)
@@ -858,6 +863,7 @@ int lookahead(int numCycles, MIPS &inter, int targetRow)
 	interpreter.dramMemory.deleteAllDryrunInst();
 	return ans;
 }
+// [ASSIGNMENT 4 end]
 
 int MIPS::execute(int numLook, int targetRow)
 {
@@ -877,6 +883,9 @@ int MIPS::execute(int numLook, int targetRow)
 			bool issueNext = !(dramMemory.isBlocked(instructDecoded));
 
 			dramMemory.executeNext();
+			// [ASSIGNMENT 4 end]
+
+
 
 			// If we can execute the next instruction, do it
 			if (issueNext)
@@ -1010,6 +1019,10 @@ int MIPS::execute(int numLook, int targetRow)
 			// Check if we can issue the next instruction
 			bool issueNext = !(dramMemory.isBlocked(instructDecoded));
 
+
+
+
+
 			// [ASSIGNMENT 4]
 			if (dramMemory.willPerformWritebackNext())
 			{
@@ -1034,6 +1047,10 @@ int MIPS::execute(int numLook, int targetRow)
 				}
 				assert(clockCycles < waitDramTill);
 			}
+			// [ASSIGNMENT 4 end]
+
+
+
 
 			// If we can execute the next instruction, do it
 			if (issueNext)
@@ -1166,6 +1183,10 @@ int MIPS::execute(int numLook, int targetRow)
 	}
 
 	assert(!dryrun); // If we were dryrunning, we must have returned a value by now
+	// [ASSIGNMENT 4 end]
+
+
+	
 	while (!dramMemory.pendingInstructionsPriority.empty())
 	{
 		clockCycles++;

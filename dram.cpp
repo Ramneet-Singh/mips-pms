@@ -34,30 +34,6 @@ DRAM::DRAM(int rowAccessDelay, int colAccessDelay, bool blockMode, bool dry)
     rowBufferUpdates = 0;
 }
 
-void DRAM::store(int address, int val)
-{
-    if (address < 0 || address >= (sizeof(Memory) / sizeof(Memory[0][0])))
-    {
-        throw "Error: Invalid address being stored to: " + std::to_string(address);
-    }
-
-    int row = address / NUMCOLS;
-    int col = address % NUMCOLS;
-    Memory[row][col] = val;
-}
-
-int DRAM::fetch(int address)
-{
-    if (address < 0 || address >= (sizeof(Memory) / sizeof(Memory[0][0])))
-    {
-        throw "Error: Invalid address being stored to: " + std::to_string(address);
-    }
-
-    int row = address / NUMCOLS;
-    int col = address % NUMCOLS;
-    return Memory[row][col];
-}
-
 void DRAM::copyToRowBuffer(int rowIndex)
 {
     for (int i = 0; i < NUMCOLS; i++)
@@ -88,90 +64,9 @@ void DRAM::updateRowBuffer(int columnNum, int val)
     rowBuffer[columnNum] = val;
 }
 
-bool DRAM::isClashing(int *instr, Instruction &dramInstr)
-{
-    if (dramInstr.type == 1)
-    {
-        return false; // sw instruction
-    }
 
-    int targetReg = dramInstr.target;
-    switch (instr[0])
-    {
-    case 0:
-        if (instr[2] == targetReg)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-        break;
-    case 1:
-        if (instr[1] == targetReg || instr[2] == targetReg)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-        break;
-    case 2:
-    case 3:
-    case 4:
-    case 9:
-        for (int k = 1; k <= 3; k++)
-        {
-            if (instr[k] == targetReg)
-            {
-                return true;
-            }
-        }
-        return false;
-        break;
-    case 5:
-    case 7:
-    case 8:
-        if ((instr[1] == targetReg) || (instr[2] == targetReg))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-        break;
-    case 6:
-        return false;
-        break;
-    default:
-        return true;
-        break;
-    }
-}
 
-// [ASSIGNMENT 4]
-bool DRAM::isBlocked(int *instruction)
-{
-    if (blockingMode)
-    {
-        return !pendingInstructionsPriority.empty();
-    }
-
-    for (auto &i : pendingInstructionsPriority)
-    {
-        if (isClashing(instruction, *i))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// [ASSIGNMENT 4]
+// [ASSIGNMENT 4] :: just converted instruction array to object
 void DRAM::addActivities(Instruction &dramInstr)
 {
     if (dramInstr.type == 0)
@@ -248,7 +143,7 @@ void DRAM::addActivities(Instruction &dramInstr)
 
 void DRAM::performActivity()
 {
-    std::array<int, 4> &act = pendingActivities.front();
+    std::array<int, 5> &act = pendingActivities.front();
 
     switch (act[0])
     {
@@ -308,6 +203,7 @@ void DRAM::performActivity()
             // Remove its instruction from pending instructions
             // [ASSIGNMENT 4]
             deleteCurrentInstruction();
+            // [ASSIGNMENT 4 end]
         }
         break;
     }
@@ -330,7 +226,9 @@ void DRAM::performActivity()
             // Remove from pending activities
             pendingActivities.pop();
             // Remove its instruction from pending instructions
+            // [ASSIGNMENT 4]
             deleteCurrentInstruction();
+            // [ASSIGNMENT 4 end]
         }
         break;
     }
