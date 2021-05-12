@@ -15,6 +15,7 @@ public:
     int type;
     // 0 means lw
     // 1 means sw
+    // -1 means empty instruction
     int target;
     int address;
     int id;

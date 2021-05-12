@@ -37,7 +37,7 @@ public:
         Called upon completion of the last activity of the currently executing instruction. Deletes it from the pendingInstructionsPriority priority queue and also from the dependencies of each instruction in the queue.
     */
     void deleteCurrentInstruction();
-    int getEmpty();
+    int getEmptyIndex();
 
 
     /*
@@ -60,4 +60,8 @@ public:
         If the completed activity was the last one of some instruction, then remove that from the pending instructions
     */
     void executeNext();
+
+    bool isBufferEmpty();
+
+    void getDramActivity(int * ar);
 };

@@ -74,7 +74,7 @@ bool MRM::isConflicting(Instruction &inst1, Instruction &inst2)
     return false;
 }
 
-int MRM::getEmpty(){
+int MRM::getEmptyIndex(){
     for(int i = 0; i<BUFFER_SIZE; i++){
         
         if(buffer[i]->type == -1){
@@ -94,7 +94,7 @@ void MRM::addInstruction(Instruction &inst)
             inst.dependencies[i] = 1;
         }
     }
-    int index = getEmpty();
+    int index = getEmptyIndex();
     if(index == -1){
         throw "Buffer overflow!";
     }
@@ -139,46 +139,6 @@ void MRM::deleteCurrentInstruction()
     buffer[targetInd]->type = -1;
 }
 
-bool MRM::willPerformWritebackNext()
-{
-    if (!pendingActivities.empty())
-    {
-        return false;
-    }
-    if (pendingInstructionsPriority.empty())
-    {
-        return false;
-    }
-
-    queue<Instruction *> auxilliary;
-    Instruction *instPtr;
-    instPtr = pendingInstructionsPriority.top();
-    while (!instPtr->dependencies.empty())
-    {
-        auxilliary.push(instPtr);
-        pendingInstructionsPriority.pop();
-        if (pendingInstructionsPriority.empty())
-        {
-            cerr << "ERROR: There are no instructions with empty dependencies!" << endl;
-            exit(EXIT_FAILURE);
-        }
-        instPtr = pendingInstructionsPriority.top();
-    }
-
-    // assert: We have found the lowest priority instruction with empty dependencies
-    // Insert the popped instructions back into the priority queue
-    Instruction *auxPtr;
-    while (!auxilliary.empty())
-    {
-        auxPtr = auxilliary.front();
-        pendingInstructionsPriority.push(auxPtr);
-        auxilliary.pop();
-    }
-    bool isDiffRow = ((instPtr->address / NUMCOLS) != bufferRowIndex) && (bufferRowIndex != -1);
-    pendingInstructionsPriority.push(instPtr);
-    return isDiffRow;
-}
-
 void MRM::executeNext()
 {
     for (int i = 0; i < 4; i++)
@@ -190,18 +150,16 @@ void MRM::executeNext()
     if (pendingActivities.empty())
     {
         // Check for pending instructions
-        if (pendingInstructionsPriority.empty())
-        {
+        if(isBufferEmpty())
             return;
-        }
 
         Instruction *nextInstr = scheduleNextInstr();
-        currentInstId = nextInstr->id;
+        currentInstIndex = nextInstr->index;
 
-        addActivities(*(nextInstr));
+        dramMemory.addActivities(*(nextInstr));
     }
 
-    performActivity();
+    dramMemory.performActivity();
 }
 
 
@@ -271,21 +229,33 @@ bool MRM::isClashing(int *instr, Instruction &dramInstr, int cpu_core)
     }
 }
 
+bool MRM::isBufferEmpty(){
+    bool isEmpty = true;
+    for(int i = 0; i<BUFFER_SIZE; i++){
+        if(buffer[i]->type == -1)
+            isEmpty = false;
+    }
+    return isEmpty;
+}
 
-bool MRM::isBlocked(int *instruction)
+bool MRM::isBlocked(int *instruction, int cpu_core)
 {
     if (blockingMode)
     {
-        return !pendingInstructionsPriority.empty();
+        return !isBufferEmpty();
     }
 
-    for (auto &i : pendingInstructionsPriority)
+    for (int i = 0; i<BUFFER_SIZE; i++)
     {
-        if (isClashing(instruction, *i))
-        {
+        if (isClashing(instruction, buffer[i], cpu_core))
             return true;
-        }
     }
 
     return false;
+}
+
+void MRM::getDramActivity(int * ar){
+    for(int i = 0; i<4; i++){
+        ar[i] = dramMemory.dramCompletedActivity[i];
+    }
 }

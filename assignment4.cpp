@@ -6,7 +6,7 @@
 #include <string.h>
 #include <boost/algorithm/string/replace.hpp>
 
-#include <dram.hpp>
+#include <mrm.hpp>
 
 using namespace std;
 
@@ -55,6 +55,8 @@ private:
 	vector<int> addressesAccessed;
 
 public:
+	int core_no;
+	int instructionMemory[INSTRUCTION_MEMORY_SIZE];
 	// Instruction mapping
 	static string instructions[10];
 	static string registerNames[32];
@@ -74,10 +76,11 @@ public:
 
 public:
 	
-	MIPS(int rowAccessDelay, int colAccessDelay, bool blockMode, bool dry = false, MRM & m)
+	MIPS(int rowAccessDelay, int colAccessDelay, bool blockMode, bool dry = false, MRM & m, int cpu_core)
 	{
 
 		manager = m;
+		core_no = cpu_core;
 		firstLoad = true;
 		dryrun = dry;
 		waitDramTill = -1;
@@ -471,46 +474,35 @@ public:
 		}
 	}
 
-	void handleActivity()
+	void handleActivity(int * dramCompletedActivity)
 	{
-		if (dramMemory.dramCompletedActivity[0] == -1)
+		if (dramCompletedActivity[0] == -1)
 		{
 			return;
 		}
 
-		switch (dramMemory.dramCompletedActivity[0])
+		switch (dramCompletedActivity[0])
 		{
 		case 0:
 		{
-			if (!dryrun)
-			{
-				cout << "DRAM Activity: Copied Row " << dramMemory.dramCompletedActivity[1] << " to Row Buffer\n";
-			}
+			cout << "DRAM Activity: Copied Row " << dramCompletedActivity[1] << " to Row Buffer\n";
 			break;
 		}
 		case 1:
 		{
-			if (!dryrun)
-			{
-				cout << "DRAM Activity: Writeback Row " << dramMemory.dramCompletedActivity[1] << " to Main Memory\n";
-			}
+			cout << "DRAM Activity: Writeback Row " << dramCompletedActivity[1] << " to Main Memory\n"
 			break;
 		}
 		case 2:
 		{
-			registers[dramMemory.dramCompletedActivity[2]].setContent(dramMemory.dramCompletedActivity[1]);
-			if (!dryrun)
-			{
-				cout << "Register Modified: $" << dramMemory.dramCompletedActivity[2] << " == $" << registers[dramMemory.dramCompletedActivity[2]].name << " == " << registers[dramMemory.dramCompletedActivity[2]].content << "\n";
-			}
+			registers[dramCompletedActivity[2]].setContent(dramCompletedActivity[1]);
+			cout << "Register Modified: $" << dramCompletedActivity[2] << " == $" << registers[dramCompletedActivity[2]].name << " == " << registers[dramCompletedActivity[2]].content << "\n";
 			break;
 		}
 		case 3:
 		{
-			if (!dryrun)
-			{
-				cout << "Memory Location Modified: Address == " << dramMemory.dramCompletedActivity[1] << " Value == " << dramMemory.rowBuffer[dramMemory.dramCompletedActivity[1] % NUMCOLS] << "\n";
-			}
+			// TODO: add access to rowbuffer here!
+			cout << "Memory Location Modified: Address == " << dramCompletedActivity[1] << " Value == " << manager.dramMemory.rowBuffer[dramCompletedActivity[1]] << "\n";
 			break;
 		}
 		default:
@@ -540,7 +532,9 @@ public:
 	                                INSTRUCTION ENCODING FUNCTIONS
 				 ================================================================-
 	*/
-
+	void storeInMem(int address, int value){
+		instructionMemory[address] = value;
+	}
 	void encode(string command, string arguments[], int maxArguments, int instructionIndex)
 	{
 		auto itr = find(begin(instructions), end(instructions), command);
@@ -594,9 +588,10 @@ public:
 					throwError(secondArg, 2);
 				}
 			}
-			dramMemory.store(instructionIndex + 1, registerNo);
-			dramMemory.store(instructionIndex + 2, baseRegister);
-			dramMemory.store(instructionIndex + 3, offset);
+
+			storeInMem(instructionIndex + 1, registerNo);
+			storeInMem(instructionIndex + 2, baseRegister);
+			storeInMem(instructionIndex + 3, offset);
 		}
 		else if (commandCode == 7 || commandCode == 8)
 		{
@@ -616,9 +611,9 @@ public:
 				labelPos = labels.size();
 				labels.push_back(label);
 			}
-			dramMemory.store(instructionIndex + 1, reg1);
-			dramMemory.store(instructionIndex + 2, reg2);
-			dramMemory.store(instructionIndex + 3, labelPos);
+			storeInMem(instructionIndex + 1, reg1);
+			storeInMem(instructionIndex + 2, reg2);
+			storeInMem(instructionIndex + 3, labelPos);
 		}
 		else if (commandCode == 5)
 		{
@@ -628,9 +623,9 @@ public:
 			reg1 = stoi(arguments[0]);
 			reg2 = stoi(arguments[1]);
 			imValue = stoi(arguments[2]);
-			dramMemory.store(instructionIndex + 1, reg1);
-			dramMemory.store(instructionIndex + 2, reg2);
-			dramMemory.store(instructionIndex + 3, imValue);
+			storeInMem(instructionIndex + 1, reg1);
+			storeInMem(instructionIndex + 2, reg2);
+			storeInMem(instructionIndex + 3, imValue);
 		}
 		else if (commandCode == 6)
 		{
@@ -648,7 +643,7 @@ public:
 				jumpLabelPos = labels.size();
 				labels.push_back(jumpLabel);
 			}
-			dramMemory.store(instructionIndex + 1, jumpLabelPos);
+			storeInMem(instructionIndex + 1, jumpLabelPos);
 		}
 		else
 		{
@@ -659,19 +654,23 @@ public:
 			reg2 = stoi(arguments[1]);
 			reg3 = stoi(arguments[2]);
 
-			dramMemory.store(instructionIndex + 1, reg1);
-			dramMemory.store(instructionIndex + 2, reg2);
-			dramMemory.store(instructionIndex + 3, reg3);
+			storeInMem(instructionIndex + 1, reg1);
+			storeInMem(instructionIndex + 2, reg2);
+			storeInMem(instructionIndex + 3, reg3);
 		}
 		// cout<<command<<instructionIndex<<commandCode<<'\n';
-		dramMemory.store(instructionIndex, commandCode);
+		storeInMem(instructionIndex, commandCode);
+	}
+
+	int instructionFetch(int index){
+		return instructionMemory[index];
 	}
 
 	void decode(int index, int *instructDecoded)
 	{
 		// add everything decoded in instructDecoded.
 		// instructDecoded[0] contains command, and other elements contain arguments
-		int commandCode = dramMemory.fetch(index);
+		int commandCode = instructionFetch(index);
 		instructDecoded[0] = commandCode;
 		string cmdLabel;
 		int labelPos;
@@ -680,7 +679,7 @@ public:
 		case 6:
 		{
 			// labels may be going out of range
-			cmdLabel = labels[dramMemory.fetch(index + 1)];
+			cmdLabel = labels[instructionFetch(index + 1)];
 			auto itr1 = labelToAddr.find(cmdLabel);
 			if (itr1 == labelToAddr.end())
 			{
@@ -692,10 +691,10 @@ public:
 		case 7:
 		case 8:
 		{
-			instructDecoded[1] = dramMemory.fetch(index + 1);
-			instructDecoded[2] = dramMemory.fetch(index + 2);
+			instructDecoded[1] = instructionFetch(index + 1);
+			instructDecoded[2] = instructionFetch(index + 2);
 			// labels may be going out of range
-			cmdLabel = labels[dramMemory.fetch(index + 3)];
+			cmdLabel = labels[instructionFetch(index + 3)];
 			auto itr2 = labelToAddr.find(cmdLabel);
 			if (itr2 == labelToAddr.end())
 			{
@@ -708,7 +707,7 @@ public:
 		{
 			for (int k = 1; k < 4; k++)
 			{
-				instructDecoded[k] = dramMemory.fetch(index + k);
+				instructDecoded[k] = instructionFetch(index + k);
 			}
 		}
 		}
@@ -848,221 +847,32 @@ public:
 	int execute(int numLook = 0, int targetRow = -1);
 };
 
-// [ASSIGNMENT 4]
-int lookahead(int numCycles, MIPS &inter, int targetRow)
-{
-	// Create a new interpreter at the same state as the MIPS interpreter, run it for numCycles, without the DRAM executing anything, and see if an instruction comes which is targeting the same row as is in the row buffer
-	int oldNumInst = Instruction::numInstr;
-	int oldBufferIndex = Instruction::rowBufferIndex;
-	MIPS interpreter(inter);
-	interpreter.dryrun = true;
-	interpreter.dramMemory.dryrun = true;
-	int ans = interpreter.execute(numCycles, targetRow);
-	Instruction::numInstr = oldNumInst;
-	Instruction::rowBufferIndex = oldBufferIndex;
-	interpreter.dramMemory.deleteAllDryrunInst();
-	return ans;
-}
-// [ASSIGNMENT 4 end]
-
-int MIPS::execute(int numLook, int targetRow)
-{
-	// Till you cross the instruction section of memory, keep fetching instructions and executing
-	int i = 0;
-	while ((i < numLook || !dryrun) && programCounter < instructionIndex)
+void MIPS::execute()
 	{
-		// [ASSIGNMENT 4]
-		if (dryrun)
+		int programCounter = 0;
+
+		// Till you cross the instruction section of memory, keep fetching instructions and executing
+		while (programCounter < instructionIndex)
 		{
 			clockCycles++;
-			i++;
-			int instructDecoded[maxArguments + 1];
-			decode(programCounter, instructDecoded);
-
-			// Check if we can issue the next instruction
-			bool issueNext = !(dramMemory.isBlocked(instructDecoded));
-
-			dramMemory.executeNext();
-			// [ASSIGNMENT 4 end]
-
-
-
-			// If we can execute the next instruction, do it
-			if (issueNext)
-			{
-				if (instructDecoded[0] < 10)
-				{
-					no_exec_instructions[instructDecoded[0]] += 1;
-				}
-
-				switch (instructDecoded[0])
-				{
-				case 0:
-				{
-					// lw instruction
-					issueLw(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					int addr = registers[instructDecoded[2]].content + instructDecoded[3];
-					if ((addr / NUMCOLS) == targetRow)
-					{
-						return clockCycles;
-					}
-					break;
-				}
-				case 1:
-				{
-					// sw instruction
-					issueSw(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					int addr = registers[instructDecoded[2]].content + instructDecoded[3];
-					if ((addr / NUMCOLS) == targetRow)
-					{
-						return clockCycles;
-					}
-					break;
-				}
-				case 2:
-				{
-					add(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					break;
-				}
-				case 3:
-				{
-					sub(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					break;
-				}
-				case 4:
-				{
-					mul(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					break;
-				}
-				case 5:
-				{
-					addi(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					break;
-				}
-				case 6:
-				{
-					if (instructDecoded[1] >= instructionIndex || instructDecoded[1] < 0)
-					{
-						throwError(to_string(instructDecoded[1]), 7);
-					}
-					if ((instructDecoded[1] % 4) != 0)
-					{
-						throwError("j " + to_string(instructDecoded[1]), 11);
-					}
-					programCounter = instructDecoded[1] - 4;
-					break;
-				}
-				case 7:
-				{
-					if (instructDecoded[3] >= instructionIndex || instructDecoded[3] < 0)
-					{
-						throwError(to_string(instructDecoded[3]), 7);
-					}
-					bool check = beq(instructDecoded[1], instructDecoded[2]);
-					if ((instructDecoded[3] % 4) != 0)
-					{
-						throwError("beq " + registers[instructDecoded[1]].name + " " + registers[instructDecoded[2]].name + " " + to_string(instructDecoded[3]), 11);
-					}
-					if (check)
-					{
-						programCounter = instructDecoded[3] - 4;
-					}
-					break;
-				}
-				case 8:
-				{
-					if (instructDecoded[3] >= instructionIndex || instructDecoded[3] < 0)
-					{
-						throwError(to_string(instructDecoded[3]), 7);
-					}
-					bool check = bne(instructDecoded[1], instructDecoded[2]);
-					if ((instructDecoded[3] % 4) != 0)
-					{
-						throwError("bne " + registers[instructDecoded[1]].name + " " + registers[instructDecoded[2]].name + " " + to_string(instructDecoded[3]), 11);
-					}
-					if (check)
-					{
-						programCounter = instructDecoded[3] - 4;
-					}
-					break;
-				}
-				case 9:
-				{
-					slt(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					break;
-				}
-				default:
-				{
-					cout << "Error: The instruction is either undefined or out of scope of this assignment.\n";
-					cout << "Kindly use add, sub, mul, beq, bne, slt, j, lw, sw, addi instructions only\n";
-					exit(0);
-				}
-				}
-
-				programCounter = programCounter + 4;
-			}
-
-			// Check for any activity completed by the DRAM
-			if (dramMemory.dramCompletedActivity[0] != -1)
-			{
-				handleActivity();
-			}
-		}
-		else
-		{
-			clockCycles++;
-			cout << "==================Clock Cycle: " << setw(3) << clockCycles << "==================\n";
+			cout << "==================Clock Cycle: " <<setw(3)<< clockCycles << "==================\n";
 
 			int instructDecoded[maxArguments + 1];
 			decode(programCounter, instructDecoded);
 
 			// Check if we can issue the next instruction
-			bool issueNext = !(dramMemory.isBlocked(instructDecoded));
+			bool issueNext = !(manager.isBlocked(instructDecoded, core_no));
 
-
-
-
-
-			// [ASSIGNMENT 4]
-			if (dramMemory.willPerformWritebackNext())
-			{
-				waitDramTill = lookahead(LOOK, *this, dramMemory.bufferRowIndex);
-			}
-
-			if (waitDramTill == -1)
-			{
-				dramMemory.executeNext();
-			}
-			else if (waitDramTill == clockCycles)
-			{
-				dramMemory.executeNext();
-				waitDramTill = -1;
-			}
-			else
-			{
-				// We must now be waiting
-				for (int i = 0; i < 4; i++)
-				{
-					dramMemory.dramCompletedActivity[i] = -1;
-				}
-				assert(clockCycles < waitDramTill);
-			}
-			// [ASSIGNMENT 4 end]
-
-
-
+			// TODO : remove this from here, call once after looping through all cores
+			manager.executeNext();
 
 			// If we can execute the next instruction, do it
 			if (issueNext)
 			{
-				if (instructDecoded[0] < 10)
-				{
-					no_exec_instructions[instructDecoded[0]] += 1;
-				}
+				if (instructDecoded[0] < 10){ no_exec_instructions[instructDecoded[0]] += 1; }
 
 				printInstruction(instructDecoded);
 				cout<<" issued. Memory address : " << programCounter <<" - "<<programCounter+3<<'\n' ;
-				// printInstruction(instructDecoded);
 
 				switch (instructDecoded[0])
 				{
@@ -1167,46 +977,39 @@ int MIPS::execute(int numLook, int targetRow)
 			}
 
 			// Check for any activity completed by the DRAM
-			if (dramMemory.dramCompletedActivity[0] != -1)
+			int dramCompletedActivity[4];
+			manager.getDramActivity(dramCompletedActivity);
+			if (dramCompletedActivity[0] != -1)
 			{
-				handleActivity();
+				handleActivity(dramCompletedActivity);
 			}
 
 			cout << "\n";
 		}
-	}
 
-	// [ASSIGNMENT 4]
-	if ((i >= numLook || programCounter >= instructionIndex) && dryrun)
-	{
-		return -1;
-	}
-
-	assert(!dryrun); // If we were dryrunning, we must have returned a value by now
-	// [ASSIGNMENT 4 end]
-
-
-	
-	while (!dramMemory.pendingInstructionsPriority.empty())
-	{
-		clockCycles++;
-		cout << "==================Clock Cycle: " << setw(3) << clockCycles << "==================\n";
-
-		dramMemory.executeNext();
-
-		// Check for any activity completed by the DRAM
-		if (dramMemory.dramCompletedActivity[0] != -1)
+		while (!manager.isBufferEmpty())
 		{
-			handleActivity();
-		}
+			clockCycles++;
+			cout << "==================Clock Cycle: " <<setw(3)<< clockCycles << "==================\n";
 
+			
+			manager.executeNext();
+
+			// Check for any activity completed by the DRAM
+			int dramCompletedActivity[4];
+			manager.getDramActivity(dramCompletedActivity);
+			if (dramCompletedActivity[0] != -1)
+			{
+				handleActivity(dramCompletedActivity);
+			}
+
+			cout << "\n";
+		}
 		cout << "\n";
+		printRegisterContents();
+		printMemory();
+		printStatistics();
 	}
-	cout << "\n";
-	printRegisterContents();
-	printMemory();
-	printStatistics();
-	return 0;
 }
 
 string MIPS::instructions[10] = {"lw", "sw", "add", "sub", "mul", "addi", "j", "beq", "bne", "slt"};
