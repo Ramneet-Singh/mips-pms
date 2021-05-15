@@ -31,6 +31,8 @@ public:
         address = add;
         target = tar;
         type = typ;
+        for(int i = 0; i<BUFFER_SIZE; i++)
+            dependencies[i] = 0;
     }
 
     Instruction(int idNum, int add, int tar, int typ)
@@ -39,21 +41,9 @@ public:
         address = add;
         target = tar;
         type = typ;
+        for(int i = 0; i<BUFFER_SIZE; i++)
+            dependencies[i] = 0;
     }
-
-    Instruction(const Instruction &other) : dependencies(other.dependencies.size())
-    {
-        id = other.id;
-        address = other.address;
-        target = other.target;
-        type = other.type;
-        auto thisit = dependencies.begin();
-        auto thatit = other.dependencies.cbegin();
-
-        for (; thatit != other.dependencies.cend(); ++thisit, ++thatit)
-            *thisit = new Instruction((**thatit).id, (**thatit).address, (**thatit).target, (**thatit).type);
-    }
-
     bool operator==(const Instruction &rhs) const;
 
     int getRowDifference() const;

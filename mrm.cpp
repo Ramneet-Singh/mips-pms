@@ -1,4 +1,4 @@
-#include <MRM.hpp>
+#include <mrm.hpp>
 
 
 
@@ -20,9 +20,10 @@
 //     return rhs.id == id;
 // }
 
-MRM::MRM(){
+MRM::MRM(int block){
+    blockingMode = block;
     for (int i  = 0; i<BUFFER_SIZE; i++){
-        buffer[i] = new Instruction(0, 0, -1);
+        buffer[i] = new Instruction(-1, 0, 0, -1);
     }
 }
 MRM::~MRM(){
@@ -99,7 +100,7 @@ void MRM::addInstruction(Instruction &inst)
         throw "Buffer overflow!";
     }
     else{
-        buffer[index] = inst;
+        buffer[index] = &inst;
     }
 }
 
@@ -115,13 +116,16 @@ Instruction *MRM::scheduleNextInstr()
         }
 
         bool isEmpty = (buffer[i]->type == -1);
-
+        // std::cout<<isEmpty<<isIndependent<<"here\n";
+        // std::cout<<buffer[i]->id<<' '<<min_id<<'\n';
         if((buffer[i]->id<=min_id) && !isEmpty && isIndependent){
             min_id = buffer[i]->id;
             min_index = i;
+            std::cout<<"here\n";
         }
     }
     if(min_index == -1){
+        
         throw "No independent instruction!";
     }
     return buffer[min_index];
@@ -146,20 +150,18 @@ void MRM::executeNext()
         dramMemory.dramCompletedActivity[i] = -1;
     }
 
-    
-    if (pendingActivities.empty())
+    if (dramMemory.pendingActivities.empty())
     {
         // Check for pending instructions
         if(isBufferEmpty())
             return;
-
         Instruction *nextInstr = scheduleNextInstr();
         currentInstIndex = nextInstr->index;
-
+        deleteCurrentInstruction();
         dramMemory.addActivities(*(nextInstr));
     }
-
     dramMemory.performActivity();
+        
 }
 
 
@@ -232,7 +234,7 @@ bool MRM::isClashing(int *instr, Instruction &dramInstr, int cpu_core)
 bool MRM::isBufferEmpty(){
     bool isEmpty = true;
     for(int i = 0; i<BUFFER_SIZE; i++){
-        if(buffer[i]->type == -1)
+        if(buffer[i]->type != -1)
             isEmpty = false;
     }
     return isEmpty;
@@ -247,7 +249,7 @@ bool MRM::isBlocked(int *instruction, int cpu_core)
 
     for (int i = 0; i<BUFFER_SIZE; i++)
     {
-        if (isClashing(instruction, buffer[i], cpu_core))
+        if (isClashing(instruction, *buffer[i], cpu_core))
             return true;
     }
 

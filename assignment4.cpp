@@ -64,7 +64,7 @@ public:
 	int maxArguments;
 	bool firstLoad;
 
-	MRM & manager;
+	MRM * manager;
 	
 	int programCounter;
 
@@ -76,7 +76,7 @@ public:
 
 public:
 	
-	MIPS(int rowAccessDelay, int colAccessDelay, bool blockMode, bool dry = false, MRM & m, int cpu_core)
+	MIPS(int rowAccessDelay, int colAccessDelay, bool blockMode, MRM * m, int cpu_core, bool dry = false)
 	{
 
 		manager = m;
@@ -221,7 +221,7 @@ public:
 		}
 		int addr = registers[b].content + c;
 		addressesAccessed.push_back(addr);
-		if (addr >= (sizeof(dramMemory.Memory) / sizeof(**dramMemory.Memory)) || addr < instructionIndex)
+		if (addr >= (sizeof(manager->dramMemory.Memory) / sizeof(**(manager->dramMemory.Memory))) || addr < instructionIndex)
 		{
 			throwError(to_string(addr), 2);
 		}
@@ -236,7 +236,7 @@ public:
 
 		// [ASSIGNMENT 4]
 		Instruction *dramInstr = new Instruction(addr, a, 0);
-		dramMemory.addInstruction(*dramInstr);
+		manager->addInstruction(*dramInstr);
 		// [ASSIGNMENT 4 end]
 	}
 	void issueSw(int a, int b, int c)
@@ -252,7 +252,7 @@ public:
 		int addr = registers[b].content + c;
 		addressesAccessed.push_back(addr);
 		int val = registers[a].content;
-		if (addr >= (sizeof(dramMemory.Memory) / sizeof(**dramMemory.Memory)) || addr < instructionIndex)
+		if (addr >= (sizeof(manager->dramMemory.Memory) / sizeof(**(manager->dramMemory.Memory))) || addr < instructionIndex)
 		{
 			throwError(to_string(addr), 2);
 		}
@@ -263,7 +263,7 @@ public:
 
 		// [ASSIGNMENT 4]
 		Instruction *dramInstr = new Instruction(addr, val, 1);
-		dramMemory.addInstruction(*dramInstr);
+		manager->addInstruction(*dramInstr);
 		// [ASSIGNMENT 4 end]
 	}
 
@@ -420,7 +420,7 @@ public:
 	{
 		cout << "====================================================\n\n";
 		cout << setw(35) << "Total number of clock cycles :  " << setw(10) << clockCycles << '\n';
-		cout << setw(35) << "Number of row buffer updates :  " << setw(10) << dramMemory.rowBufferUpdates;
+		cout << setw(35) << "Number of row buffer updates :  " << setw(10) << manager->dramMemory.rowBufferUpdates;
 
 		cout << "\n\n===================================================\n";
 		// printing number of times each instruction was executed
@@ -449,15 +449,15 @@ public:
 			int col = address % NUMCOLS;
 			int row = (address - col) / NUMCOLS;
 			stringstream stream;
-			if (row == dramMemory.bufferRowIndex)
+			if (row == manager->dramMemory.bufferRowIndex)
 			{
-				stream << "0x" << hex << dramMemory.rowBuffer[col];
-				cout << setw(20) << to_string(address) + " - " + to_string(address + 3) << setw(13) << stream.str() << setw(12) << to_string(dramMemory.rowBuffer[col]) + "\n";
+				stream << "0x" << hex << manager->dramMemory.rowBuffer[col];
+				cout << setw(20) << to_string(address) + " - " + to_string(address + 3) << setw(13) << stream.str() << setw(12) << to_string(manager->dramMemory.rowBuffer[col]) + "\n";
 			}
 			else
 			{
-				stream << "0x" << hex << dramMemory.Memory[row][col];
-				cout << setw(20) << to_string(address) + " - " + to_string(address + 3) << setw(13) << stream.str() << setw(12) << to_string(dramMemory.Memory[row][col]) + "\n";
+				stream << "0x" << hex << manager->dramMemory.Memory[row][col];
+				cout << setw(20) << to_string(address) + " - " + to_string(address + 3) << setw(13) << stream.str() << setw(12) << to_string(manager->dramMemory.Memory[row][col]) + "\n";
 			}
 		}
 	}
@@ -490,7 +490,7 @@ public:
 		}
 		case 1:
 		{
-			cout << "DRAM Activity: Writeback Row " << dramCompletedActivity[1] << " to Main Memory\n"
+			cout << "DRAM Activity: Writeback Row " << dramCompletedActivity[1] << " to Main Memory\n";
 			break;
 		}
 		case 2:
@@ -502,7 +502,7 @@ public:
 		case 3:
 		{
 			// TODO: add access to rowbuffer here!
-			cout << "Memory Location Modified: Address == " << dramCompletedActivity[1] << " Value == " << manager.dramMemory.rowBuffer[dramCompletedActivity[1]] << "\n";
+			cout << "Memory Location Modified: Address == " << dramCompletedActivity[1] << " Value == " << manager->dramMemory.rowBuffer[dramCompletedActivity[1]] << "\n";
 			break;
 		}
 		default:
@@ -844,10 +844,7 @@ public:
 				 ================================================================-
 	*/
 
-	int execute(int numLook = 0, int targetRow = -1);
-};
-
-void MIPS::execute()
+	void execute()
 	{
 		int programCounter = 0;
 
@@ -861,11 +858,16 @@ void MIPS::execute()
 			decode(programCounter, instructDecoded);
 
 			// Check if we can issue the next instruction
-			bool issueNext = !(manager.isBlocked(instructDecoded, core_no));
+			bool issueNext = !(manager->isBlocked(instructDecoded, core_no));
 
 			// TODO : remove this from here, call once after looping through all cores
-			manager.executeNext();
-
+			
+			try{
+				manager->executeNext();
+			} catch (const char* ex) {
+				cout<<ex;
+			}
+			
 			// If we can execute the next instruction, do it
 			if (issueNext)
 			{
@@ -978,7 +980,7 @@ void MIPS::execute()
 
 			// Check for any activity completed by the DRAM
 			int dramCompletedActivity[4];
-			manager.getDramActivity(dramCompletedActivity);
+			manager->getDramActivity(dramCompletedActivity);
 			if (dramCompletedActivity[0] != -1)
 			{
 				handleActivity(dramCompletedActivity);
@@ -987,17 +989,20 @@ void MIPS::execute()
 			cout << "\n";
 		}
 
-		while (!manager.isBufferEmpty())
+		while (!manager->isBufferEmpty())
 		{
 			clockCycles++;
 			cout << "==================Clock Cycle: " <<setw(3)<< clockCycles << "==================\n";
-
 			
-			manager.executeNext();
+			try{
+				manager->executeNext();
+			} catch (const char* ex) {
+				cout<<ex;
+			}
 
 			// Check for any activity completed by the DRAM
 			int dramCompletedActivity[4];
-			manager.getDramActivity(dramCompletedActivity);
+			manager->getDramActivity(dramCompletedActivity);
 			if (dramCompletedActivity[0] != -1)
 			{
 				handleActivity(dramCompletedActivity);
@@ -1010,7 +1015,8 @@ void MIPS::execute()
 		printMemory();
 		printStatistics();
 	}
-}
+};
+
 
 string MIPS::instructions[10] = {"lw", "sw", "add", "sub", "mul", "addi", "j", "beq", "bne", "slt"};
 string MIPS::registerNames[32] = {"zero", "at", "v0", "v1", "a0", "a1", "a2", "a3", "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra"};
@@ -1036,7 +1042,9 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	MIPS interpreter(rowDelay, colDelay, blockMode);
+	MRM * manager = new MRM(blockMode);
+
+	MIPS interpreter(rowDelay, colDelay, blockMode, manager, 0);
 
 	interpreter.readInstructions(filename);
 

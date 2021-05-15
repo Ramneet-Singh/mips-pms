@@ -3,3 +3,5 @@
 #define LOOK 4
 
 #define BUFFER_SIZE 64
+
+#define INSTRUCTION_MEMORY_SIZE 1048576

@@ -6,6 +6,11 @@
 class MRM{
 
 public:
+
+    MRM(int block);
+    ~MRM();
+    int blockingMode;
+
     DRAM dramMemory;
     int currentInstIndex;
 
@@ -23,12 +28,12 @@ public:
            This is because, if it makes use of a value, the programmer expects the lw instruction to have taken place by the time I is executed.
            And if its value changes, then we will change it back to a wrong value after a few cycles if we don't block instruction I.
     */
-    bool isClashing(int *instr, Instruction &dramInstr);
+    bool isClashing(int *instr, Instruction &dramInstr, int cpu_core);
      /*
         Checks if the instruction given is safe to execute before all pending instructions of dram are completed
         Iterates through the deque of pending instructions and checks one by one whether there is a conflict between this and the given instruction
     */
-    bool isBlocked(int *instruction);
+    bool isBlocked(int *instruction, int cpu_core);
     /*
         Given a  pending DRAM Instruction inst1 and an instruction to be inserted inst2, checks whether inst1 should be added to the dependencies of inst2
     */

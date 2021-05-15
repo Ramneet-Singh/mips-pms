@@ -143,7 +143,7 @@ void DRAM::addActivities(Instruction &dramInstr)
 
 void DRAM::performActivity()
 {
-    std::array<int, 5> &act = pendingActivities.front();
+    std::array<int, 4> &act = pendingActivities.front();
 
     switch (act[0])
     {
@@ -200,10 +200,6 @@ void DRAM::performActivity()
             dramCompletedActivity[2] = act[2];
             // Remove from pending activities
             pendingActivities.pop();
-            // Remove its instruction from pending instructions
-            // [ASSIGNMENT 4]
-            deleteCurrentInstruction();
-            // [ASSIGNMENT 4 end]
         }
         break;
     }
@@ -226,9 +222,6 @@ void DRAM::performActivity()
             // Remove from pending activities
             pendingActivities.pop();
             // Remove its instruction from pending instructions
-            // [ASSIGNMENT 4]
-            deleteCurrentInstruction();
-            // [ASSIGNMENT 4 end]
         }
         break;
     }
