@@ -262,15 +262,10 @@ public:
 		{
 			manager->addInstruction(*dramInstr);
 		}
-<<<<<<< HEAD
 		catch (...)
 		{
-			cout << "Stalling... Memory request manager buffer full! Cannot issue request.\n";
-=======
-		catch(...){
-			if(toPrint)
-				cout<<"|  Stalling... Memory request manager buffer full! Cannot issue request.\n";
->>>>>>> origin/mrm
+			if (toPrint)
+				cout << "|  Stalling... Memory request manager buffer full! Cannot issue request.\n";
 			programCounter -= 4;
 		}
 
@@ -304,15 +299,10 @@ public:
 		{
 			manager->addInstruction(*dramInstr);
 		}
-<<<<<<< HEAD
 		catch (...)
 		{
-			cout << "Stalling... Memory request manager buffer full! Cannot issue request.\n";
-=======
-		catch(...){
-			if(toPrint)
-				cout<<"|  Stalling... Memory request manager buffer full! Cannot issue request.\n";
->>>>>>> origin/mrm
+			if (toPrint)
+				cout << "|  Stalling... Memory request manager buffer full! Cannot issue request.\n";
 			programCounter -= 4;
 		}
 		// [ASSIGNMENT 4 end]
@@ -536,26 +526,26 @@ public:
 		{
 		case 0:
 		{
-			if(toPrint)
+			if (toPrint)
 				cout << "|  DRAM Activity: Copied Row " << dramCompletedActivity[1] << " to Row Buffer\n";
 			break;
 		}
 		case 1:
 		{
-			if(toPrint)
+			if (toPrint)
 				cout << "|  DRAM Activity: Writeback Row " << dramCompletedActivity[1] << " to Main Memory\n";
 			break;
 		}
 		case 2:
 		{
 			registers[dramCompletedActivity[2]].setContent(dramCompletedActivity[1]);
-			if(toPrint)
+			if (toPrint)
 				cout << "|  Register Modified: $" << dramCompletedActivity[2] << " == $" << registers[dramCompletedActivity[2]].name << " == " << registers[dramCompletedActivity[2]].content << "\n";
 			break;
 		}
 		case 3:
 		{
-			if(toPrint)
+			if (toPrint)
 				cout << "|  Memory Location Modified: Address == " << dramCompletedActivity[1] << " Value == " << manager->dramMemory.rowBuffer[dramCompletedActivity[1] % NUMCOLS] << "\n";
 			break;
 		}
@@ -932,17 +922,12 @@ public:
 				{
 					no_exec_instructions[instructDecoded[0]] += 1;
 				}
-<<<<<<< HEAD
-				cout << "Instruction ";
-				printInstruction(instructDecoded);
-				cout << " fetched. Memory address : " << programCounter << " - " << programCounter + 3 << '\n';
-=======
-				if(toPrint){
-					cout<<"|  Instruction ";
+				if (toPrint)
+				{
+					cout << "|  Instruction ";
 					printInstruction(instructDecoded);
 					cout << " fetched. Memory address : " << programCounter << " - " << programCounter + 3 << '\n';
 				}
->>>>>>> origin/mrm
 
 				switch (instructDecoded[0])
 				{
@@ -961,28 +946,28 @@ public:
 				case 2:
 				{
 					add(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					if(toPrint)
+					if (toPrint)
 						cout << "|  Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
 					break;
 				}
 				case 3:
 				{
 					sub(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					if(toPrint)
+					if (toPrint)
 						cout << "|  Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
 					break;
 				}
 				case 4:
 				{
 					mul(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					if(toPrint)
+					if (toPrint)
 						cout << "|  Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
 					break;
 				}
 				case 5:
 				{
 					addi(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					if(toPrint)
+					if (toPrint)
 						cout << "|  Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
 					break;
 				}
@@ -1036,7 +1021,7 @@ public:
 				case 9:
 				{
 					slt(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					if(toPrint)
+					if (toPrint)
 						cout << "Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
 					break;
 				}
@@ -1073,7 +1058,7 @@ public:
 		{
 			executeClockCycle();
 		}
-		if(toPrint)
+		if (toPrint)
 			cout << "\n";
 		printRegisterContents();
 		printMemory();
@@ -1162,8 +1147,8 @@ int main(int argc, char **argv)
 		{
 			exOver[i] = interpreters[i].executionOver();
 		}
-		if(toPrint)
-			cout << "\n==================Clock Cycle: " << setw(3) << interpreters[0].clockCycles + 1 << "==================\n";
+		if (toPrint)
+			cout << "\n==================Clock Cycle: " << setw(3) << counter + 1 << "==================\n";
 		// TODO : remove this from here, call once after looping through all cores
 		try
 		{
@@ -1171,22 +1156,18 @@ int main(int argc, char **argv)
 		}
 		catch (const char *ex)
 		{
-			if(toPrint)
+			if (toPrint)
 				cout << ex;
 		}
-<<<<<<< HEAD
-		cout << '\n';
-=======
-		if(toPrint)
-			cout<<'\n';
->>>>>>> origin/mrm
+		if (toPrint)
+			cout << '\n';
 
 		for (int i = 0; i < no_of_cores; i++)
 		{
 
 			if (!exOver[i])
 			{
-				if(toPrint)
+				if (toPrint)
 					cout << "|  ==================CPU CORE: " << setw(3) << i << "==================\n";
 				interpreters[i].executeClockCycle();
 			}
@@ -1198,12 +1179,13 @@ int main(int argc, char **argv)
 		{
 			counter++;
 		}
-		if(toPrint)
+		if (toPrint)
 			cout << "====================================================\n";
 		//  if (counter > 100)
 		//	break;
 	}
-	if(toPrint){
+	if (toPrint)
+	{
 		for (int i = 0; i < no_of_cores; i++)
 		{
 			cout << "\n";
@@ -1211,7 +1193,6 @@ int main(int argc, char **argv)
 			interpreters[i].printRegisterContents();
 			interpreters[i].printMemory();
 			interpreters[i].printStatistics();
-		}	
+		}
 	}
-	
 }
