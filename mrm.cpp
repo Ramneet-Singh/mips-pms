@@ -2,18 +2,18 @@
 
 
 
-// int Instruction::getRowDifference() const
-// {
-//     int row_number = address / NUMCOLS;
-//     if (row_number > rowBufferIndex)
-//     {
-//         return row_number - rowBufferIndex;
-//     }
-//     else
-//     {
-//         return rowBufferIndex - row_number;
-//     }
-// }
+int Instruction::getRowDifference() const
+{
+    int row_number = address / NUMCOLS;
+    if (row_number > rowBufferIndex)
+    {
+        return row_number - rowBufferIndex;
+    }
+    else
+    {
+        return rowBufferIndex - row_number;
+    }
+}
 
 // bool Instruction::operator==(const Instruction &rhs) const
 // {
@@ -101,6 +101,7 @@ void MRM::addInstruction(Instruction &inst)
     }
     else{
         buffer[index] = &inst;
+        inst.index = index;
     }
 }
 
@@ -114,19 +115,24 @@ Instruction *MRM::scheduleNextInstr()
             if(buffer[i]->dependencies[j] != 0)
                 isIndependent = false;
         }
-
+        
         bool isEmpty = (buffer[i]->type == -1);
+
+        if(!isEmpty && isIndependent && (buffer[i]->getRowDifference() == 0)){
+            // std::cout<<"found same row\n";
+            return buffer[i];
+        }
         // std::cout<<isEmpty<<isIndependent<<"here\n";
         // std::cout<<buffer[i]->id<<' '<<min_id<<'\n';
         if((buffer[i]->id<=min_id) && !isEmpty && isIndependent){
             min_id = buffer[i]->id;
             min_index = i;
-            std::cout<<"here\n";
+            // std::cout<<"here\n";
         }
     }
     if(min_index == -1){
         
-        throw "No independent instruction!";
+        throw "No Suitable instruction!";
     }
     return buffer[min_index];
 }
@@ -145,6 +151,11 @@ void MRM::deleteCurrentInstruction()
 
 void MRM::executeNext()
 {
+    std::cout<<"Instructions in the row buffer are: \n";
+    for(int i = 0 ; i< BUFFER_SIZE; i++){
+        if(buffer[i]->type != -1)
+            buffer[i]->print();
+    }
     for (int i = 0; i < 4; i++)
     {
         dramMemory.dramCompletedActivity[i] = -1;
@@ -156,17 +167,27 @@ void MRM::executeNext()
         if(isBufferEmpty())
             return;
         Instruction *nextInstr = scheduleNextInstr();
+        std::cout<<"DRAM received instruction: ";
+        nextInstr->print();
         currentInstIndex = nextInstr->index;
-        deleteCurrentInstruction();
         dramMemory.addActivities(*(nextInstr));
     }
-    dramMemory.performActivity();
+    bool instructionOver;
+    instructionOver = dramMemory.performActivity();
+    if(instructionOver){
+        // std::cout<<"Instruction execution completed: ";
+        // buffer[currentInstIndex]->print();
+        deleteCurrentInstruction();
+    }
+    
         
 }
 
 
 bool MRM::isClashing(int *instr, Instruction &dramInstr, int cpu_core)
 {
+    if(dramInstr.type == -1)
+        return false;
     if(dramInstr.core_no != cpu_core)
         return false;
     if (dramInstr.type == 1)
@@ -249,8 +270,10 @@ bool MRM::isBlocked(int *instruction, int cpu_core)
 
     for (int i = 0; i<BUFFER_SIZE; i++)
     {
-        if (isClashing(instruction, *buffer[i], cpu_core))
+        if (isClashing(instruction, *buffer[i], cpu_core)){
+            buffer[i]->print();
             return true;
+        }
     }
 
     return false;

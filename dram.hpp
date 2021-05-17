@@ -48,8 +48,14 @@ public:
 
     int getRowDifference() const;
 
-    void to_string(){
-        std::cout<<"ID: "<<id<<" target: "<<target<<" address: "<<address<<'\n';
+    void print(){
+        std::string registerNames[32] = {"zero", "at", "v0", "v1", "a0", "a1", "a2", "a3", "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra"};
+        if(type == 0)
+            std::cout<<"Index: "<<index<<". lw $"<<registerNames[target]<<" ("<<target<<") "<<address<<'\n';
+        else if(type == 1)
+            std::cout<<"Index: "<<index<<". sw (value "<<target<<") "<<address<<'\n';
+        else if(type == -1)
+            std::cout<<"<Empty Instruction>\n";
     }
 };
 
@@ -240,7 +246,7 @@ public:
     /*
         Take the front of the pending activities queue, and move it forward by one cycle
     */
-    void performActivity();
+    bool performActivity();
 
 
 };

@@ -69,6 +69,11 @@ void DRAM::updateRowBuffer(int columnNum, int val)
 // [ASSIGNMENT 4] :: just converted instruction array to object
 void DRAM::addActivities(Instruction &dramInstr)
 {
+    if(dramInstr.type == -1){
+        std::cout<<"adding empty activities\n";
+        return;
+    }
+        
     if (dramInstr.type == 0)
     {
         // lw instruction
@@ -141,7 +146,7 @@ void DRAM::addActivities(Instruction &dramInstr)
     }
 }
 
-void DRAM::performActivity()
+bool DRAM::performActivity()
 {
     std::array<int, 4> &act = pendingActivities.front();
 
@@ -201,6 +206,7 @@ void DRAM::performActivity()
             // Remove from pending activities
             pendingActivities.pop();
         }
+        return true;
         break;
     }
     case 3:
@@ -223,6 +229,7 @@ void DRAM::performActivity()
             pendingActivities.pop();
             // Remove its instruction from pending instructions
         }
+        return true;
         break;
     }
     default:
@@ -230,4 +237,5 @@ void DRAM::performActivity()
         break;
     }
     }
+    return false;
 }
