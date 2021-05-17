@@ -47,7 +47,7 @@ class MIPS
 private:
 	IntRegister registers[32];
 
-	int clockCycles;
+	
 	int instructionIndex;
 	vector<string> labels;
 	map<string, int> labelToAddr;
@@ -55,6 +55,7 @@ private:
 	vector<int> addressesAccessed;
 
 public:
+	int clockCycles;
 	int core_no;
 	int instructionMemory[INSTRUCTION_MEMORY_SIZE];
 	// Instruction mapping
@@ -864,13 +865,11 @@ public:
 	*/
 	void executeClockCycle()
 	{
-		
-
+		clockCycles++;
 		// If you have not yet crossed the instruction section of memory, fetch instruction and execute
 		if (programCounter < instructionIndex)
 		{
-			clockCycles++;
-			cout << "==================Clock Cycle: " <<setw(3)<< clockCycles << "==================\n";
+			
 
 			int instructDecoded[maxArguments + 1];
 			decode(programCounter, instructDecoded);
@@ -878,13 +877,7 @@ public:
 			// Check if we can issue the next instruction
 			bool issueNext = !(manager->isBlocked(instructDecoded, core_no));
 
-			// TODO : remove this from here, call once after looping through all cores
 			
-			try{
-				manager->executeNext();
-			} catch (const char* ex) {
-				cout<<ex;
-			}
 			
 			// If we can execute the next instruction, do it
 			if (issueNext)
@@ -1007,22 +1000,8 @@ public:
 			}
 
 			cout << "\n";
-			if(programCounter < instructionIndex)
-				return;
 		}
-
-
-		if(!manager->isBufferEmpty()){
-			clockCycles++;
-			cout << "==================Clock Cycle: " <<setw(3)<< clockCycles << "==================\n";
-			
-			try{
-				manager->executeNext();
-			} catch (const char* ex) {
-				cout<<ex;
-			}
-
-			// Check for any activity completed by the DRAM
+		else{
 			int dramCompletedActivity[4];
 			manager->getDramActivity(dramCompletedActivity);
 			if (dramCompletedActivity[0] != -1)
@@ -1032,6 +1011,7 @@ public:
 
 			cout << "\n";
 		}
+		
 	}
 
 	void execute()
@@ -1109,6 +1089,15 @@ int main(int argc, char **argv)
 	int counter = 0;
 	while(!allCoresExecuted){
 		allCoresExecuted = true;
+		
+		cout << "==================Clock Cycle: " <<setw(3)<< interpreters[0].clockCycles + 1 << "==================\n";
+		// TODO : remove this from here, call once after looping through all cores
+		try{
+			manager->executeNext();
+		} catch (const char* ex) {
+			cout<<ex;
+		}
+
 		for(int i = 0 ; i<no_of_cores; i++){
 			if(!interpreters[i].executionOver()){
 				counter++;
@@ -1117,6 +1106,9 @@ int main(int argc, char **argv)
 				interpreters[i].executeClockCycle();
 			}
 		}
+		
+		// if(counter>50)
+		// 	break;
 	}
 	for(int i = 0 ; i<no_of_cores; i++){
 

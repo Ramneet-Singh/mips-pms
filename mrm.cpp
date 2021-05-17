@@ -111,6 +111,7 @@ void MRM::addInstruction(Instruction &inst)
 
 Instruction *MRM::scheduleNextInstr()
 {
+    
     int min_id = buffer[0]->id, min_index = -1;
     bool isIndependent = true;
     for(int i = 0; i<BUFFER_SIZE; i++){
@@ -132,7 +133,7 @@ Instruction *MRM::scheduleNextInstr()
         if((buffer[i]->id<=min_id) && !isEmpty && isIndependent){
             min_id = buffer[i]->id;
             min_index = i;
-            std::cout<<"here\n";
+            std::cout<<"Loop detecting?\n";
         }
     }
     if(min_index == -1){
@@ -159,6 +160,7 @@ void MRM::deleteCurrentInstruction()
 
 void MRM::executeNext()
 {
+    
     std::cout<<"Instructions in the row buffer are: \n";
     for(int i = 0 ; i< BUFFER_SIZE; i++){
         if(buffer[i]->type != -1)
@@ -168,7 +170,7 @@ void MRM::executeNext()
     {
         dramMemory.dramCompletedActivity[i] = -1;
     }
-
+    
     if (dramMemory.pendingActivities.empty())
     {
         // Check for pending instructions
@@ -180,14 +182,16 @@ void MRM::executeNext()
         currentInstIndex = nextInstr->index;
         dramMemory.addActivities(*(nextInstr));
     }
+    
     bool instructionOver;
     instructionOver = dramMemory.performActivity();
     if(instructionOver){
         // std::cout<<"Instruction execution completed: ";
         // buffer[currentInstIndex]->print();
+        
         deleteCurrentInstruction();
     }
-    
+   
         
 }
 
