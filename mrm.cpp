@@ -52,7 +52,7 @@ bool MRM::isConflicting(Instruction &inst1, Instruction &inst2)
                 return true;
             }
         }
-        else if(inst2.type == 1)
+        else if (inst2.type == 1)
         {
             // lw and sw
             if (inst1.address == inst2.address)
@@ -61,7 +61,7 @@ bool MRM::isConflicting(Instruction &inst1, Instruction &inst2)
             }
         }
     }
-    else if(inst1.type == 1)
+    else if (inst1.type == 1)
     {
         if (inst2.type == 0)
         {
@@ -69,14 +69,15 @@ bool MRM::isConflicting(Instruction &inst1, Instruction &inst2)
             if (inst1.address == inst2.address)
             {
                 /// FORWARDING ///
-                if(inst1.id >= inst2.forwarded_id){
+                if (inst1.id >= inst2.forwarded_id)
+                {
                     inst2.forwarded_value = inst1.target;
                     inst2.forwarded_id = inst1.id;
                 }
                 return true;
             }
         }
-        else if(inst2.type == 1)
+        else if (inst2.type == 1)
         {
             // sw and sw
             if (inst1.address == inst2.address)
@@ -90,7 +91,7 @@ bool MRM::isConflicting(Instruction &inst1, Instruction &inst2)
 
 int MRM::getEmptyIndex(int cpu_core)
 {
-    for (int i = cpu_core*BUFFER_SIZE/MAX_CPU_CORES; i < (cpu_core+1)*BUFFER_SIZE/MAX_CPU_CORES; i++)
+    for (int i = cpu_core * BUFFER_SIZE / MAX_CPU_CORES; i < (cpu_core + 1) * BUFFER_SIZE / MAX_CPU_CORES; i++)
     {
 
         if (buffer[i]->type == -1)
@@ -133,7 +134,8 @@ Instruction *MRM::scheduleNextInstr()
     int min_id_row_same = INT32_MAX, min_index_row_same = -1;
 
     /// FORWARDING ///
-    for (int i = 0; i < BUFFER_SIZE; i++){
+    for (int i = 0; i < BUFFER_SIZE; i++)
+    {
         isIndependent = true;
         for (int j = 0; j < BUFFER_SIZE; j++)
         {
@@ -143,12 +145,13 @@ Instruction *MRM::scheduleNextInstr()
 
         bool isEmpty = (buffer[i]->type == -1);
 
-        if(isIndependent && !isEmpty){
-            if(buffer[i]->isForwarded()){
+        if (isIndependent && !isEmpty)
+        {
+            if (buffer[i]->isForwarded())
+            {
                 return buffer[i];
             }
         }
-
     }
 
     for (int i = 0; i < BUFFER_SIZE; i++)
@@ -161,8 +164,6 @@ Instruction *MRM::scheduleNextInstr()
         }
 
         bool isEmpty = (buffer[i]->type == -1);
-
-        
 
         if (!isEmpty && isIndependent && (buffer[i]->getRowDifference() == 0) && (buffer[i]->id <= min_id_row_same))
         {
@@ -177,7 +178,8 @@ Instruction *MRM::scheduleNextInstr()
             min_index = i;
         }
     }
-    if(min_index_row_same != -1){
+    if (min_index_row_same != -1)
+    {
         return buffer[min_index_row_same];
     }
     if (min_index != -1)
@@ -203,10 +205,12 @@ void MRM::deleteCurrentInstruction()
 
 void MRM::executeNext()
 {
-    if(isBufferEmpty()){
+    if (isBufferEmpty())
+    {
         std::cout << "Row buffer is Empty! \n";
     }
-    else{
+    else
+    {
         std::cout << "Instructions in the row buffer: \n";
         for (int i = 0; i < BUFFER_SIZE; i++)
         {
@@ -214,13 +218,13 @@ void MRM::executeNext()
                 buffer[i]->print();
         }
     }
-    
+
     for (int i = 0; i < 5; i++)
     {
         dramMemory.dramCompletedActivity[i] = -1;
     }
 
-    if (dramMemory.pendingActivities.empty() && schedulingDelayLeft==-1)
+    if (dramMemory.pendingActivities.empty() && schedulingDelayLeft == -1)
     {
         // Check for pending instructions
         if (isBufferEmpty())
@@ -229,16 +233,20 @@ void MRM::executeNext()
         nextInstIndex = nextInstr->index;
         schedulingDelayLeft = SCHEDULING_DELAY;
     }
-    if(dramMemory.pendingActivities.empty()){
-        if(schedulingDelayLeft==0){
+    if (dramMemory.pendingActivities.empty())
+    {
+        if (schedulingDelayLeft == 0)
+        {
             currentInstIndex = buffer[nextInstIndex]->index;
-            if(buffer[nextInstIndex]->isForwarded()){
+            if (buffer[nextInstIndex]->isForwarded())
+            {
                 dramMemory.dramCompletedActivity[0] = 2;
                 dramMemory.dramCompletedActivity[1] = buffer[nextInstIndex]->forwarded_value;
                 dramMemory.dramCompletedActivity[2] = buffer[nextInstIndex]->target;
-                std::cout<<"Forwarded sw-lw value "<<buffer[nextInstIndex]->forwarded_value<<" to instruction: ";
+                std::cout << "Forwarded sw-lw value " << buffer[nextInstIndex]->forwarded_value << " to instruction: ";
                 buffer[nextInstIndex]->print();
                 deleteCurrentInstruction();
+                schedulingDelayLeft = -1;
                 return;
             }
             std::cout << "DRAM request issued | instruction: ";
@@ -246,8 +254,9 @@ void MRM::executeNext()
             dramMemory.addActivities(*(buffer[nextInstIndex]));
             schedulingDelayLeft = -1;
         }
-        else{
-            schedulingDelayLeft -- ;
+        else
+        {
+            schedulingDelayLeft--;
             return;
         }
     }
@@ -350,8 +359,8 @@ bool MRM::isBlocked(int *instruction, int cpu_core)
     {
         if (isClashing(instruction, *buffer[i], cpu_core))
         {
-            std::cout<<"Instruction dependencies unsatisfied. Stalling...\n";
-            std::cout<<"Dependent Instruction: ";
+            std::cout << "Instruction dependencies unsatisfied. Stalling...\n";
+            std::cout << "Dependent Instruction: ";
             buffer[i]->print();
             return true;
         }
