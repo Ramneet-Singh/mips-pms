@@ -4,7 +4,6 @@
 #include <array>
 #include <constants.h>
 
-
 // [ASSIGNMENT 4]
 class Instruction
 {
@@ -31,7 +30,7 @@ public:
         address = add;
         target = tar;
         type = typ;
-        for(int i = 0; i<BUFFER_SIZE; i++)
+        for (int i = 0; i < BUFFER_SIZE; i++)
             dependencies[i] = 0;
     }
 
@@ -41,21 +40,33 @@ public:
         address = add;
         target = tar;
         type = typ;
-        for(int i = 0; i<BUFFER_SIZE; i++)
+        for (int i = 0; i < BUFFER_SIZE; i++)
             dependencies[i] = 0;
     }
     bool operator==(const Instruction &rhs) const;
 
     int getRowDifference() const;
 
-    void print(){
+    void print()
+    {
         std::string registerNames[32] = {"zero", "at", "v0", "v1", "a0", "a1", "a2", "a3", "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra"};
-        if(type == 0)
-            std::cout<<"Index: "<<index<<". lw $"<<registerNames[target]<<" ("<<target<<") "<<address<<'\n';
-        else if(type == 1)
-            std::cout<<"Index: "<<index<<". sw (value "<<target<<") "<<address<<'\n';
-        else if(type == -1)
-            std::cout<<"Index: "<<index<<". <Empty Instruction>\n";
+        if (type == 0)
+            std::cout << "Index: " << index << ". lw $" << registerNames[target] << " (" << target << ") " << address << " Dependencies: ";
+        else if (type == 1)
+            std::cout
+                << "Index: " << index << ". sw (value " << target << ") " << address << " Dependencies: ";
+        else if (type == -1)
+            std::cout
+                << "Index: " << index << ". <Empty Instruction>"
+                << " Dependencies: ";
+        for (int i = 0; i < BUFFER_SIZE; i++)
+        {
+            if (dependencies[i] == 1)
+            {
+                std::cout << "Index " << i << ", ";
+            }
+        }
+        std::cout << "\n";
     }
 };
 
@@ -90,27 +101,9 @@ public:
 
 // [ASSIGNMENT 4 ends]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class DRAM
 {
 private:
-
     /*
         Copy the row at rowIdx to row buffer
     */
@@ -130,26 +123,10 @@ public:
     int rowBuffer[NUMCOLS];
     int bufferRowIndex;
 
-    
-
     int rowBufferUpdates;
 
     int ROW_ACCESS_DELAY;
     int COL_ACCESS_DELAY;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // [ASSIGNMENT 4]
     /* 
@@ -177,15 +154,11 @@ public:
     */
     std::queue<std::array<int, 4>> pendingActivities;
 
-
-    
-
     /*
     Checks if a new instruction's execution will be started in this cycle. If it will, checks which instruction will be scheduled. Returns true only if this instruction would require a writeback and false in all other cases
     */
     bool willPerformWritebackNext();
 
-   
     /*
         Adds the activities for a dram instruction. Activities for a lw instruction:
         1. Writeback the row in row buffer
@@ -195,24 +168,7 @@ public:
     */
     void addActivities(Instruction &dramInstr);
 
-    // [ASSIGNMENT 4 ends] 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // [ASSIGNMENT 4 ends]
 
     /*
         Have an array to store the comleted activity in current cycle if any
@@ -221,15 +177,12 @@ public:
     */
     int dramCompletedActivity[4];
 
-
-
     DRAM();
 
     DRAM(int rowAccessDelay, int colAccessDelay = 2);
 
     void setDelays(int rowAccessDelay, int colAccessDelay);
 
-    
     // 0 cycle delay instruction store and fetch operations
     void store(int address, int val);
     int fetch(int address);
@@ -243,6 +196,4 @@ public:
         Take the front of the pending activities queue, and move it forward by one cycle
     */
     bool performActivity();
-
-
 };

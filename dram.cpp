@@ -15,7 +15,8 @@ DRAM::DRAM()
     rowBufferUpdates = 0;
 }
 
-void DRAM::setDelays(int rowAccessDelay, int colAccessDelay){
+void DRAM::setDelays(int rowAccessDelay, int colAccessDelay)
+{
     ROW_ACCESS_DELAY = rowAccessDelay;
     COL_ACCESS_DELAY = colAccessDelay;
 }
@@ -63,16 +64,15 @@ void DRAM::updateRowBuffer(int columnNum, int val)
     rowBuffer[columnNum] = val;
 }
 
-
-
 // [ASSIGNMENT 4] :: just converted instruction array to object
 void DRAM::addActivities(Instruction &dramInstr)
 {
-    if(dramInstr.type == -1){
-        std::cout<<"adding empty activities\n";
+    if (dramInstr.type == -1)
+    {
+        std::cout << "adding empty activities\n";
         return;
     }
-        
+
     if (dramInstr.type == 0)
     {
         // lw instruction
@@ -204,8 +204,8 @@ bool DRAM::performActivity()
             dramCompletedActivity[2] = act[2];
             // Remove from pending activities
             pendingActivities.pop();
+            return true;
         }
-        return true;
         break;
     }
     case 3:
@@ -227,8 +227,8 @@ bool DRAM::performActivity()
             // Remove from pending activities
             pendingActivities.pop();
             // Remove its instruction from pending instructions
+            return true;
         }
-        return true;
         break;
     }
     default:

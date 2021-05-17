@@ -47,7 +47,6 @@ class MIPS
 private:
 	IntRegister registers[32];
 
-	
 	int instructionIndex;
 	vector<string> labels;
 	map<string, int> labelToAddr;
@@ -65,8 +64,8 @@ public:
 	int maxArguments;
 	bool firstLoad;
 
-	MRM * manager;
-	
+	MRM *manager;
+
 	int programCounter;
 
 	// [ASSIGNMENT 4]
@@ -74,8 +73,8 @@ public:
 	int waitDramTill;
 
 public:
-
-	MIPS(){
+	MIPS()
+	{
 		core_no = 0;
 		firstLoad = true;
 		waitDramTill = -1;
@@ -96,8 +95,8 @@ public:
 			no_exec_instructions[i] = 0;
 		}
 	}
-	
-	MIPS(MRM * m, int cpu_core)
+
+	MIPS(MRM *m, int cpu_core)
 	{
 
 		manager = m;
@@ -494,7 +493,7 @@ public:
 		}
 	}
 
-	void handleActivity(int * dramCompletedActivity)
+	void handleActivity(int *dramCompletedActivity)
 	{
 		if (dramCompletedActivity[0] == -1)
 		{
@@ -552,7 +551,8 @@ public:
 	                                INSTRUCTION ENCODING FUNCTIONS
 				 ================================================================-
 	*/
-	void storeInMem(int address, int value){
+	void storeInMem(int address, int value)
+	{
 		instructionMemory[address] = value;
 	}
 	void encode(string command, string arguments[], int maxArguments, int instructionIndex)
@@ -581,10 +581,12 @@ public:
 			{
 				//Then there is no base register given
 				baseRegister = 0;
-				try{
+				try
+				{
 					offset = stoi(arguments[1], nullptr, 0);
 				}
-				catch (std::out_of_range& e) {
+				catch (std::out_of_range &e)
+				{
 					throwError(arguments[1], 2);
 				}
 			}
@@ -601,10 +603,12 @@ public:
 					throwError(command, 6);
 				}
 				baseRegister = stoi(thirdArg);
-				try{
+				try
+				{
 					offset = stoi(secondArg, nullptr, 0);
 				}
-				catch (std::out_of_range& e) {
+				catch (std::out_of_range &e)
+				{
 					throwError(secondArg, 2);
 				}
 			}
@@ -682,7 +686,8 @@ public:
 		storeInMem(instructionIndex, commandCode);
 	}
 
-	int instructionFetch(int index){
+	int instructionFetch(int index)
+	{
 		return instructionMemory[index];
 	}
 
@@ -869,7 +874,6 @@ public:
 		// If you have not yet crossed the instruction section of memory, fetch instruction and execute
 		if (programCounter < instructionIndex)
 		{
-			
 
 			int instructDecoded[maxArguments + 1];
 			decode(programCounter, instructDecoded);
@@ -877,15 +881,16 @@ public:
 			// Check if we can issue the next instruction
 			bool issueNext = !(manager->isBlocked(instructDecoded, core_no));
 
-			
-			
 			// If we can execute the next instruction, do it
 			if (issueNext)
 			{
-				if (instructDecoded[0] < 10){ no_exec_instructions[instructDecoded[0]] += 1; }
+				if (instructDecoded[0] < 10)
+				{
+					no_exec_instructions[instructDecoded[0]] += 1;
+				}
 
 				printInstruction(instructDecoded);
-				cout<<" issued. Memory address : " << programCounter <<" - "<<programCounter+3<<'\n' ;
+				cout << " issued. Memory address : " << programCounter << " - " << programCounter + 3 << '\n';
 
 				switch (instructDecoded[0])
 				{
@@ -987,8 +992,6 @@ public:
 				}
 
 				programCounter = programCounter + 4;
-				
-
 			}
 
 			// Check for any activity completed by the DRAM
@@ -1001,7 +1004,8 @@ public:
 
 			cout << "\n";
 		}
-		else{
+		else
+		{
 			int dramCompletedActivity[4];
 			manager->getDramActivity(dramCompletedActivity);
 			if (dramCompletedActivity[0] != -1)
@@ -1011,23 +1015,23 @@ public:
 
 			cout << "\n";
 		}
-		
 	}
 
 	void execute()
 	{
 		programCounter = 0;
-		while(!executionOver()){
+		while (!executionOver())
+		{
 			executeClockCycle();
 		}
 		cout << "\n";
 		printRegisterContents();
 		printMemory();
 		printStatistics();
-
 	}
 
-	bool executionOver(){
+	bool executionOver()
+	{
 		return (programCounter >= instructionIndex && manager->isBufferEmpty());
 	}
 };
@@ -1044,42 +1048,51 @@ int main(int argc, char **argv)
 	int rowDelay, colDelay, no_of_cores;
 	bool blockMode;
 	bool wrongArguments = false;
-	if(argc == 1)
+	if (argc == 1)
 		wrongArguments = true;
-	else{
-		try{
+	else
+	{
+		try
+		{
 			no_of_cores = stoi(argv[1]);
 		}
-		catch(...){
+		catch (...)
+		{
 			cout << "Error: incorrect usage. The first argument has to be the number of cores!\n";
 			return -1;
 		}
-		if(no_of_cores > MAX_CPU_CORES){
-			cout<<"Error: Only upto "<<MAX_CPU_CORES<<" CPU cores available. Requested "<<no_of_cores<<" cores\n";
+		if (no_of_cores > MAX_CPU_CORES)
+		{
+			cout << "Error: Only upto " << MAX_CPU_CORES << " CPU cores available. Requested " << no_of_cores << " cores\n";
 		}
-		if(argc == no_of_cores + 5){
-			for(int i = 0; i<no_of_cores; i++){
-				filenames[i] = argv[2+i];
+		if (argc == no_of_cores + 5)
+		{
+			for (int i = 0; i < no_of_cores; i++)
+			{
+				filenames[i] = argv[2 + i];
 			}
 			rowDelay = stoi(argv[2 + no_of_cores]);
 			colDelay = stoi(argv[3 + no_of_cores]);
 			blockMode = (stoi(argv[4 + no_of_cores]) == 0) ? true : false;
 		}
-		else{
+		else
+		{
 			wrongArguments = true;
 		}
 	}
-	
-	if (wrongArguments){
+
+	if (wrongArguments)
+	{
 		cout << "Error: incorrect usage. \nPlease run: \t./assignment3 no_of_cores path_to_program1 path_to_program2 ... path_to_programn ROW_ACCESS_DELAY COL_ACCESS_DELAY blockingMode\n";
 		return -1;
 	}
 
-	MRM * manager = new MRM(rowDelay, colDelay, blockMode);
+	MRM *manager = new MRM(rowDelay, colDelay, blockMode);
 
 	MIPS interpreters[MAX_CPU_CORES];
 
-	for(int i = 0; i<no_of_cores; i++){
+	for (int i = 0; i < no_of_cores; i++)
+	{
 		interpreters[i] = MIPS(manager, i);
 		interpreters[i].readInstructions(filenames[i]);
 	}
@@ -1087,36 +1100,45 @@ int main(int argc, char **argv)
 	bool allCoresExecuted = false;
 
 	int counter = 0;
-	while(!allCoresExecuted){
+	while (!allCoresExecuted)
+	{
 		allCoresExecuted = true;
-		
-		cout << "==================Clock Cycle: " <<setw(3)<< interpreters[0].clockCycles + 1 << "==================\n";
+
+		cout << "==================Clock Cycle: " << setw(3) << interpreters[0].clockCycles + 1 << "==================\n";
 		// TODO : remove this from here, call once after looping through all cores
-		try{
+		try
+		{
 			manager->executeNext();
-		} catch (const char* ex) {
-			cout<<ex;
+		}
+		catch (const char *ex)
+		{
+			cout << ex;
 		}
 
-		for(int i = 0 ; i<no_of_cores; i++){
-			if(!interpreters[i].executionOver()){
-				counter++;
-				cout << "\n==================CORE: " <<setw(3)<< i << "==================\n";
+		for (int i = 0; i < no_of_cores; i++)
+		{
+			if (!interpreters[i].executionOver())
+			{
+				cout << "\n==================CORE: " << setw(3) << i << "==================\n";
 				allCoresExecuted = false;
 				interpreters[i].executeClockCycle();
 			}
 		}
-		
-		// if(counter>50)
-		// 	break;
+
+		if (!allCoresExecuted)
+		{
+			counter++;
+		}
+		//  if (counter > 100)
+		//	break;
 	}
-	for(int i = 0 ; i<no_of_cores; i++){
+	for (int i = 0; i < no_of_cores; i++)
+	{
 
 		cout << "\n";
-		cout << "==================CORE: " <<setw(3)<< i << "==================\n";
+		cout << "==================CORE: " << setw(3) << i << "==================\n";
 		interpreters[i].printRegisterContents();
 		interpreters[i].printMemory();
 		interpreters[i].printStatistics();
 	}
-	
 }
