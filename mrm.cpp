@@ -18,11 +18,12 @@ int Instruction::getRowDifference() const
 //     return rhs.id == id;
 // }
 
-MRM::MRM(int rDelay, int cDelay, int block)
+MRM::MRM(int rDelay, int cDelay, int block, bool p)
 {
     rowAccessDelay = rDelay;
     colAccessDelay = cDelay;
     blockingMode = block;
+    toPrint = p;
     for (int i = 0; i < BUFFER_SIZE; i++)
     {
         buffer[i] = new Instruction(-1, 0, 0, -1, -1);
@@ -205,17 +206,19 @@ void MRM::deleteCurrentInstruction()
 
 void MRM::executeNext()
 {
-    if (isBufferEmpty())
-    {
-        std::cout << "Row buffer is Empty! \n";
-    }
-    else
-    {
-        std::cout << "Instructions in the row buffer: \n";
-        for (int i = 0; i < BUFFER_SIZE; i++)
+    if(toPrint){
+        if (isBufferEmpty())
         {
-            if (buffer[i]->type != -1)
-                buffer[i]->print();
+            std::cout << "Row buffer is Empty! \n";
+        }
+        else
+        {
+            std::cout << "Instructions in the row buffer: \n";
+            for (int i = 0; i < BUFFER_SIZE; i++)
+            {
+                if (buffer[i]->type != -1)
+                    buffer[i]->print();
+            }
         }
     }
 
@@ -243,14 +246,18 @@ void MRM::executeNext()
                 dramMemory.dramCompletedActivity[0] = 2;
                 dramMemory.dramCompletedActivity[1] = buffer[nextInstIndex]->forwarded_value;
                 dramMemory.dramCompletedActivity[2] = buffer[nextInstIndex]->target;
-                std::cout << "Forwarded sw-lw value " << buffer[nextInstIndex]->forwarded_value << " to instruction: ";
-                buffer[nextInstIndex]->print();
+                if(toPrint){
+                    std::cout << "Forwarded sw-lw value " << buffer[nextInstIndex]->forwarded_value << " to instruction: ";
+                    buffer[nextInstIndex]->print();
+                }
                 deleteCurrentInstruction();
                 schedulingDelayLeft = -1;
                 return;
             }
-            std::cout << "DRAM request issued | instruction: ";
-            buffer[nextInstIndex]->print();
+            if(toPrint){
+                std::cout << "DRAM request issued | instruction: ";
+                buffer[nextInstIndex]->print();
+            }
             dramMemory.addActivities(*(buffer[nextInstIndex]));
             schedulingDelayLeft = -1;
         }
@@ -359,9 +366,11 @@ bool MRM::isBlocked(int *instruction, int cpu_core)
     {
         if (isClashing(instruction, *buffer[i], cpu_core))
         {
-            std::cout << "Instruction dependencies unsatisfied. Stalling...\n";
-            std::cout << "Dependent Instruction: ";
-            buffer[i]->print();
+            if(toPrint){
+                std::cout << "|  Instruction dependencies unsatisfied. Stalling...\n";
+                std::cout << "|  Dependent Instruction: ";
+                buffer[i]->print();
+            }
             return true;
         }
     }
