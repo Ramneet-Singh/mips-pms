@@ -69,20 +69,39 @@ public:
 	int programCounter;
 
 	// [ASSIGNMENT 4]
-	// Are we simulating an execution or not?
-	bool dryrun;
 	// If we are making the dram wait, till what clock cycle number? If not, we set it to -1
 	int waitDramTill;
 
 public:
+
+	MIPS(){
+		core_no = 0;
+		firstLoad = true;
+		waitDramTill = -1;
+
+		maxArguments = 3;
+		clockCycles = 0;
+		programCounter = 0;
+		programCounter = 0;
+
+		for (int i = 0; i < 32; i++)
+		{
+			registers[i].setName(registerNames[i]);
+			registers[i].setContent(0);
+		}
+
+		for (int i = 0; i < 10; i++)
+		{
+			no_exec_instructions[i] = 0;
+		}
+	}
 	
-	MIPS(int rowAccessDelay, int colAccessDelay, bool blockMode, MRM * m, int cpu_core, bool dry = false)
+	MIPS(MRM * m, int cpu_core)
 	{
 
 		manager = m;
 		core_no = cpu_core;
 		firstLoad = true;
-		dryrun = dry;
 		waitDramTill = -1;
 
 		maxArguments = 3;
@@ -843,13 +862,12 @@ public:
 	                                EXECUTION FUNCTION
 				 ================================================================-
 	*/
-
-	void execute()
+	void executeClockCycle()
 	{
-		int programCounter = 0;
+		
 
-		// Till you cross the instruction section of memory, keep fetching instructions and executing
-		while (programCounter < instructionIndex)
+		// If you have not yet crossed the instruction section of memory, fetch instruction and execute
+		if (programCounter < instructionIndex)
 		{
 			clockCycles++;
 			cout << "==================Clock Cycle: " <<setw(3)<< clockCycles << "==================\n";
@@ -976,6 +994,8 @@ public:
 				}
 
 				programCounter = programCounter + 4;
+				
+
 			}
 
 			// Check for any activity completed by the DRAM
@@ -987,10 +1007,12 @@ public:
 			}
 
 			cout << "\n";
+			if(programCounter < instructionIndex)
+				return;
 		}
 
-		while (!manager->isBufferEmpty())
-		{
+
+		if(!manager->isBufferEmpty()){
 			clockCycles++;
 			cout << "==================Clock Cycle: " <<setw(3)<< clockCycles << "==================\n";
 			
@@ -1010,13 +1032,25 @@ public:
 
 			cout << "\n";
 		}
+	}
+
+	void execute()
+	{
+		programCounter = 0;
+		while(!executionOver()){
+			executeClockCycle();
+		}
 		cout << "\n";
 		printRegisterContents();
 		printMemory();
 		printStatistics();
+
+	}
+
+	bool executionOver(){
+		return (programCounter >= instructionIndex && manager->isBufferEmpty());
 	}
 };
-
 
 string MIPS::instructions[10] = {"lw", "sw", "add", "sub", "mul", "addi", "j", "beq", "bne", "slt"};
 string MIPS::registerNames[32] = {"zero", "at", "v0", "v1", "a0", "a1", "a2", "a3", "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra"};
@@ -1026,27 +1060,71 @@ int Instruction::numInstr = 0;
 
 int main(int argc, char **argv)
 {
-	string filename;
-	int rowDelay, colDelay;
+	string filenames[MAX_CPU_CORES];
+	int rowDelay, colDelay, no_of_cores;
 	bool blockMode;
-	if (argc == 5)
-	{
-		filename = argv[1];
-		rowDelay = stoi(argv[2]);
-		colDelay = stoi(argv[3]);
-		blockMode = (stoi(argv[4]) == 0) ? true : false;
+	bool wrongArguments = false;
+	if(argc == 1)
+		wrongArguments = true;
+	else{
+		try{
+			no_of_cores = stoi(argv[1]);
+		}
+		catch(...){
+			cout << "Error: incorrect usage. The first argument has to be the number of cores!\n";
+			return -1;
+		}
+		if(no_of_cores > MAX_CPU_CORES){
+			cout<<"Error: Only upto "<<MAX_CPU_CORES<<" CPU cores available. Requested "<<no_of_cores<<" cores\n";
+		}
+		if(argc == no_of_cores + 5){
+			for(int i = 0; i<no_of_cores; i++){
+				filenames[i] = argv[2+i];
+			}
+			rowDelay = stoi(argv[2 + no_of_cores]);
+			colDelay = stoi(argv[3 + no_of_cores]);
+			blockMode = (stoi(argv[4 + no_of_cores]) == 0) ? true : false;
+		}
+		else{
+			wrongArguments = true;
+		}
 	}
-	else
-	{
-		cout << "Error: incorrect usage. \nPlease run: \t./assignment3 path_to_program ROW_ACCESS_DELAY COL_ACCESS_DELAY blockingMode\n";
+	
+	if (wrongArguments){
+		cout << "Error: incorrect usage. \nPlease run: \t./assignment3 no_of_cores path_to_program1 path_to_program2 ... path_to_programn ROW_ACCESS_DELAY COL_ACCESS_DELAY blockingMode\n";
 		return -1;
 	}
 
-	MRM * manager = new MRM(blockMode);
+	MRM * manager = new MRM(rowDelay, colDelay, blockMode);
 
-	MIPS interpreter(rowDelay, colDelay, blockMode, manager, 0);
+	MIPS interpreters[MAX_CPU_CORES];
 
-	interpreter.readInstructions(filename);
+	for(int i = 0; i<no_of_cores; i++){
+		interpreters[i] = MIPS(manager, i);
+		interpreters[i].readInstructions(filenames[i]);
+	}
 
-	interpreter.execute();
+	bool allCoresExecuted = false;
+
+	int counter = 0;
+	while(!allCoresExecuted){
+		allCoresExecuted = true;
+		for(int i = 0 ; i<no_of_cores; i++){
+			if(!interpreters[i].executionOver()){
+				counter++;
+				cout << "\n==================CORE: " <<setw(3)<< i << "==================\n";
+				allCoresExecuted = false;
+				interpreters[i].executeClockCycle();
+			}
+		}
+	}
+	for(int i = 0 ; i<no_of_cores; i++){
+
+		cout << "\n";
+		cout << "==================CORE: " <<setw(3)<< i << "==================\n";
+		interpreters[i].printRegisterContents();
+		interpreters[i].printMemory();
+		interpreters[i].printStatistics();
+	}
+	
 }

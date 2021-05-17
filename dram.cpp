@@ -4,11 +4,8 @@ using namespace std;
 
 DRAM::DRAM()
 {
-    blockingMode = true;
-    dryrun = false;
-    ROW_ACCESS_DELAY = 10;
-    COL_ACCESS_DELAY = 2;
     bufferRowIndex = -1;
+    setDelays(10, 2);
     Instruction::rowBufferIndex = -1;
 
     for (int i = 0; i < 3; i++)
@@ -18,12 +15,14 @@ DRAM::DRAM()
     rowBufferUpdates = 0;
 }
 
-DRAM::DRAM(int rowAccessDelay, int colAccessDelay, bool blockMode, bool dry)
-{
-    blockingMode = blockMode;
-    dryrun = dry;
+void DRAM::setDelays(int rowAccessDelay, int colAccessDelay){
     ROW_ACCESS_DELAY = rowAccessDelay;
     COL_ACCESS_DELAY = colAccessDelay;
+}
+
+DRAM::DRAM(int rowAccessDelay, int colAccessDelay)
+{
+    setDelays(rowAccessDelay, colAccessDelay);
     bufferRowIndex = -1;
     Instruction::rowBufferIndex = -1;
 

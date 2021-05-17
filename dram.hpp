@@ -55,7 +55,7 @@ public:
         else if(type == 1)
             std::cout<<"Index: "<<index<<". sw (value "<<target<<") "<<address<<'\n';
         else if(type == -1)
-            std::cout<<"<Empty Instruction>\n";
+            std::cout<<"Index: "<<index<<". <Empty Instruction>\n";
     }
 };
 
@@ -152,8 +152,6 @@ public:
 
 
     // [ASSIGNMENT 4]
-    // Are we currently in simulation mode or actual execution?
-    bool dryrun;
     /* 
         Have a Buffer of pending instructions
     */
@@ -179,10 +177,6 @@ public:
     */
     std::queue<std::array<int, 4>> pendingActivities;
 
-    /*
-        Delete the memory for any dram instructions left when you exit dryrun mode
-    */
-    void deleteAllDryrunInst();
 
     
 
@@ -231,7 +225,9 @@ public:
 
     DRAM();
 
-    DRAM(int rowAccessDelay, int colAccessDelay = 2, bool blockMode = true, bool dry = false);
+    DRAM(int rowAccessDelay, int colAccessDelay = 2);
+
+    void setDelays(int rowAccessDelay, int colAccessDelay);
 
     
     // 0 cycle delay instruction store and fetch operations

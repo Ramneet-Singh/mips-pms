@@ -7,9 +7,11 @@ class MRM{
 
 public:
 
-    MRM(int block);
+    MRM(int rDelay, int cDelay, int block);
     ~MRM();
     int blockingMode;
+    int rowAccessDelay;
+    int colAccessDelay;
 
     DRAM dramMemory;
     int currentInstIndex;

@@ -20,11 +20,14 @@ int Instruction::getRowDifference() const
 //     return rhs.id == id;
 // }
 
-MRM::MRM(int block){
+MRM::MRM(int rDelay, int cDelay, int block){
+    rowAccessDelay = rDelay;
+    colAccessDelay = cDelay;
     blockingMode = block;
     for (int i  = 0; i<BUFFER_SIZE; i++){
         buffer[i] = new Instruction(-1, 0, 0, -1);
     }
+    dramMemory.setDelays(rowAccessDelay, colAccessDelay);
 }
 MRM::~MRM(){
     for (int i  = 0; i<BUFFER_SIZE; i++){
@@ -109,12 +112,14 @@ void MRM::addInstruction(Instruction &inst)
 Instruction *MRM::scheduleNextInstr()
 {
     int min_id = buffer[0]->id, min_index = -1;
+    bool isIndependent = true;
     for(int i = 0; i<BUFFER_SIZE; i++){
-        bool isIndependent = true;
+        isIndependent = true;
         for(int j = 0; j< BUFFER_SIZE; j++){
             if(buffer[i]->dependencies[j] != 0)
                 isIndependent = false;
         }
+
         
         bool isEmpty = (buffer[i]->type == -1);
 
@@ -127,10 +132,13 @@ Instruction *MRM::scheduleNextInstr()
         if((buffer[i]->id<=min_id) && !isEmpty && isIndependent){
             min_id = buffer[i]->id;
             min_index = i;
-            // std::cout<<"here\n";
+            std::cout<<"here\n";
         }
     }
     if(min_index == -1){
+        std::cout<<"row index: "<<dramMemory.bufferRowIndex<<" Is independent: "<<isIndependent;
+        std::cout<<"\nCurrent Instruction: ";
+        buffer[currentInstIndex]->print();
         
         throw "No Suitable instruction!";
     }
@@ -167,7 +175,7 @@ void MRM::executeNext()
         if(isBufferEmpty())
             return;
         Instruction *nextInstr = scheduleNextInstr();
-        std::cout<<"DRAM received instruction: ";
+        std::cout<<"DRAM request issued | instruction: ";
         nextInstr->print();
         currentInstIndex = nextInstr->index;
         dramMemory.addActivities(*(nextInstr));
