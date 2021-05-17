@@ -1,12 +1,11 @@
 #include <dram.hpp>
 #include <constants.h>
-// TODO: justify/update size of buffer 
+// TODO: justify/update size of buffer
 
-
-class MRM{
+class MRM
+{
 
 public:
-
     MRM(int rDelay, int cDelay, int block);
     ~MRM();
     int blockingMode;
@@ -18,9 +17,8 @@ public:
     int nextInstIndex;
     int schedulingDelayLeft;
 
-    Instruction * buffer[BUFFER_SIZE];
-    
-    
+    Instruction *buffer[BUFFER_SIZE];
+
     /*
         
         Checks whether the instruction given is conflicting with the second instruction (which is pending in dram)
@@ -33,7 +31,7 @@ public:
            And if its value changes, then we will change it back to a wrong value after a few cycles if we don't block instruction I.
     */
     bool isClashing(int *instr, Instruction &dramInstr, int cpu_core);
-     /*
+    /*
         Checks if the instruction given is safe to execute before all pending instructions of dram are completed
         Iterates through the deque of pending instructions and checks one by one whether there is a conflict between this and the given instruction
     */
@@ -48,7 +46,6 @@ public:
     void deleteCurrentInstruction();
     int getEmptyIndex(int cpu_core);
 
-
     /*
     Takes in a request from the processor, figures out its dependencies, and adds it to the pendingInstructionsPriority queue.
     */
@@ -58,7 +55,7 @@ public:
         It picks the next instruction to be performed from the currently pending instructions in the DRAM.
         The logic for exploiting row buffer locality is present in this function.
     */
-    
+
     Instruction *scheduleNextInstr();
 
     /*
@@ -70,7 +67,9 @@ public:
     */
     void executeNext();
 
+    bool isBufferEmpty(int cpu_core);
+
     bool isBufferEmpty();
 
-    void getDramActivity(int * ar);
+    void getDramActivity(int *ar);
 };

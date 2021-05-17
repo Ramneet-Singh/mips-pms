@@ -337,6 +337,17 @@ bool MRM::isClashing(int *instr, Instruction &dramInstr, int cpu_core)
     }
 }
 
+bool MRM::isBufferEmpty(int cpu_core)
+{
+    bool isEmpty = true;
+    for (int i = 0; i < BUFFER_SIZE; i++)
+    {
+        if (buffer[i]->type != -1 && buffer[i]->core_no == cpu_core)
+            isEmpty = false;
+    }
+    return isEmpty;
+}
+
 bool MRM::isBufferEmpty()
 {
     bool isEmpty = true;
@@ -352,7 +363,7 @@ bool MRM::isBlocked(int *instruction, int cpu_core)
 {
     if (blockingMode)
     {
-        return !isBufferEmpty();
+        return !isBufferEmpty(cpu_core);
     }
 
     for (int i = 0; i < BUFFER_SIZE; i++)

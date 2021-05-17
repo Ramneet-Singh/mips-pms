@@ -255,14 +255,16 @@ public:
 
 		// [ASSIGNMENT 4]
 		Instruction *dramInstr = new Instruction(addr, a, 0, core_no);
-		try{
+		try
+		{
 			manager->addInstruction(*dramInstr);
 		}
-		catch(...){
-			cout<<"Stalling... Memory request manager buffer full! Cannot issue request.\n";
+		catch (...)
+		{
+			cout << "Stalling... Memory request manager buffer full! Cannot issue request.\n";
 			programCounter -= 4;
 		}
-		
+
 		// [ASSIGNMENT 4 end]
 	}
 	void issueSw(int a, int b, int c)
@@ -289,11 +291,13 @@ public:
 
 		// [ASSIGNMENT 4]
 		Instruction *dramInstr = new Instruction(addr, val, 1, core_no);
-		try{
+		try
+		{
 			manager->addInstruction(*dramInstr);
 		}
-		catch(...){
-			cout<<"Stalling... Memory request manager buffer full! Cannot issue request.\n";
+		catch (...)
+		{
+			cout << "Stalling... Memory request manager buffer full! Cannot issue request.\n";
 			programCounter -= 4;
 		}
 		// [ASSIGNMENT 4 end]
@@ -512,7 +516,6 @@ public:
 		{
 			return;
 		}
-		
 
 		switch (dramCompletedActivity[0])
 		{
@@ -543,7 +546,6 @@ public:
 			break;
 		}
 		}
-		
 	}
 
 	void printInstruction(int *instr)
@@ -896,7 +898,7 @@ public:
 			// Check for any activity completed by the DRAM
 			int dramCompletedActivity[5];
 			manager->getDramActivity(dramCompletedActivity);
-			 
+
 			if (dramCompletedActivity[0] != -1)
 			{
 				handleActivity(dramCompletedActivity);
@@ -904,7 +906,7 @@ public:
 
 			// Check if we can issue the next instruction
 			bool issueNext = !(manager->isBlocked(instructDecoded, core_no));
-			issueNext = issueNext && (dramCompletedActivity[4]!= core_no || dramCompletedActivity[0]!=2);
+			issueNext = issueNext && (dramCompletedActivity[4] != core_no || dramCompletedActivity[0] != 2);
 			// If we can execute the next instruction, do it
 			if (issueNext)
 			{
@@ -912,7 +914,7 @@ public:
 				{
 					no_exec_instructions[instructDecoded[0]] += 1;
 				}
-				cout<<"Instruction ";
+				cout << "Instruction ";
 				printInstruction(instructDecoded);
 				cout << " fetched. Memory address : " << programCounter << " - " << programCounter + 3 << '\n';
 
@@ -1048,7 +1050,7 @@ public:
 
 	bool executionOver()
 	{
-		return (programCounter >= instructionIndex && manager->isBufferEmpty());
+		return (programCounter >= instructionIndex && manager->isBufferEmpty(core_no));
 	}
 };
 
@@ -1124,7 +1126,8 @@ int main(int argc, char **argv)
 		allCoresExecuted = true;
 
 		bool exOver[MAX_CPU_CORES];
-		for(int i = 0; i< no_of_cores; i++){
+		for (int i = 0; i < no_of_cores; i++)
+		{
 			exOver[i] = interpreters[i].executionOver();
 		}
 
@@ -1138,7 +1141,7 @@ int main(int argc, char **argv)
 		{
 			cout << ex;
 		}
-		cout<<'\n';
+		cout << '\n';
 
 		for (int i = 0; i < no_of_cores; i++)
 		{
@@ -1148,7 +1151,7 @@ int main(int argc, char **argv)
 				cout << "==================CPU CORE: " << setw(3) << i << "==================\n";
 				interpreters[i].executeClockCycle();
 			}
-			if(!interpreters[i].executionOver())
+			if (!interpreters[i].executionOver())
 				allCoresExecuted = false;
 		}
 
