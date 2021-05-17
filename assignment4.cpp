@@ -1081,7 +1081,7 @@ int main(int argc, char **argv)
 {
 	string filenames[MAX_CPU_CORES];
 	bool toPrint = true;
-	int rowDelay, colDelay, no_of_cores;
+	int rowDelay, colDelay, no_of_cores, simulation_time;
 	bool blockMode;
 	bool wrongArguments = false;
 	if (argc == 1)
@@ -1101,17 +1101,19 @@ int main(int argc, char **argv)
 		{
 			cout << "Error: Only upto " << MAX_CPU_CORES << " CPU cores available. Requested " << no_of_cores << " cores\n";
 		}
-		if (argc == no_of_cores + 6)
+		if (argc == no_of_cores + 7)
 		{
+			simulation_time = stoi(argv[2]);
+
 			for (int i = 0; i < no_of_cores; i++)
 			{
-				filenames[i] = argv[2 + i];
+				filenames[i] = argv[3 + i];
 			}
-			rowDelay = stoi(argv[2 + no_of_cores]);
-			colDelay = stoi(argv[3 + no_of_cores]);
-			toPrint = (stoi(argv[4 + no_of_cores]) == 0) ? false : true;
+			rowDelay = stoi(argv[3 + no_of_cores]);
+			colDelay = stoi(argv[4 + no_of_cores]);
+			toPrint = (stoi(argv[5 + no_of_cores]) == 0) ? false : true;
 
-			blockMode = (stoi(argv[5 + no_of_cores]) == 0) ? true : false;
+			blockMode = (stoi(argv[6 + no_of_cores]) == 0) ? true : false;
 		}
 		else
 		{
@@ -1138,7 +1140,7 @@ int main(int argc, char **argv)
 	bool allCoresExecuted = false;
 
 	int counter = 0;
-	while (!allCoresExecuted)
+	while (!allCoresExecuted && counter < simulation_time)
 	{
 		allCoresExecuted = true;
 
@@ -1184,15 +1186,13 @@ int main(int argc, char **argv)
 		//  if (counter > 100)
 		//	break;
 	}
-	if (toPrint)
+
+	for (int i = 0; i < no_of_cores; i++)
 	{
-		for (int i = 0; i < no_of_cores; i++)
-		{
-			cout << "\n";
-			cout << "==================CPU CORE: " << setw(3) << i << "==================\n";
-			interpreters[i].printRegisterContents();
-			interpreters[i].printMemory();
-			interpreters[i].printStatistics();
-		}
+		cout << "\n";
+		cout << "==================CPU CORE: " << setw(3) << i << "==================\n";
+		interpreters[i].printRegisterContents();
+		interpreters[i].printMemory();
+		interpreters[i].printStatistics();
 	}
 }
