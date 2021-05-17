@@ -56,6 +56,7 @@ private:
 public:
 	int clockCycles;
 	int core_no;
+	bool toPrint;
 	int instructionMemory[INSTRUCTION_MEMORY_SIZE];
 	// Instruction mapping
 	static string instructions[10];
@@ -78,6 +79,7 @@ public:
 		core_no = 0;
 		firstLoad = true;
 		waitDramTill = -1;
+		toPrint = false;
 
 		maxArguments = 3;
 		clockCycles = 0;
@@ -96,13 +98,14 @@ public:
 		}
 	}
 
-	MIPS(MRM *m, int cpu_core)
+	MIPS(MRM *m, int cpu_core, bool p)
 	{
 
 		manager = m;
 		core_no = cpu_core;
 		firstLoad = true;
 		waitDramTill = -1;
+		toPrint = p;
 
 		maxArguments = 3;
 		clockCycles = 0;
@@ -259,9 +262,15 @@ public:
 		{
 			manager->addInstruction(*dramInstr);
 		}
+<<<<<<< HEAD
 		catch (...)
 		{
 			cout << "Stalling... Memory request manager buffer full! Cannot issue request.\n";
+=======
+		catch(...){
+			if(toPrint)
+				cout<<"|  Stalling... Memory request manager buffer full! Cannot issue request.\n";
+>>>>>>> origin/mrm
 			programCounter -= 4;
 		}
 
@@ -295,9 +304,15 @@ public:
 		{
 			manager->addInstruction(*dramInstr);
 		}
+<<<<<<< HEAD
 		catch (...)
 		{
 			cout << "Stalling... Memory request manager buffer full! Cannot issue request.\n";
+=======
+		catch(...){
+			if(toPrint)
+				cout<<"|  Stalling... Memory request manager buffer full! Cannot issue request.\n";
+>>>>>>> origin/mrm
 			programCounter -= 4;
 		}
 		// [ASSIGNMENT 4 end]
@@ -521,24 +536,27 @@ public:
 		{
 		case 0:
 		{
-			cout << "DRAM Activity: Copied Row " << dramCompletedActivity[1] << " to Row Buffer\n";
+			if(toPrint)
+				cout << "|  DRAM Activity: Copied Row " << dramCompletedActivity[1] << " to Row Buffer\n";
 			break;
 		}
 		case 1:
 		{
-			cout << "DRAM Activity: Writeback Row " << dramCompletedActivity[1] << " to Main Memory\n";
+			if(toPrint)
+				cout << "|  DRAM Activity: Writeback Row " << dramCompletedActivity[1] << " to Main Memory\n";
 			break;
 		}
 		case 2:
 		{
 			registers[dramCompletedActivity[2]].setContent(dramCompletedActivity[1]);
-			cout << "Register Modified: $" << dramCompletedActivity[2] << " == $" << registers[dramCompletedActivity[2]].name << " == " << registers[dramCompletedActivity[2]].content << "\n";
+			if(toPrint)
+				cout << "|  Register Modified: $" << dramCompletedActivity[2] << " == $" << registers[dramCompletedActivity[2]].name << " == " << registers[dramCompletedActivity[2]].content << "\n";
 			break;
 		}
 		case 3:
 		{
-			// TODO: add access to rowbuffer here!
-			cout << "Memory Location Modified: Address == " << dramCompletedActivity[1] << " Value == " << manager->dramMemory.rowBuffer[dramCompletedActivity[1] % NUMCOLS] << "\n";
+			if(toPrint)
+				cout << "|  Memory Location Modified: Address == " << dramCompletedActivity[1] << " Value == " << manager->dramMemory.rowBuffer[dramCompletedActivity[1] % NUMCOLS] << "\n";
 			break;
 		}
 		default:
@@ -914,9 +932,17 @@ public:
 				{
 					no_exec_instructions[instructDecoded[0]] += 1;
 				}
+<<<<<<< HEAD
 				cout << "Instruction ";
 				printInstruction(instructDecoded);
 				cout << " fetched. Memory address : " << programCounter << " - " << programCounter + 3 << '\n';
+=======
+				if(toPrint){
+					cout<<"|  Instruction ";
+					printInstruction(instructDecoded);
+					cout << " fetched. Memory address : " << programCounter << " - " << programCounter + 3 << '\n';
+				}
+>>>>>>> origin/mrm
 
 				switch (instructDecoded[0])
 				{
@@ -935,25 +961,29 @@ public:
 				case 2:
 				{
 					add(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					cout << "Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
+					if(toPrint)
+						cout << "|  Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
 					break;
 				}
 				case 3:
 				{
 					sub(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					cout << "Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
+					if(toPrint)
+						cout << "|  Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
 					break;
 				}
 				case 4:
 				{
 					mul(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					cout << "Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
+					if(toPrint)
+						cout << "|  Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
 					break;
 				}
 				case 5:
 				{
 					addi(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					cout << "Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
+					if(toPrint)
+						cout << "|  Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
 					break;
 				}
 				case 6:
@@ -1006,7 +1036,8 @@ public:
 				case 9:
 				{
 					slt(instructDecoded[1], instructDecoded[2], instructDecoded[3]);
-					cout << "Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
+					if(toPrint)
+						cout << "Register Modified: $" << instructDecoded[1] << " == $" << registers[instructDecoded[1]].name << " == " << registers[instructDecoded[1]].content << "\n";
 					break;
 				}
 				default:
@@ -1042,7 +1073,8 @@ public:
 		{
 			executeClockCycle();
 		}
-		cout << "\n";
+		if(toPrint)
+			cout << "\n";
 		printRegisterContents();
 		printMemory();
 		printStatistics();
@@ -1108,13 +1140,13 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	MRM *manager = new MRM(rowDelay, colDelay, blockMode);
+	MRM *manager = new MRM(rowDelay, colDelay, blockMode, toPrint);
 
 	MIPS interpreters[MAX_CPU_CORES];
 
 	for (int i = 0; i < no_of_cores; i++)
 	{
-		interpreters[i] = MIPS(manager, i);
+		interpreters[i] = MIPS(manager, i, toPrint);
 		interpreters[i].readInstructions(filenames[i]);
 	}
 
@@ -1130,8 +1162,8 @@ int main(int argc, char **argv)
 		{
 			exOver[i] = interpreters[i].executionOver();
 		}
-
-		cout << "\n==================Clock Cycle: " << setw(3) << interpreters[0].clockCycles + 1 << "==================\n";
+		if(toPrint)
+			cout << "\n==================Clock Cycle: " << setw(3) << interpreters[0].clockCycles + 1 << "==================\n";
 		// TODO : remove this from here, call once after looping through all cores
 		try
 		{
@@ -1139,16 +1171,23 @@ int main(int argc, char **argv)
 		}
 		catch (const char *ex)
 		{
-			cout << ex;
+			if(toPrint)
+				cout << ex;
 		}
+<<<<<<< HEAD
 		cout << '\n';
+=======
+		if(toPrint)
+			cout<<'\n';
+>>>>>>> origin/mrm
 
 		for (int i = 0; i < no_of_cores; i++)
 		{
 
 			if (!exOver[i])
 			{
-				cout << "==================CPU CORE: " << setw(3) << i << "==================\n";
+				if(toPrint)
+					cout << "|  ==================CPU CORE: " << setw(3) << i << "==================\n";
 				interpreters[i].executeClockCycle();
 			}
 			if (!interpreters[i].executionOver())
@@ -1159,16 +1198,20 @@ int main(int argc, char **argv)
 		{
 			counter++;
 		}
+		if(toPrint)
+			cout << "====================================================\n";
 		//  if (counter > 100)
 		//	break;
 	}
-	for (int i = 0; i < no_of_cores; i++)
-	{
-
-		cout << "\n";
-		cout << "==================CPU CORE: " << setw(3) << i << "==================\n";
-		interpreters[i].printRegisterContents();
-		interpreters[i].printMemory();
-		interpreters[i].printStatistics();
+	if(toPrint){
+		for (int i = 0; i < no_of_cores; i++)
+		{
+			cout << "\n";
+			cout << "==================CPU CORE: " << setw(3) << i << "==================\n";
+			interpreters[i].printRegisterContents();
+			interpreters[i].printMemory();
+			interpreters[i].printStatistics();
+		}	
 	}
+	
 }

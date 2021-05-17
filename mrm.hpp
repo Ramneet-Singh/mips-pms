@@ -6,7 +6,7 @@ class MRM
 {
 
 public:
-    MRM(int rDelay, int cDelay, int block);
+    MRM(int rDelay, int cDelay, int block, bool p);
     ~MRM();
     int blockingMode;
     int rowAccessDelay;
@@ -16,6 +16,8 @@ public:
     int currentInstIndex;
     int nextInstIndex;
     int schedulingDelayLeft;
+
+    bool toPrint;
 
     Instruction *buffer[BUFFER_SIZE];
 
