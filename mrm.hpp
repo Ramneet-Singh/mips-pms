@@ -15,6 +15,8 @@ public:
 
     DRAM dramMemory;
     int currentInstIndex;
+    int nextInstIndex;
+    int schedulingDelayLeft;
 
     Instruction * buffer[BUFFER_SIZE];
     
@@ -44,7 +46,7 @@ public:
         Called upon completion of the last activity of the currently executing instruction. Deletes it from the pendingInstructionsPriority priority queue and also from the dependencies of each instruction in the queue.
     */
     void deleteCurrentInstruction();
-    int getEmptyIndex();
+    int getEmptyIndex(int cpu_core);
 
 
     /*

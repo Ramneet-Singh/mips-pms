@@ -21,27 +21,44 @@ public:
 
     int core_no;
     int index;
-    // std::vector<Instruction *> dependencies;
+    float forwarded_value;
+    int forwarded_id;
     int dependencies[BUFFER_SIZE];
+   
+    // The maximum value of stallingNo is limited
+    int stallingNo;
 
-    Instruction(int add, int tar, int typ)
+
+    Instruction(int add, int tar, int typ, int cpu_core)
     {
         id = numInstr++;
-        address = add;
+        address = cpu_core*NUMCOLS*NUMCOLS/MAX_CPU_CORES  + add;
         target = tar;
         type = typ;
         for (int i = 0; i < BUFFER_SIZE; i++)
             dependencies[i] = 0;
+        core_no = cpu_core;
+        forwarded_value = 3.5;
+        forwarded_id = -1;
+        stallingNo = 0;
     }
 
-    Instruction(int idNum, int add, int tar, int typ)
+    bool isForwarded(){
+        return (forwarded_value != 3.5);
+    }
+
+    Instruction(int idNum, int add, int tar, int typ, int cpu_core)
     {
         id = idNum;
-        address = add;
+        address = cpu_core*NUMCOLS*NUMCOLS/MAX_CPU_CORES  + add;
         target = tar;
         type = typ;
         for (int i = 0; i < BUFFER_SIZE; i++)
             dependencies[i] = 0;
+        core_no = cpu_core;
+        forwarded_value = 3.5;
+        forwarded_id = -1;
+        stallingNo = 0;
     }
     bool operator==(const Instruction &rhs) const;
 
@@ -51,21 +68,13 @@ public:
     {
         std::string registerNames[32] = {"zero", "at", "v0", "v1", "a0", "a1", "a2", "a3", "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7", "t8", "t9", "k0", "k1", "gp", "sp", "fp", "ra"};
         if (type == 0)
-            std::cout << "Index: " << index << ". lw $" << registerNames[target] << " (" << target << ") " << address << " Dependencies: ";
+            std::cout << "Index: " << index << ". lw $" << registerNames[target] << "(" << target << ") " << address;
         else if (type == 1)
             std::cout
-                << "Index: " << index << ". sw (value " << target << ") " << address << " Dependencies: ";
+                << "Index: " << index << ". sw (value " << target << ") " << address;
         else if (type == -1)
             std::cout
-                << "Index: " << index << ". <Empty Instruction>"
-                << " Dependencies: ";
-        for (int i = 0; i < BUFFER_SIZE; i++)
-        {
-            if (dependencies[i] == 1)
-            {
-                std::cout << "Index " << i << ", ";
-            }
-        }
+                << "Index: " << index << ". <Empty Instruction>";
         std::cout << "\n";
     }
 };
@@ -152,7 +161,7 @@ public:
              activity[2] = value to be written to the address
              activity[3] = Number of clock cycles it will take for this to be completed (initially COL_ACCESS_DELAY)
     */
-    std::queue<std::array<int, 4>> pendingActivities;
+    std::queue<std::array<int, 5>> pendingActivities;
 
     /*
     Checks if a new instruction's execution will be started in this cycle. If it will, checks which instruction will be scheduled. Returns true only if this instruction would require a writeback and false in all other cases
@@ -175,7 +184,7 @@ public:
         dramCompletedActivity[0] = -1 means there are none in this cycle
         set dramCompletedActivity[0] to -1 after printing out the activity
     */
-    int dramCompletedActivity[4];
+    int dramCompletedActivity[5];
 
     DRAM();
 

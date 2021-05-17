@@ -8,7 +8,7 @@ DRAM::DRAM()
     setDelays(10, 2);
     Instruction::rowBufferIndex = -1;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 5; i++)
     {
         dramCompletedActivity[i] = -1;
     }
@@ -27,7 +27,7 @@ DRAM::DRAM(int rowAccessDelay, int colAccessDelay)
     bufferRowIndex = -1;
     Instruction::rowBufferIndex = -1;
 
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 5; i++)
     {
         dramCompletedActivity[i] = -1;
     }
@@ -79,7 +79,8 @@ void DRAM::addActivities(Instruction &dramInstr)
         int targetReg = dramInstr.target;
         int addr = dramInstr.address;
 
-        std::array<int, 4> activity;
+        std::array<int, 5> activity;
+        activity[4] = dramInstr.core_no;
         int targetRow = addr / NUMCOLS;
         int targetCol = addr % NUMCOLS;
 
@@ -114,7 +115,8 @@ void DRAM::addActivities(Instruction &dramInstr)
         int value = dramInstr.target;
         int address = dramInstr.address;
 
-        std::array<int, 4> activity;
+        std::array<int, 5> activity;
+        activity[4] = dramInstr.core_no;
         int row = address / NUMCOLS;
         int col = address % NUMCOLS;
 
@@ -147,8 +149,8 @@ void DRAM::addActivities(Instruction &dramInstr)
 
 bool DRAM::performActivity()
 {
-    std::array<int, 4> &act = pendingActivities.front();
-
+    std::array<int, 5> &act = pendingActivities.front();
+    dramCompletedActivity[4] = act[4];
     switch (act[0])
     {
     case 0:

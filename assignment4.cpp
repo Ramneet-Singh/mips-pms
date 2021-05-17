@@ -148,7 +148,7 @@ public:
 		}
 		else if (ErrorType == 2)
 		{
-			cout << "Error: Memory address " << argument << " not found!" << '\n';
+			cout << "Error: Memory address " << argument << " exceeds allocated space!" << '\n';
 		}
 		else if (ErrorType == 3)
 		{
@@ -240,7 +240,7 @@ public:
 		}
 		int addr = registers[b].content + c;
 		addressesAccessed.push_back(addr);
-		if (addr >= (sizeof(manager->dramMemory.Memory) / sizeof(**(manager->dramMemory.Memory))) || addr < instructionIndex)
+		if (addr >= (sizeof(manager->dramMemory.Memory) / (sizeof(**(manager->dramMemory.Memory)) * MAX_CPU_CORES)) || addr < instructionIndex)
 		{
 			throwError(to_string(addr), 2);
 		}
@@ -254,8 +254,15 @@ public:
 		}
 
 		// [ASSIGNMENT 4]
-		Instruction *dramInstr = new Instruction(addr, a, 0);
-		manager->addInstruction(*dramInstr);
+		Instruction *dramInstr = new Instruction(addr, a, 0, core_no);
+		try{
+			manager->addInstruction(*dramInstr);
+		}
+		catch(...){
+			cout<<"Stalling... Memory request manager buffer full! Cannot issue request.\n";
+			programCounter -= 4;
+		}
+		
 		// [ASSIGNMENT 4 end]
 	}
 	void issueSw(int a, int b, int c)
@@ -271,7 +278,7 @@ public:
 		int addr = registers[b].content + c;
 		addressesAccessed.push_back(addr);
 		int val = registers[a].content;
-		if (addr >= (sizeof(manager->dramMemory.Memory) / sizeof(**(manager->dramMemory.Memory))) || addr < instructionIndex)
+		if (addr >= (sizeof(manager->dramMemory.Memory) / (sizeof(**(manager->dramMemory.Memory)) * MAX_CPU_CORES)) || addr < instructionIndex)
 		{
 			throwError(to_string(addr), 2);
 		}
@@ -281,8 +288,14 @@ public:
 		}
 
 		// [ASSIGNMENT 4]
-		Instruction *dramInstr = new Instruction(addr, val, 1);
-		manager->addInstruction(*dramInstr);
+		Instruction *dramInstr = new Instruction(addr, val, 1, core_no);
+		try{
+			manager->addInstruction(*dramInstr);
+		}
+		catch(...){
+			cout<<"Stalling... Memory request manager buffer full! Cannot issue request.\n";
+			programCounter -= 4;
+		}
 		// [ASSIGNMENT 4 end]
 	}
 
@@ -495,10 +508,11 @@ public:
 
 	void handleActivity(int *dramCompletedActivity)
 	{
-		if (dramCompletedActivity[0] == -1)
+		if (dramCompletedActivity[0] == -1 || core_no != dramCompletedActivity[4])
 		{
 			return;
 		}
+		
 
 		switch (dramCompletedActivity[0])
 		{
@@ -521,7 +535,7 @@ public:
 		case 3:
 		{
 			// TODO: add access to rowbuffer here!
-			cout << "Memory Location Modified: Address == " << dramCompletedActivity[1] << " Value == " << manager->dramMemory.rowBuffer[dramCompletedActivity[1]] << "\n";
+			cout << "Memory Location Modified: Address == " << dramCompletedActivity[1] << " Value == " << manager->dramMemory.rowBuffer[dramCompletedActivity[1] % NUMCOLS] << "\n";
 			break;
 		}
 		default:
@@ -529,6 +543,7 @@ public:
 			break;
 		}
 		}
+		
 	}
 
 	void printInstruction(int *instr)
@@ -878,9 +893,18 @@ public:
 			int instructDecoded[maxArguments + 1];
 			decode(programCounter, instructDecoded);
 
+			// Check for any activity completed by the DRAM
+			int dramCompletedActivity[5];
+			manager->getDramActivity(dramCompletedActivity);
+			 
+			if (dramCompletedActivity[0] != -1)
+			{
+				handleActivity(dramCompletedActivity);
+			}
+
 			// Check if we can issue the next instruction
 			bool issueNext = !(manager->isBlocked(instructDecoded, core_no));
-
+			issueNext = issueNext && (dramCompletedActivity[4]!= core_no || dramCompletedActivity[0]!=2);
 			// If we can execute the next instruction, do it
 			if (issueNext)
 			{
@@ -888,9 +912,9 @@ public:
 				{
 					no_exec_instructions[instructDecoded[0]] += 1;
 				}
-
+				cout<<"Instruction ";
 				printInstruction(instructDecoded);
-				cout << " issued. Memory address : " << programCounter << " - " << programCounter + 3 << '\n';
+				cout << " fetched. Memory address : " << programCounter << " - " << programCounter + 3 << '\n';
 
 				switch (instructDecoded[0])
 				{
@@ -992,28 +1016,20 @@ public:
 				}
 
 				programCounter = programCounter + 4;
-			}
 
-			// Check for any activity completed by the DRAM
-			int dramCompletedActivity[4];
-			manager->getDramActivity(dramCompletedActivity);
-			if (dramCompletedActivity[0] != -1)
-			{
-				handleActivity(dramCompletedActivity);
+				// cout << "\n";
 			}
-
-			cout << "\n";
 		}
 		else
 		{
-			int dramCompletedActivity[4];
+			int dramCompletedActivity[5];
 			manager->getDramActivity(dramCompletedActivity);
 			if (dramCompletedActivity[0] != -1)
 			{
 				handleActivity(dramCompletedActivity);
 			}
 
-			cout << "\n";
+			// cout << "\n";
 		}
 	}
 
@@ -1045,6 +1061,7 @@ int Instruction::numInstr = 0;
 int main(int argc, char **argv)
 {
 	string filenames[MAX_CPU_CORES];
+	bool toPrint = true;
 	int rowDelay, colDelay, no_of_cores;
 	bool blockMode;
 	bool wrongArguments = false;
@@ -1065,7 +1082,7 @@ int main(int argc, char **argv)
 		{
 			cout << "Error: Only upto " << MAX_CPU_CORES << " CPU cores available. Requested " << no_of_cores << " cores\n";
 		}
-		if (argc == no_of_cores + 5)
+		if (argc == no_of_cores + 6)
 		{
 			for (int i = 0; i < no_of_cores; i++)
 			{
@@ -1073,7 +1090,9 @@ int main(int argc, char **argv)
 			}
 			rowDelay = stoi(argv[2 + no_of_cores]);
 			colDelay = stoi(argv[3 + no_of_cores]);
-			blockMode = (stoi(argv[4 + no_of_cores]) == 0) ? true : false;
+			toPrint = (stoi(argv[4 + no_of_cores]) == 0) ? false : true;
+
+			blockMode = (stoi(argv[5 + no_of_cores]) == 0) ? true : false;
 		}
 		else
 		{
@@ -1083,7 +1102,7 @@ int main(int argc, char **argv)
 
 	if (wrongArguments)
 	{
-		cout << "Error: incorrect usage. \nPlease run: \t./assignment3 no_of_cores path_to_program1 path_to_program2 ... path_to_programn ROW_ACCESS_DELAY COL_ACCESS_DELAY blockingMode\n";
+		cout << "Error: incorrect usage. \nPlease run: \t./assignment3 no_of_cores path_to_program1 path_to_program2 ... path_to_programn ROW_ACCESS_DELAY COL_ACCESS_DELAY printMode blockingMode\n";
 		return -1;
 	}
 
@@ -1104,7 +1123,12 @@ int main(int argc, char **argv)
 	{
 		allCoresExecuted = true;
 
-		cout << "==================Clock Cycle: " << setw(3) << interpreters[0].clockCycles + 1 << "==================\n";
+		bool exOver[MAX_CPU_CORES];
+		for(int i = 0; i< no_of_cores; i++){
+			exOver[i] = interpreters[i].executionOver();
+		}
+
+		cout << "\n==================Clock Cycle: " << setw(3) << interpreters[0].clockCycles + 1 << "==================\n";
 		// TODO : remove this from here, call once after looping through all cores
 		try
 		{
@@ -1114,15 +1138,18 @@ int main(int argc, char **argv)
 		{
 			cout << ex;
 		}
+		cout<<'\n';
 
 		for (int i = 0; i < no_of_cores; i++)
 		{
-			if (!interpreters[i].executionOver())
+
+			if (!exOver[i])
 			{
-				cout << "\n==================CORE: " << setw(3) << i << "==================\n";
-				allCoresExecuted = false;
+				cout << "==================CPU CORE: " << setw(3) << i << "==================\n";
 				interpreters[i].executeClockCycle();
 			}
+			if(!interpreters[i].executionOver())
+				allCoresExecuted = false;
 		}
 
 		if (!allCoresExecuted)
@@ -1136,7 +1163,7 @@ int main(int argc, char **argv)
 	{
 
 		cout << "\n";
-		cout << "==================CORE: " << setw(3) << i << "==================\n";
+		cout << "==================CPU CORE: " << setw(3) << i << "==================\n";
 		interpreters[i].printRegisterContents();
 		interpreters[i].printMemory();
 		interpreters[i].printStatistics();
