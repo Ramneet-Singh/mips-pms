@@ -1,5 +1,4 @@
 all:
-	@g++ assignment3.cpp -o assignment3 -std=c++11
-	@./assignment3
+	@g++ assignment4.cpp dram.cpp mrm.cpp -I . -o assignment4 -std=c++11 -g
 clean:
-	@rm assignment3
+	@rm assignment4

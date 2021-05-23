@@ -1,0 +1,11 @@
+#define NUMCOLS 1024
+#define NUMROWS 1024
+#define LOOK 4
+
+#define BUFFER_SIZE 512
+
+#define INSTRUCTION_MEMORY_SIZE 1048576
+
+#define MAX_CPU_CORES 8
+
+#define SCHEDULING_DELAY 1
