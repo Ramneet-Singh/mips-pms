@@ -15,7 +15,7 @@ A C++ program which acts as a simulator for MIPS Assembly Language Programs.
 - [**Testing Strategy**](#testing-strategy)
   1. [**Reordering**](#1-reordering)
   2. [**SW - LW Forwarding**](#2-sw-lw-forwarding)
-  3. [**Syntax Errors**](#syntax-errors)
+  3. [**Syntax Errors**](#3-syntax-errors)
 
 ## Features
 
@@ -31,10 +31,10 @@ A C++ program which acts as a simulator for MIPS Assembly Language Programs.
 This can be a useful tool to analyze multiple MIPS Assembly Language programs and their performance while running.
 
 ## Architecture Diagrams
-This figure illustrates the high-level structure of the system, with the memory request manager acting as an interface between multiple CPU Cores and the DRAM Memory.
+This figure illustrates the high-level structure of the system, with the memory request manager acting as an interface between multiple CPU Cores and the DRAM Memory.  
 ![System Overview](https://github.com/Ramneet-Singh/col216-minor-assignment/blob/master/architecture-diagrams/overall-system.png?raw=true)
   
-If we zoom into the DRAM Memory, on most moder systems it looks something like the following figure taken from [[Rixner00]](http://cva.stanford.edu/publications/2000/mas.pdf "[Rixner00]"). Note that we have not considered multiple banks and have limited our analysis to a single bank in the interest of time, however most timing and resource considerations are still there.
+If we zoom into the DRAM Memory, on most moder systems it looks something like the following figure taken from [[Rixner00]](http://cva.stanford.edu/publications/2000/mas.pdf "[Rixner00]"). Note that we have not considered multiple banks and have limited our analysis to a single bank in the interest of time, however most timing and resource considerations are still there.  
 ![Modern DRAM Organization](https://github.com/Ramneet-Singh/col216-minor-assignment/blob/master/architecture-diagrams/modern-dram.png?raw=true)
 
 ## Design Characteristics
