@@ -34,7 +34,7 @@ This can be a useful tool to analyze multiple MIPS Assembly Language programs an
 This figure illustrates the high-level structure of the system, with the memory request manager acting as an interface between multiple CPU Cores and the DRAM Memory.  
 ![System Overview](https://github.com/Ramneet-Singh/col216-minor-assignment/blob/master/architecture-diagrams/overall-system.png?raw=true)
   
-If we zoom into the DRAM Memory, on most moder systems it looks something like the following figure taken from [[Rixner00]](http://cva.stanford.edu/publications/2000/mas.pdf "[Rixner00]"). Note that we have not considered multiple banks and have limited our analysis to a single bank in the interest of time, however most timing and resource considerations are still there.  
+If we zoom into the DRAM Memory, on most modern systems it looks something like the following figure taken from [[Rixner00]](http://cva.stanford.edu/publications/2000/mas.pdf "[Rixner00]"). Note that we have not considered multiple banks and have limited our analysis to a single bank in the interest of time, however most timing and resource considerations are still there.  
 ![Modern DRAM Organization](https://github.com/Ramneet-Singh/col216-minor-assignment/blob/master/architecture-diagrams/modern-dram.png?raw=true)
 
 ## Design Characteristics
@@ -98,7 +98,7 @@ Thus, the MRM effectively requires only two clock cycles. After the end of the s
 
 ## Testing Strategy
 
-The test cases are written as separate files inside relevant folders inside the main directory [```testcases```](assgn4testcases/"testcases"). The testing has been divided into the following subcategories and test cases of each have been checked to ensure correct working of our interpreter.
+The test cases are written as separate files inside relevant folders inside the main directory [```testcases```](assgn4testcases/). The testing has been divided into the following subcategories and test cases of each have been checked to ensure correct working of our interpreter.
 
 ### 1. Reordering
 Here, we consider test cases where aggressively reordering significantly improves performance over the first-come first-serve scheduling policy.
