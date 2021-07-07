@@ -4,18 +4,18 @@ A C++ program which acts as a simulator for MIPS Assembly Language Programs.
   
 ## Index
 - [**Features**](#features)
-- [**Architecture Diagrams**](#-architecture-diagrams)
-- [**Design Characteristics**](#-design-characteristics)
-- [**Tradeoffs**](#-tradeoffs)
-- [**Approach of Solution**](#-approach-of-solution)
-  - [**Memory Request Manager**](#-memory-request-manager)
-  - [**Multi-Core Functionality**](#-multi-core-functionality)
-  - [**Hardware Implementation**](#-hardware-implementation)
-  - [**MRM Delay Estimation**](#-mrm-delay-estimation)
-- [**Testing Strategy**](#-testing-strategy)
-  1. [**Reordering**](#-1-reordering)
-  2. [**SW - LW Forwarding**](#-2-sw-lw-forwarding)
-  3. [**Syntax Errors**](#-syntax-errors)
+- [**Architecture Diagrams**](#architecture-diagrams)
+- [**Design Characteristics**](#design-characteristics)
+- [**Tradeoffs**](#tradeoffs)
+- [**Approach of Solution**](#approach-of-solution)
+  - [**Memory Request Manager**](#memory-request-manager)
+  - [**Multi-Core Functionality**](#multi-core-functionality)
+  - [**Hardware Implementation**](#hardware-implementation)
+  - [**MRM Delay Estimation**](#mrm-delay-estimation)
+- [**Testing Strategy**](#testing-strategy)
+  1. [**Reordering**](#1-reordering)
+  2. [**SW - LW Forwarding**](#2-sw-lw-forwarding)
+  3. [**Syntax Errors**](#syntax-errors)
 
 ## Features
 
