@@ -98,7 +98,7 @@ Thus, the MRM effectively requires only two clock cycles. After the end of the s
 
 ## Testing Strategy
 
-The test cases are written as separate files inside relevant folders inside the main directory [```testcases```](assgn4testcases/). The testing has been divided into the following subcategories and test cases of each have been checked to ensure correct working of our interpreter.
+The test cases are written as separate files inside relevant folders inside the main directory [```testcases```](assgn4-testcases/). The testing has been divided into the following subcategories and test cases of each have been checked to ensure correct working of our interpreter.
 
 ### 1. Reordering
 Here, we consider test cases where aggressively reordering significantly improves performance over the first-come first-serve scheduling policy.
@@ -117,7 +117,7 @@ We had made the interpreter robust towards syntax errors in the input MIPS progr
 1. Unrecognized command.
 2. Unrecognized registers.
 3. Less or more arguments to an instruction (flagged when comma missing also).
-4. Editing the$zero register (flagged only if value is being stored at $zero).
+4. Editing the $zero register (flagged only if value is being stored at $zero).
 5. Data load or store instructions accessing instruction memory and branch instructions accessing data memory. Un-aligned words (invalid for byte-addressable) being accessed are flagged too.
 6. Finally, integer overflows during addition and subtraction are flagged.
 
