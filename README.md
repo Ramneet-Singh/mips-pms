@@ -3,7 +3,7 @@
 A C++ program which acts as a simulator for MIPS Assembly Language Programs. 
   
 ## Index
-- [**Features**](#-features)
+- [**Features**](#features)
 - [**Architecture Diagrams**](#-architecture-diagrams)
 - [**Design Characteristics**](#-design-characteristics)
 - [**Tradeoffs**](#-tradeoffs)
