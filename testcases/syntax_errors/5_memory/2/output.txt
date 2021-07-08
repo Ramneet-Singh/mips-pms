@@ -1,0 +1,6 @@
+
+==================Clock Cycle:   1==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+Error: The label: "8001" has not been declared

@@ -1,0 +1,7 @@
+
+==================Clock Cycle:   1==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $zero $t1 2 fetched. Memory address : 0 - 3
+Error: The instruction: addi $zero $t1 2 is trying to modify register $zero!
