@@ -98,7 +98,7 @@ Thus, the MRM effectively requires only two clock cycles. After the end of the s
 
 ## Testing Strategy
 
-The test cases are written as separate files inside relevant folders inside the main directory [```testcases```](assgn4-testcases/). The testing has been divided into the following subcategories and test cases of each have been checked to ensure correct working of our interpreter.
+The test cases are written as separate files inside relevant folders inside the main directory [```testcases```](testcases/). The testing has been divided into the following subcategories and test cases of each have been checked to ensure correct working of our interpreter.
 
 ### 1. Reordering
 Here, we consider test cases where aggressively reordering significantly improves performance over the first-come first-serve scheduling policy.
