@@ -1,0 +1,759 @@
+
+==================Clock Cycle:   1==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t0 $zero 2000 fetched. Memory address : 0 - 3
+====================================================
+
+==================Clock Cycle:   2==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t1 $zero 2000 fetched. Memory address : 4 - 7
+====================================================
+
+==================Clock Cycle:   3==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+DRAM request issued | instruction: Index: 0. sw (value 0) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:   4==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:   5==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:   6==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:   7==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:   8==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:   9==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:  10==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:  11==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:  12==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  DRAM Activity: Copied Row 1 to Row Buffer
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:  13==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:  14==================
+Instructions in the row buffer: 
+Index: 0. sw (value 0) 2000
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2000 Value == 0
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:  15==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:  16==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2000
+Forwarded sw-lw value 0 to instruction: Index: 1. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 0 fetched. Memory address : 8 - 11
+|  Register Modified: $9 == $t1 == 0
+====================================================
+
+==================Clock Cycle:  17==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $zero 2000 fetched. Memory address : 12 - 15
+|  Register Modified: $16 == $s0 == 2000
+====================================================
+
+==================Clock Cycle:  18==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s1 $zero 2032 fetched. Memory address : 16 - 19
+|  Register Modified: $17 == $s1 == 2032
+====================================================
+
+==================Clock Cycle:  19==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t1 $s0 0 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  20==================
+Instructions in the row buffer: 
+Index: 0. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 0. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:  21==================
+Instructions in the row buffer: 
+Index: 0. lw $t1(9) 2000
+DRAM request issued | instruction: Index: 0. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 0. lw $t1(9) 2000
+====================================================
+
+==================Clock Cycle:  22==================
+Instructions in the row buffer: 
+Index: 0. lw $t1(9) 2000
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $9 == $t1 == 0
+====================================================
+
+==================Clock Cycle:  23==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 6 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 6
+====================================================
+
+==================Clock Cycle:  24==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 4 fetched. Memory address : 28 - 31
+|  Register Modified: $16 == $s0 == 2004
+====================================================
+
+==================Clock Cycle:  25==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s0 0 fetched. Memory address : 32 - 35
+====================================================
+
+==================Clock Cycle:  26==================
+Instructions in the row buffer: 
+Index: 0. sw (value 6) 2004
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $s1 20 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  27==================
+Instructions in the row buffer: 
+Index: 0. sw (value 6) 2004
+DRAM request issued | instruction: Index: 0. sw (value 6) 2004
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t1 $s0 0 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  28==================
+Instructions in the row buffer: 
+Index: 0. sw (value 6) 2004
+Index: 1. lw $t1(9) 2004
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2004 Value == 6
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2004
+====================================================
+
+==================Clock Cycle:  29==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2004
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2004
+====================================================
+
+==================Clock Cycle:  30==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2004
+Forwarded sw-lw value 6 to instruction: Index: 1. lw $t1(9) 2004
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 6 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 12
+====================================================
+
+==================Clock Cycle:  31==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 4 fetched. Memory address : 28 - 31
+|  Register Modified: $16 == $s0 == 2008
+====================================================
+
+==================Clock Cycle:  32==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s0 0 fetched. Memory address : 32 - 35
+====================================================
+
+==================Clock Cycle:  33==================
+Instructions in the row buffer: 
+Index: 0. sw (value 12) 2008
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $s1 20 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  34==================
+Instructions in the row buffer: 
+Index: 0. sw (value 12) 2008
+DRAM request issued | instruction: Index: 0. sw (value 12) 2008
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t1 $s0 0 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  35==================
+Instructions in the row buffer: 
+Index: 0. sw (value 12) 2008
+Index: 1. lw $t1(9) 2008
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2008 Value == 12
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2008
+====================================================
+
+==================Clock Cycle:  36==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2008
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2008
+====================================================
+
+==================Clock Cycle:  37==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2008
+Forwarded sw-lw value 12 to instruction: Index: 1. lw $t1(9) 2008
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 6 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 18
+====================================================
+
+==================Clock Cycle:  38==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 4 fetched. Memory address : 28 - 31
+|  Register Modified: $16 == $s0 == 2012
+====================================================
+
+==================Clock Cycle:  39==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s0 0 fetched. Memory address : 32 - 35
+====================================================
+
+==================Clock Cycle:  40==================
+Instructions in the row buffer: 
+Index: 0. sw (value 18) 2012
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $s1 20 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  41==================
+Instructions in the row buffer: 
+Index: 0. sw (value 18) 2012
+DRAM request issued | instruction: Index: 0. sw (value 18) 2012
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t1 $s0 0 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  42==================
+Instructions in the row buffer: 
+Index: 0. sw (value 18) 2012
+Index: 1. lw $t1(9) 2012
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2012 Value == 18
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2012
+====================================================
+
+==================Clock Cycle:  43==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2012
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2012
+====================================================
+
+==================Clock Cycle:  44==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2012
+Forwarded sw-lw value 18 to instruction: Index: 1. lw $t1(9) 2012
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 6 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 24
+====================================================
+
+==================Clock Cycle:  45==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 4 fetched. Memory address : 28 - 31
+|  Register Modified: $16 == $s0 == 2016
+====================================================
+
+==================Clock Cycle:  46==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s0 0 fetched. Memory address : 32 - 35
+====================================================
+
+==================Clock Cycle:  47==================
+Instructions in the row buffer: 
+Index: 0. sw (value 24) 2016
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $s1 20 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  48==================
+Instructions in the row buffer: 
+Index: 0. sw (value 24) 2016
+DRAM request issued | instruction: Index: 0. sw (value 24) 2016
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t1 $s0 0 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  49==================
+Instructions in the row buffer: 
+Index: 0. sw (value 24) 2016
+Index: 1. lw $t1(9) 2016
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2016 Value == 24
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2016
+====================================================
+
+==================Clock Cycle:  50==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2016
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2016
+====================================================
+
+==================Clock Cycle:  51==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2016
+Forwarded sw-lw value 24 to instruction: Index: 1. lw $t1(9) 2016
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 6 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 30
+====================================================
+
+==================Clock Cycle:  52==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 4 fetched. Memory address : 28 - 31
+|  Register Modified: $16 == $s0 == 2020
+====================================================
+
+==================Clock Cycle:  53==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s0 0 fetched. Memory address : 32 - 35
+====================================================
+
+==================Clock Cycle:  54==================
+Instructions in the row buffer: 
+Index: 0. sw (value 30) 2020
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $s1 20 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  55==================
+Instructions in the row buffer: 
+Index: 0. sw (value 30) 2020
+DRAM request issued | instruction: Index: 0. sw (value 30) 2020
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t1 $s0 0 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  56==================
+Instructions in the row buffer: 
+Index: 0. sw (value 30) 2020
+Index: 1. lw $t1(9) 2020
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2020 Value == 30
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2020
+====================================================
+
+==================Clock Cycle:  57==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2020
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2020
+====================================================
+
+==================Clock Cycle:  58==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2020
+Forwarded sw-lw value 30 to instruction: Index: 1. lw $t1(9) 2020
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 6 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 36
+====================================================
+
+==================Clock Cycle:  59==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 4 fetched. Memory address : 28 - 31
+|  Register Modified: $16 == $s0 == 2024
+====================================================
+
+==================Clock Cycle:  60==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s0 0 fetched. Memory address : 32 - 35
+====================================================
+
+==================Clock Cycle:  61==================
+Instructions in the row buffer: 
+Index: 0. sw (value 36) 2024
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $s1 20 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  62==================
+Instructions in the row buffer: 
+Index: 0. sw (value 36) 2024
+DRAM request issued | instruction: Index: 0. sw (value 36) 2024
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t1 $s0 0 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  63==================
+Instructions in the row buffer: 
+Index: 0. sw (value 36) 2024
+Index: 1. lw $t1(9) 2024
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2024 Value == 36
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2024
+====================================================
+
+==================Clock Cycle:  64==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2024
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2024
+====================================================
+
+==================Clock Cycle:  65==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2024
+Forwarded sw-lw value 36 to instruction: Index: 1. lw $t1(9) 2024
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 6 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 42
+====================================================
+
+==================Clock Cycle:  66==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 4 fetched. Memory address : 28 - 31
+|  Register Modified: $16 == $s0 == 2028
+====================================================
+
+==================Clock Cycle:  67==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s0 0 fetched. Memory address : 32 - 35
+====================================================
+
+==================Clock Cycle:  68==================
+Instructions in the row buffer: 
+Index: 0. sw (value 42) 2028
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $s1 20 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  69==================
+Instructions in the row buffer: 
+Index: 0. sw (value 42) 2028
+DRAM request issued | instruction: Index: 0. sw (value 42) 2028
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t1 $s0 0 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  70==================
+Instructions in the row buffer: 
+Index: 0. sw (value 42) 2028
+Index: 1. lw $t1(9) 2028
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2028 Value == 42
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2028
+====================================================
+
+==================Clock Cycle:  71==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2028
+
+|  ==================CPU CORE:   0==================
+|  Instruction dependencies unsatisfied. Stalling...
+|  Dependent Instruction: Index: 1. lw $t1(9) 2028
+====================================================
+
+==================Clock Cycle:  72==================
+Instructions in the row buffer: 
+Index: 1. lw $t1(9) 2028
+Forwarded sw-lw value 42 to instruction: Index: 1. lw $t1(9) 2028
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 6 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 48
+====================================================
+
+==================Clock Cycle:  73==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 4 fetched. Memory address : 28 - 31
+|  Register Modified: $16 == $s0 == 2032
+====================================================
+
+==================Clock Cycle:  74==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s0 0 fetched. Memory address : 32 - 35
+====================================================
+
+==================Clock Cycle:  75==================
+Instructions in the row buffer: 
+Index: 0. sw (value 48) 2032
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $s1 20 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  76==================
+Instructions in the row buffer: 
+Index: 0. sw (value 48) 2032
+DRAM request issued | instruction: Index: 0. sw (value 48) 2032
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  77==================
+Instructions in the row buffer: 
+Index: 0. sw (value 48) 2032
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2032 Value == 48
+====================================================
+
+===================CPU CORE:   0===================
+====================================================
+  Register contents at the end of the execution:
+====================================================
+Reg no.   Reg name    Content-Dec    Content-Hex
+     0       zero              0            0x0
+     1         at              0            0x0
+     2         v0              0            0x0
+     3         v1              0            0x0
+     4         a0              0            0x0
+     5         a1              0            0x0
+     6         a2              0            0x0
+     7         a3              0            0x0
+     8         t0              0            0x0
+     9         t1             48           0x30
+    10         t2              0            0x0
+    11         t3              0            0x0
+    12         t4              0            0x0
+    13         t5              0            0x0
+    14         t6              0            0x0
+    15         t7              0            0x0
+    16         s0           2032          0x7f0
+    17         s1           2032          0x7f0
+    18         s2              0            0x0
+    19         s3              0            0x0
+    20         s4              0            0x0
+    21         s5              0            0x0
+    22         s6              0            0x0
+    23         s7              0            0x0
+    24         t8              0            0x0
+    25         t9              0            0x0
+    26         k0              0            0x0
+    27         k1              0            0x0
+    28         gp              0            0x0
+    29         sp              0            0x0
+    30         fp              0            0x0
+    31         ra              0            0x0
+====================================================
+Accessed memory content at the end of the execution:
+====================================================
+     Memory address:         Memory content:
+         2000 - 2003          0x0          0
+         2004 - 2007          0x6          6
+         2008 - 2011          0xc         12
+         2012 - 2015         0x12         18
+         2016 - 2019         0x18         24
+         2020 - 2023         0x1e         30
+         2024 - 2027         0x24         36
+         2028 - 2031         0x2a         42
+         2032 - 2035         0x30         48
+====================================================
+
+   Total number of clock cycles :          77
+   Number of row buffer updates :          10
+
+===================================================
+   Number of times each instruction was executed:
+===================================================
+       Instruction          Executed
+                lw        9  time(s)
+                sw        9  time(s)
+               add        0  time(s)
+               sub        0  time(s)
+               mul        0  time(s)
+              addi       19  time(s)
+                 j        0  time(s)
+               beq        0  time(s)
+               bne        8  time(s)
+               slt        0  time(s)
+====================================================
