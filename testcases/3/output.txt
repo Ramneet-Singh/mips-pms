@@ -1,0 +1,3103 @@
+
+==================Clock Cycle:   1==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $zero 10 fetched. Memory address : 0 - 3
+|  Register Modified: $16 == $s0 == 10
+====================================================
+
+==================Clock Cycle:   2==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s1 $zero 0 fetched. Memory address : 4 - 7
+|  Register Modified: $17 == $s1 == 0
+====================================================
+
+==================Clock Cycle:   3==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $zero 100 fetched. Memory address : 8 - 11
+|  Register Modified: $9 == $t1 == 100
+====================================================
+
+==================Clock Cycle:   4==================
+Row buffer is Empty! 
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t0 $s1 600 fetched. Memory address : 12 - 15
+====================================================
+
+==================Clock Cycle:   5==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s1 2100 fetched. Memory address : 16 - 19
+====================================================
+
+==================Clock Cycle:   6==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+DRAM request issued | instruction: Index: 0. lw $t0(8) 600
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t2 $s1 5200 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:   7==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 -1 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 99
+====================================================
+
+==================Clock Cycle:   8==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s1 $s1 4 fetched. Memory address : 28 - 31
+|  Register Modified: $17 == $s1 == 4
+====================================================
+
+==================Clock Cycle:   9==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 -1 fetched. Memory address : 32 - 35
+|  Register Modified: $16 == $s0 == 9
+====================================================
+
+==================Clock Cycle:  10==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $zero 12 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  11==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t0 $s1 600 fetched. Memory address : 12 - 15
+====================================================
+
+==================Clock Cycle:  12==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 604
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s1 2100 fetched. Memory address : 16 - 19
+====================================================
+
+==================Clock Cycle:  13==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 604
+Index: 4. sw (value 99) 2104
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t2 $s1 5200 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  14==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 604
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 -1 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 98
+====================================================
+
+==================Clock Cycle:  15==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 604
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+
+|  ==================CPU CORE:   0==================
+|  DRAM Activity: Copied Row 0 to Row Buffer
+|  Instruction addi $s1 $s1 4 fetched. Memory address : 28 - 31
+|  Register Modified: $17 == $s1 == 8
+====================================================
+
+==================Clock Cycle:  16==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 604
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 -1 fetched. Memory address : 32 - 35
+|  Register Modified: $16 == $s0 == 8
+====================================================
+
+==================Clock Cycle:  17==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 600
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 604
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $8 == $t0 == 0
+====================================================
+
+==================Clock Cycle:  18==================
+Instructions in the row buffer: 
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 604
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $zero 12 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  19==================
+Instructions in the row buffer: 
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 604
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+DRAM request issued | instruction: Index: 3. lw $t0(8) 604
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t0 $s1 600 fetched. Memory address : 12 - 15
+====================================================
+
+==================Clock Cycle:  20==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 608
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 604
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $8 == $t0 == 0
+====================================================
+
+==================Clock Cycle:  21==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 608
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s1 2100 fetched. Memory address : 16 - 19
+====================================================
+
+==================Clock Cycle:  22==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 608
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+DRAM request issued | instruction: Index: 0. lw $t0(8) 608
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t2 $s1 5200 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  23==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 608
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $8 == $t0 == 0
+====================================================
+
+==================Clock Cycle:  24==================
+Instructions in the row buffer: 
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 -1 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 97
+====================================================
+
+==================Clock Cycle:  25==================
+Instructions in the row buffer: 
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+DRAM request issued | instruction: Index: 1. sw (value 100) 2100
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s1 $s1 4 fetched. Memory address : 28 - 31
+|  Register Modified: $17 == $s1 == 12
+====================================================
+
+==================Clock Cycle:  26==================
+Instructions in the row buffer: 
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 -1 fetched. Memory address : 32 - 35
+|  Register Modified: $16 == $s0 == 7
+====================================================
+
+==================Clock Cycle:  27==================
+Instructions in the row buffer: 
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $zero 12 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  28==================
+Instructions in the row buffer: 
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t0 $s1 600 fetched. Memory address : 12 - 15
+====================================================
+
+==================Clock Cycle:  29==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s1 2100 fetched. Memory address : 16 - 19
+====================================================
+
+==================Clock Cycle:  30==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t2 $s1 5200 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  31==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 -1 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 96
+====================================================
+
+==================Clock Cycle:  32==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s1 $s1 4 fetched. Memory address : 28 - 31
+|  Register Modified: $17 == $s1 == 16
+====================================================
+
+==================Clock Cycle:  33==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 -1 fetched. Memory address : 32 - 35
+|  Register Modified: $16 == $s0 == 6
+====================================================
+
+==================Clock Cycle:  34==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+
+|  ==================CPU CORE:   0==================
+|  DRAM Activity: Writeback Row 0 to Main Memory
+|  Instruction bne $s0 $zero 12 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  35==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t0 $s1 600 fetched. Memory address : 12 - 15
+====================================================
+
+==================Clock Cycle:  36==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s1 2100 fetched. Memory address : 16 - 19
+====================================================
+
+==================Clock Cycle:  37==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t2 $s1 5200 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  38==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 -1 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 95
+====================================================
+
+==================Clock Cycle:  39==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s1 $s1 4 fetched. Memory address : 28 - 31
+|  Register Modified: $17 == $s1 == 20
+====================================================
+
+==================Clock Cycle:  40==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 -1 fetched. Memory address : 32 - 35
+|  Register Modified: $16 == $s0 == 5
+====================================================
+
+==================Clock Cycle:  41==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $zero 12 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  42==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t0 $s1 600 fetched. Memory address : 12 - 15
+====================================================
+
+==================Clock Cycle:  43==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s1 2100 fetched. Memory address : 16 - 19
+====================================================
+
+==================Clock Cycle:  44==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+
+|  ==================CPU CORE:   0==================
+|  DRAM Activity: Copied Row 2 to Row Buffer
+|  Instruction lw $t2 $s1 5200 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  45==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 -1 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 94
+====================================================
+
+==================Clock Cycle:  46==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. sw (value 100) 2100
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2100 Value == 100
+|  Instruction addi $s1 $s1 4 fetched. Memory address : 28 - 31
+|  Register Modified: $17 == $s1 == 24
+====================================================
+
+==================Clock Cycle:  47==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 -1 fetched. Memory address : 32 - 35
+|  Register Modified: $16 == $s0 == 4
+====================================================
+
+==================Clock Cycle:  48==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+DRAM request issued | instruction: Index: 4. sw (value 99) 2104
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $zero 12 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  49==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 99) 2104
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2104 Value == 99
+|  Instruction lw $t0 $s1 600 fetched. Memory address : 12 - 15
+====================================================
+
+==================Clock Cycle:  50==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s1 2100 fetched. Memory address : 16 - 19
+====================================================
+
+==================Clock Cycle:  51==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+DRAM request issued | instruction: Index: 3. sw (value 98) 2108
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t2 $s1 5200 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  52==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. sw (value 98) 2108
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2108 Value == 98
+|  Instruction addi $t1 $t1 -1 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 93
+====================================================
+
+==================Clock Cycle:  53==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s1 $s1 4 fetched. Memory address : 28 - 31
+|  Register Modified: $17 == $s1 == 28
+====================================================
+
+==================Clock Cycle:  54==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+DRAM request issued | instruction: Index: 7. sw (value 97) 2112
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 -1 fetched. Memory address : 32 - 35
+|  Register Modified: $16 == $s0 == 3
+====================================================
+
+==================Clock Cycle:  55==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 97) 2112
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2112 Value == 97
+|  Instruction bne $s0 $zero 12 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  56==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t0 $s1 600 fetched. Memory address : 12 - 15
+====================================================
+
+==================Clock Cycle:  57==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+DRAM request issued | instruction: Index: 10. sw (value 96) 2116
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s1 2100 fetched. Memory address : 16 - 19
+====================================================
+
+==================Clock Cycle:  58==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 93) 2128
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. sw (value 96) 2116
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2116 Value == 96
+|  Instruction lw $t2 $s1 5200 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  59==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 93) 2128
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 -1 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 92
+====================================================
+
+==================Clock Cycle:  60==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 93) 2128
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+DRAM request issued | instruction: Index: 13. sw (value 95) 2120
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s1 $s1 4 fetched. Memory address : 28 - 31
+|  Register Modified: $17 == $s1 == 32
+====================================================
+
+==================Clock Cycle:  61==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 93) 2128
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. sw (value 95) 2120
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2120 Value == 95
+|  Instruction addi $s0 $s0 -1 fetched. Memory address : 32 - 35
+|  Register Modified: $16 == $s0 == 2
+====================================================
+
+==================Clock Cycle:  62==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 93) 2128
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $zero 12 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  63==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 93) 2128
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+DRAM request issued | instruction: Index: 4. sw (value 94) 2124
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t0 $s1 600 fetched. Memory address : 12 - 15
+====================================================
+
+==================Clock Cycle:  64==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 94) 2124
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 93) 2128
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2124 Value == 94
+|  Instruction sw $t1 $s1 2100 fetched. Memory address : 16 - 19
+====================================================
+
+==================Clock Cycle:  65==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 92) 2132
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 93) 2128
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t2 $s1 5200 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  66==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 92) 2132
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 93) 2128
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+DRAM request issued | instruction: Index: 7. sw (value 93) 2128
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 -1 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 91
+====================================================
+
+==================Clock Cycle:  67==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 92) 2132
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 93) 2128
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2128 Value == 93
+|  Instruction addi $s1 $s1 4 fetched. Memory address : 28 - 31
+|  Register Modified: $17 == $s1 == 36
+====================================================
+
+==================Clock Cycle:  68==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 92) 2132
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 -1 fetched. Memory address : 32 - 35
+|  Register Modified: $16 == $s0 == 1
+====================================================
+
+==================Clock Cycle:  69==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 92) 2132
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+DRAM request issued | instruction: Index: 4. sw (value 92) 2132
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $zero 12 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  70==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. sw (value 92) 2132
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2132 Value == 92
+|  Instruction lw $t0 $s1 600 fetched. Memory address : 12 - 15
+====================================================
+
+==================Clock Cycle:  71==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+
+|  ==================CPU CORE:   0==================
+|  Instruction sw $t1 $s1 2100 fetched. Memory address : 16 - 19
+====================================================
+
+==================Clock Cycle:  72==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+DRAM request issued | instruction: Index: 2. lw $t2(10) 5200
+
+|  ==================CPU CORE:   0==================
+|  Instruction lw $t2 $s1 5200 fetched. Memory address : 20 - 23
+====================================================
+
+==================Clock Cycle:  73==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $t1 $t1 -1 fetched. Memory address : 24 - 27
+|  Register Modified: $9 == $t1 == 90
+====================================================
+
+==================Clock Cycle:  74==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s1 $s1 4 fetched. Memory address : 28 - 31
+|  Register Modified: $17 == $s1 == 40
+====================================================
+
+==================Clock Cycle:  75==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Instruction addi $s0 $s0 -1 fetched. Memory address : 32 - 35
+|  Register Modified: $16 == $s0 == 0
+====================================================
+
+==================Clock Cycle:  76==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Instruction bne $s0 $zero 12 fetched. Memory address : 36 - 39
+====================================================
+
+==================Clock Cycle:  77==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  78==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  79==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  80==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  81==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  DRAM Activity: Writeback Row 2 to Main Memory
+====================================================
+
+==================Clock Cycle:  82==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  83==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  84==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  85==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  86==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  87==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  88==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  89==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  90==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  91==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  DRAM Activity: Copied Row 5 to Row Buffer
+====================================================
+
+==================Clock Cycle:  92==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  93==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 2. lw $t2(10) 5200
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $10 == $t2 == 0
+====================================================
+
+==================Clock Cycle:  94==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  95==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+DRAM request issued | instruction: Index: 5. lw $t2(10) 5204
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  96==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 5. lw $t2(10) 5204
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $10 == $t2 == 0
+====================================================
+
+==================Clock Cycle:  97==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  98==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+DRAM request issued | instruction: Index: 6. lw $t2(10) 5208
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle:  99==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 6. lw $t2(10) 5208
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $10 == $t2 == 0
+====================================================
+
+==================Clock Cycle: 100==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 101==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+DRAM request issued | instruction: Index: 8. lw $t2(10) 5212
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 102==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 8. lw $t2(10) 5212
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $10 == $t2 == 0
+====================================================
+
+==================Clock Cycle: 103==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 104==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+DRAM request issued | instruction: Index: 11. lw $t2(10) 5216
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 105==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 11. lw $t2(10) 5216
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $10 == $t2 == 0
+====================================================
+
+==================Clock Cycle: 106==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 107==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+DRAM request issued | instruction: Index: 14. lw $t2(10) 5220
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 108==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 14. lw $t2(10) 5220
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $10 == $t2 == 0
+====================================================
+
+==================Clock Cycle: 109==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 110==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+DRAM request issued | instruction: Index: 15. lw $t2(10) 5224
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 111==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 15. lw $t2(10) 5224
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $10 == $t2 == 0
+====================================================
+
+==================Clock Cycle: 112==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 113==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+DRAM request issued | instruction: Index: 10. lw $t2(10) 5228
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 114==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 10. lw $t2(10) 5228
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $10 == $t2 == 0
+====================================================
+
+==================Clock Cycle: 115==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 116==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+DRAM request issued | instruction: Index: 16. lw $t2(10) 5232
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 117==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 16. lw $t2(10) 5232
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $10 == $t2 == 0
+====================================================
+
+==================Clock Cycle: 118==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 119==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 17. lw $t2(10) 5236
+DRAM request issued | instruction: Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 120==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+Index: 17. lw $t2(10) 5236
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $10 == $t2 == 0
+====================================================
+
+==================Clock Cycle: 121==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 122==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+DRAM request issued | instruction: Index: 0. lw $t0(8) 612
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 123==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 124==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 125==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 126==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 127==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 128==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 129==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 130==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 131==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+|  DRAM Activity: Writeback Row 5 to Main Memory
+====================================================
+
+==================Clock Cycle: 132==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 133==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 134==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 135==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 136==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 137==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 138==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 139==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 140==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 141==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+|  DRAM Activity: Copied Row 0 to Row Buffer
+====================================================
+
+==================Clock Cycle: 142==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 143==================
+Instructions in the row buffer: 
+Index: 0. lw $t0(8) 612
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $8 == $t0 == 0
+====================================================
+
+==================Clock Cycle: 144==================
+Instructions in the row buffer: 
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 145==================
+Instructions in the row buffer: 
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+DRAM request issued | instruction: Index: 9. lw $t0(8) 616
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 146==================
+Instructions in the row buffer: 
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 9. lw $t0(8) 616
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $8 == $t0 == 0
+====================================================
+
+==================Clock Cycle: 147==================
+Instructions in the row buffer: 
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 148==================
+Instructions in the row buffer: 
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+DRAM request issued | instruction: Index: 12. lw $t0(8) 620
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 149==================
+Instructions in the row buffer: 
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 12. lw $t0(8) 620
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $8 == $t0 == 0
+====================================================
+
+==================Clock Cycle: 150==================
+Instructions in the row buffer: 
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 151==================
+Instructions in the row buffer: 
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 13. lw $t0(8) 632
+DRAM request issued | instruction: Index: 1. lw $t0(8) 624
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 152==================
+Instructions in the row buffer: 
+Index: 1. lw $t0(8) 624
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $8 == $t0 == 0
+====================================================
+
+==================Clock Cycle: 153==================
+Instructions in the row buffer: 
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 154==================
+Instructions in the row buffer: 
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 13. lw $t0(8) 632
+DRAM request issued | instruction: Index: 3. lw $t0(8) 628
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 155==================
+Instructions in the row buffer: 
+Index: 3. lw $t0(8) 628
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $8 == $t0 == 0
+====================================================
+
+==================Clock Cycle: 156==================
+Instructions in the row buffer: 
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 157==================
+Instructions in the row buffer: 
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 13. lw $t0(8) 632
+DRAM request issued | instruction: Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 158==================
+Instructions in the row buffer: 
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+Index: 13. lw $t0(8) 632
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $8 == $t0 == 0
+====================================================
+
+==================Clock Cycle: 159==================
+Instructions in the row buffer: 
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 160==================
+Instructions in the row buffer: 
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+DRAM request issued | instruction: Index: 4. lw $t0(8) 636
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 161==================
+Instructions in the row buffer: 
+Index: 4. lw $t0(8) 636
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+|  Register Modified: $8 == $t0 == 0
+====================================================
+
+==================Clock Cycle: 162==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 163==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+DRAM request issued | instruction: Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 164==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 165==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 166==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 167==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 168==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 169==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 170==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 171==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 172==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+|  DRAM Activity: Writeback Row 0 to Main Memory
+====================================================
+
+==================Clock Cycle: 173==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 174==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 175==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 176==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 177==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 178==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 179==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 180==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 181==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 182==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+|  DRAM Activity: Copied Row 2 to Row Buffer
+====================================================
+
+==================Clock Cycle: 183==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+====================================================
+
+==================Clock Cycle: 184==================
+Instructions in the row buffer: 
+Index: 7. sw (value 91) 2136
+
+|  ==================CPU CORE:   0==================
+|  Memory Location Modified: Address == 2136 Value == 91
+====================================================
+
+===================CPU CORE:   0===================
+====================================================
+  Register contents at the end of the execution:
+====================================================
+Reg no.   Reg name    Content-Dec    Content-Hex
+     0       zero              0            0x0
+     1         at              0            0x0
+     2         v0              0            0x0
+     3         v1              0            0x0
+     4         a0              0            0x0
+     5         a1              0            0x0
+     6         a2              0            0x0
+     7         a3              0            0x0
+     8         t0              0            0x0
+     9         t1             90           0x5a
+    10         t2              0            0x0
+    11         t3              0            0x0
+    12         t4              0            0x0
+    13         t5              0            0x0
+    14         t6              0            0x0
+    15         t7              0            0x0
+    16         s0              0            0x0
+    17         s1             40           0x28
+    18         s2              0            0x0
+    19         s3              0            0x0
+    20         s4              0            0x0
+    21         s5              0            0x0
+    22         s6              0            0x0
+    23         s7              0            0x0
+    24         t8              0            0x0
+    25         t9              0            0x0
+    26         k0              0            0x0
+    27         k1              0            0x0
+    28         gp              0            0x0
+    29         sp              0            0x0
+    30         fp              0            0x0
+    31         ra              0            0x0
+====================================================
+Accessed memory content at the end of the execution:
+====================================================
+     Memory address:         Memory content:
+           600 - 603          0x0          0
+           604 - 607          0x0          0
+           608 - 611          0x0          0
+           612 - 615          0x0          0
+           616 - 619          0x0          0
+           620 - 623          0x0          0
+           624 - 627          0x0          0
+           628 - 631          0x0          0
+           632 - 635          0x0          0
+           636 - 639          0x0          0
+         2100 - 2103         0x64        100
+         2104 - 2107         0x63         99
+         2108 - 2111         0x62         98
+         2112 - 2115         0x61         97
+         2116 - 2119         0x60         96
+         2120 - 2123         0x5f         95
+         2124 - 2127         0x5e         94
+         2128 - 2131         0x5d         93
+         2132 - 2135         0x5c         92
+         2136 - 2139         0x5b         91
+         5200 - 5203          0x0          0
+         5204 - 5207          0x0          0
+         5208 - 5211          0x0          0
+         5212 - 5215          0x0          0
+         5216 - 5219          0x0          0
+         5220 - 5223          0x0          0
+         5224 - 5227          0x0          0
+         5228 - 5231          0x0          0
+         5232 - 5235          0x0          0
+         5236 - 5239          0x0          0
+====================================================
+
+   Total number of clock cycles :         184
+   Number of row buffer updates :          15
+
+===================================================
+   Number of times each instruction was executed:
+===================================================
+       Instruction          Executed
+                lw       20  time(s)
+                sw       10  time(s)
+               add        0  time(s)
+               sub        0  time(s)
+               mul        0  time(s)
+              addi       33  time(s)
+                 j        0  time(s)
+               beq        0  time(s)
+               bne       10  time(s)
+               slt        0  time(s)
+====================================================
