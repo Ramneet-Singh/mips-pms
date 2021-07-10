@@ -1,4 +1,4 @@
 all:
-	@g++ assignment4.cpp dram.cpp mrm.cpp -I . -o assignment4 -std=c++11 -g
+	@g++ mips_pms.cpp dram.cpp mrm.cpp -I . -o mips_pms -std=c++11 -g
 clean:
-	@rm assignment4
+	@rm mips_pms

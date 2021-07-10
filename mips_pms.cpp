@@ -1101,7 +1101,18 @@ int main(int argc, char **argv)
 		{
 			cout << "Error: Only upto " << MAX_CPU_CORES << " CPU cores available. Requested " << no_of_cores << " cores\n";
 		}
-		if (argc == no_of_cores + 7)
+		if(argc == no_of_cores + 6){
+			for(int i = 0; i<no_of_cores; i++){
+				filenames[i] = argv[2+i];
+			}
+			rowDelay = stoi(argv[2 + no_of_cores]);
+			colDelay = stoi(argv[3 + no_of_cores]);
+			toPrint = (stoi(argv[4 + no_of_cores]) == 0) ? false : true;
+			blockMode = (stoi(argv[5 + no_of_cores]) == 0) ? true : false;
+
+			simulation_time = INT32_MAX;
+		}
+		else if (argc == no_of_cores + 7)
 		{
 			simulation_time = stoi(argv[2]);
 
@@ -1123,7 +1134,7 @@ int main(int argc, char **argv)
 
 	if (wrongArguments)
 	{
-		cout << "Error: incorrect usage. \nPlease run: \t./assignment3 no_of_cores path_to_program1 path_to_program2 ... path_to_programn ROW_ACCESS_DELAY COL_ACCESS_DELAY printMode blockingMode\n";
+		cout << "Error: incorrect usage. \nPlease run: \t./mips_pms no_of_cores [simulation_time](Optional) path_to_program1 path_to_program2 ... path_to_programn ROW_ACCESS_DELAY COL_ACCESS_DELAY printMode blockingMode\n";
 		return -1;
 	}
 
@@ -1170,7 +1181,7 @@ int main(int argc, char **argv)
 			if (!exOver[i])
 			{
 				if (toPrint)
-					cout << "|  ==================CPU CORE: " << setw(3) << i << "==================\n";
+					cout << "|  ===================CPU CORE: " << setw(3) << i << "===================\n";
 				interpreters[i].executeClockCycle();
 			}
 			if (!interpreters[i].executionOver())
