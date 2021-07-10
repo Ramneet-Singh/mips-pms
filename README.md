@@ -3,6 +3,7 @@
 A C++ program which acts as a simulator for MIPS Assembly Language Programs. 
   
 ## Index
+- [**Usage Instructions**](#usage-instructions)
 - [**Features**](#features)
 - [**Architecture Diagrams**](#architecture-diagrams)
 - [**Design Characteristics**](#design-characteristics)
@@ -16,6 +17,18 @@ A C++ program which acts as a simulator for MIPS Assembly Language Programs.
   1. [**Reordering**](#1-reordering)
   2. [**SW - LW Forwarding**](#2-sw-lw-forwarding)
   3. [**Syntax Errors**](#3-syntax-errors)
+
+## Usage Instructions
+
+To compile, clone the repo and run ```make all``` in the root of the repo. An executable named ```mips_pms``` will be created. For running the program, execute it like so:  
+```./mips_pms <no_of_cores> <path_to_program1> <path_to_program2> ... <path_to_programn> [simulation_time](optional) <row_access_delay> <col_access_delay> <print_mode> <block_mode>```. Parameters:
+
+- ```no_of_cores``` : The number of programs you want to execute, i.e., the number of cores in the multi-core simulator. Bounded by ```MAX_CPU_CORES``` defined in ```constants.h``` (currently set to 8).
+- ```path_to_programi```, 1<=i<=no_of_cores : The path to the MIPS Aseembly program you want core i to execute.
+- ```simulation_time``` : If you provide this parameter, then the simulation will only be done for ```simulation_time``` cycles, even if all programs have not been executed till then. The system will stop after those many cycles, and display the usual output containing intermediate state at that time. If not provided, execution is done until all programs have finished.
+- ```row_access_delay``` and ```col_access_delay``` : These are the parameters of the DRAM Model in the simulator. Depending on these, the clock cycle delays for various DRAM Activites (row activation, writeback, row buffer writes/reads) are determined. Row Access Delay is the latency (in number of clock cycles) of a row activation and a row writeback. Col Access Delay is the latency in reading data from and writing data to the row buffer. There are other DRAM timing constraints in reality however they have not been modelled.
+- ```print_mode``` : If this is set to 0, the program prints out only summary statistics for each core, like number of clock cycles, instruction wise execution count, register contents etc. If set to 1, it prints out the activity in the system at each clock cycle. This includes when requests are issued by each core to the MRM, what requests the scheduler selects from available ones, all DRAM Activity like writeback and roe activation, as well as register and memory location modifications.
+- ```block_mode``` : If set to 1, it operates the DRAM Memory in non-blocking mode. If it is set to 0, DRAM operates in blocking mode, i.e., the cores cannot move forward while they have a request pending in the DRAM. We recommend to set it to 1 so that optimisations through reordering are possible.  
 
 ## Features
 
